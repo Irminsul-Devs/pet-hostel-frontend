@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <div className="home-container">
       <h1 className="home-title">Welcome to Pet Hostel 🐾</h1>
-
+      <h1 className="home-title">....Jaba Jaba Jaba....</h1>
       <button className="book-button">Book Appointment</button>
 
       <section className="home-content">
