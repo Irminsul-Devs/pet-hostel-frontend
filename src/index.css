@@ -1,6 +1,13 @@
+@font-face {
+  font-family: 'ZhCN';
+  src: url('/fonts/zh-cn.ttf') format('truetype'); 
+  font-weight: normal;
+  font-style: normal;
+}
+
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  font-family: 'ZhCN', system-ui, Avenir, Helvetica, Arial, sans-serif;  line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
