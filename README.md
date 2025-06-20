@@ -6,7 +6,6 @@ This is the frontend of the Pet Hostel project.
 
 - Book pet rooms
 - View room availability
-- Admin dashboard
 
 ## Getting Started
 
