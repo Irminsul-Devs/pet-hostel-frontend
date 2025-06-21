@@ -1,7 +1,5 @@
-/* styles/Navbar.css */
-
 .navbar {
-  background-color: #1a1a2e;
+  background-color: #000000;
   color: white;
   display: flex;
   justify-content: space-between;
@@ -10,6 +8,7 @@
   position: sticky;
   top: 0;
   z-index: 100;
+  font-size: .9rem;
 }
 
 .navbar a {
@@ -18,8 +17,69 @@
   margin: 0 1rem;
   font-weight: 500;
   transition: color 0.2s ease-in-out;
+  position: relative;
 }
 
-.navbar a:hover {
-  color: violet;
+/* Only affect nav links, not buttons */
+.navbar-left a:hover {
+  color: #1ab3f0;
+}
+
+.active-link {
+  color: #1ab3f0 !important; /* overrides default link color */
+}
+
+/* Underline effect for active nav links */
+.active-link::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: #1ab3f0;
+  position: absolute;
+  bottom: -19px;
+  left: 0;
+}
+
+/* Buttons */
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+}
+
+.login-btn {
+  background-color: #04b1f6;
+  color: #1a1a2e;
+  margin-right: 0.5rem;
+  border: 1px solid #5ed1ff;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.login-btn:hover,.login-btn:focus {
+  border: 2px solid #1ab3f0;
+  background-color: #000000;
+  color: #ffffff;
+}
+
+/* Signup Button */
+.navbar .signup-btn {
+  background-color: #f2f1f1;
+  color: #000000;
+  border: 1px solid #ffffff;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.navbar .signup-btn:hover {
+  background-color: #000000;
+  border: 2px solid #1af033;
+  color: #ffffff;
+}
+
+.navbar .signup-btn:focus {
+  border: 2px solid #1ab3f0;
+  background-color: #000000;
+  color: #ffffff;
 }

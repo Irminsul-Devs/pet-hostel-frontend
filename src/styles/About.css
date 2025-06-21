@@ -1,0 +1,25 @@
+.about-container {
+  position: relative;
+  background-image: url('/assets/images/about-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  padding: 2rem;
+  color: white;
+  text-align: center;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* Overlay */
+.about-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5); /* semi-transparent black */
+  z-index: -1;
+}
