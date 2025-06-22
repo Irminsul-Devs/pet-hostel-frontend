@@ -1,0 +1,125 @@
+/* Compact, modern blue table */
+.staff-dashboard-table {
+  margin: 1.5rem auto;
+  border-collapse: collapse; 
+  min-width: 850px;
+  background: #000000;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(26, 179, 240, 0.10);
+  font-size: 0.9rem;
+}
+
+.staff-dashboard-table th,
+.staff-dashboard-table td {
+  padding: 0.5rem 0.7rem;
+  text-align: center;
+}
+
+.staff-dashboard-table th {
+  background: linear-gradient(90deg, #1ab3f0 70%, #1692c3 100%);
+  color: #000000;
+  font-weight: 600;
+  border-bottom: 2px solid #ffffff;
+  font-size: 1em;
+  letter-spacing: 0.01em;
+}
+
+.staff-dashboard-table tr {
+  transition: background 0.18s;
+}
+
+.staff-dashboard-table tr:nth-child(even) {
+  background: #262626;
+}
+
+.staff-dashboard-table tr:nth-child(odd) {
+  background: #1b1b1b;
+}
+
+.staff-dashboard-table tr:hover {
+  background: #3f555c;
+}
+
+/*.staff-dashboard-table tr:nth-child(even) td {
+  color: #000000;
+}
+
+.staff-dashboard-table tr:nth-child(odd) td {
+  color: #ffffff;
+}
+*/
+.staff-dashboard-table td {
+  color: #eaf6fb;
+  border-bottom: 1px solid #22334a;
+  vertical-align: middle;
+}
+
+.staff-dashboard-table td button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.08em;
+  color: #1ab3f0;
+  transition: color 0.18s, transform 0.18s;
+  margin: 0 0.1em;
+  border-radius: 50%;
+  padding: 0.2em 0.4em;
+}
+
+.staff-dashboard-table td button:hover {
+  color: #fff;
+  background: #1ab3f0;
+  transform: scale(1.13);
+  box-shadow: 0 1px 4px rgba(26, 179, 240, 0.13);
+}
+
+/* Center the dashboard content */
+.staff-dashboard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px;
+  min-height: 100vh;
+  /* Replace the URL below with your homepage image path */
+  background-image: url('/assets/images/p.jpeg'); /* Use your homepage/about bg */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;   /* <-- Add this line */
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* Overlay */
+.staff-dashboard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5); /* semi-transparent black */
+  z-index: -1;
+}
+
+/* Blue themed create booking button for navbar */
+.create-booking-btn {
+  background-color: #0b4d66;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1.3rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0;
+  margin-top: 0;
+  box-shadow: 0 2px 8px rgba(26, 179, 240, 0.12);
+  transition: background 0.2s, color 0.2s;
+}
+
+.create-booking-btn:hover {
+  background-color: #1ab3f0;
+  color: #eaf6fb;
+}
