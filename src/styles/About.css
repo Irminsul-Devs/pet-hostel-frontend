@@ -1,6 +1,6 @@
 .about-container {
   position: relative;
-  background-image: url('/assets/images/about-bg.jpg');
+  background-image: url("/assets/images/about-bg.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -10,11 +10,13 @@
   text-align: center;
   z-index: 0;
   overflow: hidden;
+  margin: 0;
+  padding: 0;
 }
 
 /* Overlay */
 .about-container::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;

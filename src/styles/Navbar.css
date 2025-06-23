@@ -8,7 +8,7 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  font-size: .9rem;
+  font-size: 0.9rem;
 }
 
 .navbar a {
@@ -31,7 +31,7 @@
 
 /* Underline effect for active nav links */
 .active-link::after {
-  content: '';
+  content: "";
   display: block;
   width: 100%;
   height: 2px;
@@ -58,7 +58,8 @@
   transition: background-color 0.3s, color 0.3s;
 }
 
-.login-btn:hover,.login-btn:focus {
+.login-btn:hover,
+.login-btn:focus {
   border: 2px solid #1ab3f0;
   background-color: #000000;
   color: #ffffff;
@@ -82,4 +83,38 @@
   border: 2px solid #1ab3f0;
   background-color: #000000;
   color: #ffffff;
+}
+
+/* Add for staff tab underline effect */
+.staff-tab {
+  position: relative;
+  cursor: pointer;
+  padding: 0 1rem;
+  font-weight: 600;
+  font-size: 1em;
+  color: white;
+  background: none;
+  border: none;
+  outline: none;
+  transition: color 0.2s;
+  display: inline-block;
+}
+
+.staff-tab:hover {
+  color: #1ab3f0;
+}
+
+.staff-tab.active-link {
+  color: #1ab3f0 !important;
+}
+
+.staff-tab.active-link::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: #1ab3f0;
+  position: absolute;
+  bottom: -19px;
+  left: 0;
 }

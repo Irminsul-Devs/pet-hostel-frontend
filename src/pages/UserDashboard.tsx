@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
 import "../styles/StaffDashboard.css";
-import StaffNavbar from "../components/StaffNavbar";
-import CreateBookingModal from "../components/CreateBookingModal";
+import UserNavbar from "../components/UserNavbar";
 
-export default function StaffDashboard() {
+export default function UserDashboard() {
   const [user, setUser] = useState<{ name?: string } | null>(null);
   const [activeTab, setActiveTab] = useState<"dashboard" | "bookings">(
     "dashboard"
   );
   const [bookings, setBookings] = useState<any[]>([]);
-  const [showBookingModal, setShowBookingModal] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem("user");
@@ -17,19 +15,13 @@ export default function StaffDashboard() {
     setBookings([]); // Empty bookings or fetch here
   }, []);
 
-  useEffect(() => {
-    const handler = () => setShowBookingModal(true);
-    window.addEventListener("open-create-booking", handler);
-    return () => window.removeEventListener("open-create-booking", handler);
-  }, []);
-
   return (
     <>
-      <StaffNavbar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <UserNavbar activeTab={activeTab} setActiveTab={setActiveTab} />
       <div className="staff-dashboard">
         {activeTab === "dashboard" ? (
           <h1 style={{ color: "#1ab3f0", marginBottom: "0.5em" }}>
-            Welcome, {user?.name || "Staff"}!
+            Welcome, {user?.name || "User"}!
           </h1>
         ) : (
           <table className="staff-dashboard-table">
@@ -37,11 +29,9 @@ export default function StaffDashboard() {
               <tr>
                 <th>S.No</th>
                 <th>Booking Date</th>
-                <th>Name</th>
-                <th>Mobile No</th>
-                <th>Email</th>
+                <th>Pet Name</th>
+                <th>Status</th>
                 <th>Remarks</th>
-                <th>More Info</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -49,9 +39,6 @@ export default function StaffDashboard() {
           </table>
         )}
       </div>
-      {showBookingModal && (
-        <CreateBookingModal onClose={() => setShowBookingModal(false)} />
-      )}
     </>
   );
 }

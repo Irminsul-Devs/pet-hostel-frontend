@@ -33,29 +33,31 @@ export default function LoginModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    try {
-      const res = await fetch("http://localhost:3000/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+    let fakeUser = null;
+    if (email === "staff@example.com") {
+      fakeUser = { name: "Staff User", role: "staff" };
+    } else if (email === "admin@example.com") {
+      fakeUser = { name: "Admin User", role: "admin" };
+    } else if (email === "user@example.com") {
+      fakeUser = { name: "Customer User", role: "customer" };
+    }
 
-      const data = await res.json();
+    if (!fakeUser) {
+      setError("Invalid credentials.");
+      return;
+    }
 
-      if (data.error) {
-        setError(data.error);
-      } else {
-        // Login successful
-        localStorage.setItem("user", JSON.stringify(data.user));
-        window.dispatchEvent(new Event("user-login"));
-        onClose();
-        const role = data.user.role;
-        if (role === "staff") navigate("/staff-dashboard");
-        else if (role === "admin") navigate("/admin-dashboard");
-        else if (role === "customer") navigate("/customer-dashboard");
-      }
-    } catch (err) {
-      setError("Login failed. Please try again.");
+    localStorage.setItem("user", JSON.stringify(fakeUser));
+    window.dispatchEvent(new Event("user-login"));
+    onClose();
+
+    // Navigate to dashboard based on role
+    if (fakeUser.role === "staff") {
+      navigate("/staff-dashboard");
+    } else if (fakeUser.role === "admin") {
+      navigate("/admin-dashboard");
+    } else if (fakeUser.role === "customer") {
+      navigate("/user-dashboard");
     }
   };
 
