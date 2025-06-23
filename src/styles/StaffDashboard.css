@@ -1,12 +1,12 @@
 /* Compact, modern blue table */
 .staff-dashboard-table {
   margin: 1.5rem auto;
-  border-collapse: collapse; 
+  border-collapse: collapse;
   min-width: 850px;
   background: #000000;
   border-radius: 5px;
   overflow: hidden;
-  box-shadow: 0 4px 18px rgba(26, 179, 240, 0.10);
+  box-shadow: 0 4px 18px rgba(26, 179, 240, 0.1);
   font-size: 0.9rem;
 }
 
@@ -83,18 +83,18 @@
   padding: 32px;
   min-height: 100vh;
   /* Replace the URL below with your homepage image path */
-  background-image: url('/assets/images/p.jpeg'); /* Use your homepage/about bg */
+  background-image: url("/assets/images/z.jpg"); /* Use your homepage/about bg */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-attachment: fixed;   /* <-- Add this line */
+  background-attachment: fixed; /* <-- Add this line */
   z-index: 0;
   overflow: hidden;
 }
 
 /* Overlay */
 .staff-dashboard::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -122,4 +122,30 @@
 .create-booking-btn:hover {
   background-color: #1ab3f0;
   color: #eaf6fb;
+}
+
+/* Responsive: Make dashboard table horizontally scrollable on small screens */
+@media (max-width: 900px) {
+  .staff-dashboard-table {
+    min-width: 600px;
+    width: 100%;
+    display: block;
+    overflow-x: auto;
+    border-radius: 5px;
+  }
+  .staff-dashboard {
+    padding: 16px;
+  }
+}
+
+/* On very small screens, reduce padding and font size */
+@media (max-width: 500px) {
+  .staff-dashboard-table th,
+  .staff-dashboard-table td {
+    font-size: 0.92em;
+    padding: 0.4em 0.5em;
+  }
+  .staff-dashboard {
+    padding: 6px;
+  }
 }

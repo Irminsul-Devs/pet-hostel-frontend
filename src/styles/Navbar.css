@@ -118,3 +118,35 @@
   bottom: -19px;
   left: 0;
 }
+
+/* Responsive styles for StaffNavbar */
+@media (max-width: 700px) {
+  .navbar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.7rem 0.5rem;
+    font-size: 1em;
+  }
+  .navbar-left,
+  .navbar-right {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    display: flex;
+  }
+  .navbar-left {
+    margin-bottom: 0.7em;
+  }
+  .staff-tab {
+    margin-left: 0 !important;
+    margin-bottom: 0.5em;
+    width: 100%;
+    text-align: left;
+    padding: 0.7em 0.5em;
+    font-size: 1em;
+  }
+  .navbar-right .btn {
+    width: 100%;
+    margin: 0.3em 0;
+  }
+}

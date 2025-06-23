@@ -1,32 +1,34 @@
 import { useRef, useEffect, useState } from "react";
 import "../styles/Modal.css";
+import ReactDatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { FaRegCalendarAlt } from "react-icons/fa";
 
 type Props = {
   onClose: () => void;
 };
 
+const initialFormState = {
+  ownerName: "",
+  ownerMobile: "",
+  ownerDob: "",
+  ownerEmail: "",
+  ownerAddress: "",
+  petName: "",
+  petType: "",
+  bookingFrom: "",
+  bookingTo: "",
+  services: [] as string[],
+  petDob: "",
+  petAge: "",
+  petFood: "",
+  signature: "",
+  acknowledge: false,
+};
+
 export default function CreateBookingModal({ onClose }: Props) {
   const ref = useRef<HTMLDivElement>(null);
-  const [form, setForm] = useState({
-    ownerName: "",
-    ownerMobile: "",
-    ownerDob: "",
-    ownerEmail: "",
-    ownerAddress: "",
-    petName: "",
-    petType: "",
-    bookingFrom: "",
-    bookingTo: "",
-    service: "",
-    petDob: "",
-    petAge: "",
-    petFood: "",
-    petVaccinated: "",
-    vaccinationFile: null,
-    remarks: "",
-    acknowledge: false,
-    signature: "",
-  });
+  const [form, setForm] = useState(initialFormState);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -44,9 +46,12 @@ export default function CreateBookingModal({ onClose }: Props) {
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => {
-    const { name, value, type, files } = e.target as any;
+    const { name, value, type, checked, files } = e.target as any;
+
     if (type === "file") {
       setForm((f) => ({ ...f, [name]: files[0] }));
+    } else if (type === "checkbox") {
+      setForm((f) => ({ ...f, [name]: checked }));
     } else {
       setForm((f) => ({ ...f, [name]: value }));
     }
@@ -54,13 +59,33 @@ export default function CreateBookingModal({ onClose }: Props) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name || !form.date || !form.mobile || !form.email) {
+    if (
+      !form.ownerName ||
+      !form.ownerMobile ||
+      !form.ownerDob ||
+      !form.ownerEmail ||
+      !form.ownerAddress ||
+      !form.petName ||
+      !form.petType ||
+      !form.bookingFrom ||
+      !form.bookingTo ||
+      form.services.length === 0 ||
+      !form.petDob ||
+      !form.petFood ||
+      !form.signature ||
+      !form.acknowledge
+    ) {
       setError("Please fill all required fields.");
       return;
     }
+
+    setError("");
     alert("Booking created!\n\n" + JSON.stringify(form, null, 2));
+    setForm(initialFormState);
     onClose();
   };
+
+  const parseDate = (val: string) => (val ? new Date(val) : null);
 
   return (
     <div className="modal-backdrop">
@@ -72,288 +97,539 @@ export default function CreateBookingModal({ onClose }: Props) {
         <form onSubmit={handleSubmit}>
           <div className="modal-form-columns">
             <div className="modal-form-col">
-              {/* LEFT COLUMN FIELDS */}
-              {/* Owner Name, Mobile, DOB, Email, Address, Pet Name, Pet Type */}
+              {/* LEFT COLUMN */}
               <div className="input-group">
                 <input
                   type="text"
-                  id="owner-name"
                   name="ownerName"
                   placeholder="Owner Name"
                   required
-                  value={form.ownerName || ""}
+                  value={form.ownerName}
                   onChange={handleChange}
                 />
-                <label htmlFor="owner-name">Owner Name</label>
+                <label>Owner Name</label>
               </div>
               <div className="input-group">
                 <input
-                  type="text"
-                  id="owner-mobile"
+                  type="tel"
                   name="ownerMobile"
+                  pattern="[0-9]{10}"
+                  title="Please enter a 10-digit phone number"
                   placeholder="Mobile Number"
                   required
-                  value={form.ownerMobile || ""}
+                  value={form.ownerMobile}
                   onChange={handleChange}
                 />
-                <label htmlFor="owner-mobile">Mobile Number</label>
+                <label>Mobile Number</label>
               </div>
-              <div className="input-group">
-                <input
-                  type="date"
-                  id="owner-dob"
-                  name="ownerDob"
-                  required
-                  value={form.ownerDob || ""}
-                  onChange={handleChange}
+              {/* --- Owner Date of Birth --- */}
+              <div className="input-group" style={{ position: "relative" }}>
+                <ReactDatePicker
+                  selected={parseDate(form.ownerDob)}
+                  onChange={(date) =>
+                    setForm((f) => ({
+                      ...f,
+                      ownerDob: date ? date.toISOString().slice(0, 10) : "",
+                    }))
+                  }
+                  dateFormat="yyyy-MM-dd"
+                  customInput={
+                    <input
+                      type="text"
+                      name="ownerDob"
+                      required
+                      autoComplete="off"
+                      value={form.ownerDob}
+                      onKeyDown={(e) => e.preventDefault()}
+                      style={{
+                        background: "#2a2a2a",
+                        color: "#eaf6fb",
+                        border: "1px solid #555",
+                        paddingRight: "2.2em",
+                        cursor: "pointer",
+                      }}
+                    />
+                  }
+                  calendarClassName="modal-datepicker"
+                  popperPlacement="bottom-end"
                 />
-                <label htmlFor="owner-dob">Owner Date of Birth</label>
+                <FaRegCalendarAlt
+                  style={{
+                    position: "absolute",
+                    right: "0.8em",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    color: "#1ab3f0",
+                    fontSize: "1.25em",
+                    pointerEvents: "none",
+                    opacity: 0.85,
+                    transition: "color 0.2s",
+                  }}
+                />
+                <label
+                  style={{
+                    position: "absolute",
+                    left: "0.75rem",
+                    top: form.ownerDob ? "-0.5rem" : "1rem",
+                    fontSize: form.ownerDob ? "0.75rem" : "0.8rem",
+                    color: form.ownerDob ? "#1ab3f0" : "#aaa",
+                    background: form.ownerDob ? "#181f2a" : "transparent",
+                    padding: "0 0.3rem",
+                    pointerEvents: "none",
+                    transition:
+                      "top 0.25s, font-size 0.25s, color 0.25s, background 0.25s",
+                    zIndex: 2,
+                  }}
+                >
+                  Owner Date of Birth
+                </label>
               </div>
               <div className="input-group">
                 <input
                   type="email"
-                  id="owner-email"
                   name="ownerEmail"
                   placeholder="Email"
                   required
-                  value={form.ownerEmail || ""}
+                  value={form.ownerEmail}
                   onChange={handleChange}
                 />
-                <label htmlFor="owner-email">Email</label>
+                <label>Email</label>
               </div>
-              <div className="input-group">
-                <input
-                  type="text"
-                  id="owner-address"
+              {/* --- Address --- */}
+              <div className="input-group" style={{ position: "relative" }}>
+                <textarea
                   name="ownerAddress"
-                  placeholder="Address"
+                  placeholder=""
                   required
-                  value={form.ownerAddress || ""}
+                  value={form.ownerAddress}
                   onChange={handleChange}
+                  rows={3}
                 />
-                <label htmlFor="owner-address">Address</label>
+                <label
+                  style={{
+                    position: "absolute",
+                    left: "0.75rem",
+                    top: form.ownerAddress ? "-0.5rem" : "1rem",
+                    fontSize: form.ownerAddress ? "0.75rem" : "0.8rem",
+                    color: form.ownerAddress ? "#1ab3f0" : "#aaa",
+                    background: form.ownerAddress ? "#181f2a" : "transparent",
+                    padding: "0 0.3rem",
+                    pointerEvents: "none",
+                    transition:
+                      "top 0.25s, font-size 0.25s, color 0.25s, background 0.25s",
+                    zIndex: 2,
+                  }}
+                >
+                  Address
+                </label>
               </div>
               <div className="input-group">
                 <input
                   type="text"
-                  id="pet-name"
                   name="petName"
                   placeholder="Pet Name"
                   required
-                  value={form.petName || ""}
+                  value={form.petName}
                   onChange={handleChange}
                 />
-                <label htmlFor="pet-name">Pet Name</label>
+                <label>Pet Name</label>
               </div>
               <div className="input-group">
                 <select
-                  id="pet-type"
                   name="petType"
                   required
-                  value={form.petType || ""}
+                  value={form.petType}
                   onChange={handleChange}
-                  className="modal-input"
+                  data-has-value={form.petType !== ""}
                 >
-                  <option value="" disabled>
-                    Select Pet Type
-                  </option>
+                  <option value="" disabled></option>
                   <option value="Dog">Dog</option>
                   <option value="Cat">Cat</option>
                   <option value="Bird">Bird</option>
                   <option value="Other">Other</option>
                 </select>
-                <label htmlFor="pet-type">Pet Type</label>
+                <label>Pet Type</label>
               </div>
             </div>
             <div className="modal-form-col">
-              {/* RIGHT COLUMN FIELDS */}
-              {/* Booking From, Booking To, Service, Pet DOB, Pet Age, Pet Food, Vaccination, File, Remarks, Acknowledge, Signature */}
-              <div className="input-group">
-                <input
-                  type="date"
-                  id="booking-from"
-                  name="bookingFrom"
-                  required
-                  value={form.bookingFrom || ""}
-                  onChange={handleChange}
-                />
-                <label htmlFor="booking-from">Booking Date From</label>
-              </div>
-              <div className="input-group">
-                <input
-                  type="date"
-                  id="booking-to"
-                  name="bookingTo"
-                  required
-                  value={form.bookingTo || ""}
-                  onChange={handleChange}
-                />
-                <label htmlFor="booking-to">Booking Date To</label>
-              </div>
-              <div className="input-group">
-                <select
-                  id="service"
-                  name="service"
-                  required
-                  value={form.service || ""}
-                  onChange={handleChange}
-                  className="modal-input"
+              {/* RIGHT COLUMN */}
+              {/* --- Booking Date From & To on the same row --- */}
+              <div style={{ display: "flex", gap: "1em", width: "100%" }}>
+                <div
+                  className="input-group"
+                  style={{ position: "relative", flex: 1 }}
                 >
-                  <option value="" disabled>
-                    Select Service
-                  </option>
-                  <option value="Boarding">Boarding</option>
-                  <option value="Grooming">Grooming</option>
-                  <option value="Training">Training</option>
-                  <option value="Day Care">Day Care</option>
-                </select>
-                <label htmlFor="service">Service You Want to Opt For?</label>
-              </div>
-              <div className="input-group">
-                <input
-                  type="date"
-                  id="pet-dob"
-                  name="petDob"
-                  required
-                  value={form.petDob || ""}
-                  onChange={(e) => {
-                    handleChange(e);
-                    // Calculate pet age
-                    const dob = new Date(e.target.value);
-                    const age =
-                      dob && !isNaN(dob.getTime())
-                        ? Math.floor(
-                            (Date.now() - dob.getTime()) /
-                              (365.25 * 24 * 60 * 60 * 1000)
-                          )
-                        : "";
-                    setForm((f) => ({ ...f, petAge: age }));
-                  }}
-                />
-                <label htmlFor="pet-dob">Pet Date of Birth</label>
-              </div>
-              <div className="input-group">
-                <input
-                  type="text"
-                  id="pet-age"
-                  name="petAge"
-                  placeholder="Pet Age"
-                  value={form.petAge || ""}
-                  readOnly
-                  className="modal-input"
-                  style={{ background: "#222", color: "#aaa" }}
-                />
-                <label htmlFor="pet-age">Pet Age (auto)</label>
-              </div>
-              <div className="input-group">
-                <input
-                  type="text"
-                  id="pet-food"
-                  name="petFood"
-                  placeholder="Pet Food Habit"
-                  required
-                  value={form.petFood || ""}
-                  onChange={handleChange}
-                />
-                <label htmlFor="pet-food">Pet Food Habit</label>
-              </div>
-              <div className="input-group">
-                <label className="switch-group" style={{ cursor: "pointer" }}>
-                  <span className="switch-label">Pet Vaccinated?</span>
-                  <span className="switch">
-                    <input
-                      type="checkbox"
-                      id="pet-vaccinated"
-                      name="petVaccinated"
-                      checked={form.petVaccinated === "Yes"}
-                      onChange={(e) =>
-                        setForm((f) => ({
-                          ...f,
-                          petVaccinated: e.target.checked ? "Yes" : "No",
-                        }))
-                      }
-                    />
-                    <span className="slider"></span>
-                  </span>
-                  <span
+                  {/* Booking Date From */}
+                  <ReactDatePicker
+                    selected={parseDate(form.bookingFrom)}
+                    onChange={(date) =>
+                      setForm((f) => ({
+                        ...f,
+                        bookingFrom: date
+                          ? date.toISOString().slice(0, 10)
+                          : "",
+                      }))
+                    }
+                    dateFormat="yyyy-MM-dd"
+                    customInput={
+                      <input
+                        type="text"
+                        name="bookingFrom"
+                        required
+                        autoComplete="off"
+                        value={form.bookingFrom}
+                        onKeyDown={(e) => e.preventDefault()}
+                        style={{
+                          background: "#2a2a2a",
+                          color: "#eaf6fb",
+                          border: "1px solid #555",
+                          paddingRight: "2.2em",
+                          cursor: "pointer",
+                        }}
+                      />
+                    }
+                    calendarClassName="modal-datepicker"
+                    popperPlacement="bottom-end"
+                  />
+                  <FaRegCalendarAlt
                     style={{
-                      marginLeft: "0.5em",
+                      position: "absolute",
+                      right: "0.5em",
+                      top: "50%",
+                      transform: "translateY(-50%)",
                       color: "#1ab3f0",
-                      fontWeight: 500,
-                      minWidth: 32,
-                      display: "inline-block",
-                      textAlign: "center",
+                      fontSize: "1em",
+                      pointerEvents: "none",
+                      opacity: 0.85,
+                      transition: "color 0.2s",
                     }}
-                  >
-                    {form.petVaccinated === "Yes" ? "Yes" : "No"}
-                  </span>
-                </label>
-              </div>
-              {form.petVaccinated === "Yes" && (
-                <div className="input-group">
-                  <input
-                    type="file"
-                    id="vaccination-file"
-                    name="vaccinationFile"
-                    accept=".pdf,.jpg,.jpeg,.png"
-                    onChange={handleChange}
-                    className="modal-input"
                   />
                   <label
-                    htmlFor="vaccination-file"
-                    style={{ color: "#eaf6fb" }}
+                    style={{
+                      position: "absolute",
+                      left: "0.5rem",
+                      right: "0.6rem", // NEW: constrain label width
+                      top: form.bookingFrom ? "-0.5rem" : "1rem",
+                      fontSize: form.bookingFrom ? "0.75rem" : "0.7rem",
+                      color: form.bookingFrom ? "#1ab3f0" : "#aaa",
+                      background: form.bookingFrom ? "#181f2a" : "transparent",
+                      padding: "0 0.2rem",
+                      pointerEvents: "none",
+                      transition:
+                        "top 0.25s, font-size 0.25s, color 0.25s, background 0.25s",
+                      zIndex: 2,
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                    }}
                   >
-                    Upload Vaccination Proof
+                    Booking Date From
                   </label>
                 </div>
-              )}
+                <div
+                  className="input-group"
+                  style={{ position: "relative", flex: 1 }}
+                >
+                  {/* Booking Date To */}
+                  <ReactDatePicker
+                    selected={parseDate(form.bookingTo)}
+                    onChange={(date) =>
+                      setForm((f) => ({
+                        ...f,
+                        bookingTo: date ? date.toISOString().slice(0, 10) : "",
+                      }))
+                    }
+                    dateFormat="yyyy-MM-dd"
+                    customInput={
+                      <input
+                        type="text"
+                        name="bookingTo"
+                        required
+                        autoComplete="off"
+                        value={form.bookingTo}
+                        onKeyDown={(e) => e.preventDefault()}
+                        style={{
+                          background: "#2a2a2a",
+                          color: "#eaf6fb",
+                          border: "1px solid #555",
+                          paddingRight: "2.2em",
+                          cursor: "pointer",
+                        }}
+                      />
+                    }
+                    calendarClassName="modal-datepicker"
+                    popperPlacement="bottom-end"
+                  />
+                  <FaRegCalendarAlt
+                    style={{
+                      position: "absolute",
+                      right: "0.7em",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      color: "#1ab3f0",
+                      fontSize: "1em",
+                      pointerEvents: "none",
+                      opacity: 0.85,
+                      transition: "color 0.2s",
+                    }}
+                  />
+                  <label
+                    style={{
+                      position: "absolute",
+                      left: "0.5rem",
+                      right: "0.6rem", // NEW: constrain label width
+                      top: form.bookingTo ? "-0.5rem" : "1rem",
+                      fontSize: form.bookingTo ? "0.75rem" : "0.7rem",
+                      color: form.bookingTo ? "#1ab3f0" : "#aaa",
+                      background: form.bookingTo ? "#181f2a" : "transparent",
+                      padding: "0 0.2rem",
+                      pointerEvents: "none",
+                      transition:
+                        "top 0.25s, font-size 0.25s, color 0.25s, background 0.25s",
+                      zIndex: 2,
+                    }}
+                  >
+                    Booking Date To
+                  </label>
+                </div>
+              </div>
+              <div style={{ marginTop: "1.2em", marginBottom: "1.2em" }}>
+                <div
+                  style={{
+                    marginBottom: "0.5em",
+                    color: "#eaf6fb",
+                    fontWeight: 500,
+                    fontSize: "0.9em",
+                  }}
+                >
+                  Select Services
+                </div>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    color: "#aaa",
+                    gap: "0.7em",
+                  }}
+                >
+                  {["Boarding", "Grooming", "Training", "Day Care"].map((s) => (
+                    <label
+                      key={s}
+                      style={{
+                        fontWeight: 400,
+                        fontSize: "0.9em",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.3em",
+                        padding: "0.2em 0.7em",
+                        minWidth: "0",
+                        justifyContent: "flex-start",
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        name="services"
+                        value={s}
+                        checked={form.services.includes(s)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setForm((f) => ({
+                              ...f,
+                              services: [...f.services, s],
+                            }));
+                          } else {
+                            setForm((f) => ({
+                              ...f,
+                              services: f.services.filter((val) => val !== s),
+                            }));
+                          }
+                        }}
+                        style={{
+                          marginRight: "0.4em",
+                          accentColor: "#1ab3f0",
+                        }}
+                      />
+                      {s}
+                    </label>
+                  ))}
+                </div>
+              </div>
+              {/* --- Pet Date of Birth --- */}
+              <div className="input-group" style={{ position: "relative" }}>
+                <ReactDatePicker
+                  selected={parseDate(form.petDob)}
+                  onChange={(date) => {
+                    setForm((f) => {
+                      const dob = date;
+                      const age =
+                        dob && !isNaN(dob.getTime())
+                          ? Math.floor(
+                              (Date.now() - dob.getTime()) /
+                                (365.25 * 24 * 60 * 60 * 1000)
+                            )
+                          : "";
+                      return {
+                        ...f,
+                        petDob: dob ? dob.toISOString().slice(0, 10) : "",
+                        petAge: age.toString(),
+                      };
+                    });
+                  }}
+                  dateFormat="yyyy-MM-dd"
+                  customInput={
+                    <input
+                      type="text"
+                      name="petDob"
+                      required
+                      autoComplete="off"
+                      value={form.petDob}
+                      onKeyDown={(e) => e.preventDefault()}
+                      style={{
+                        background: "#2a2a2a",
+                        color: "#eaf6fb",
+                        border: "1px solid #555",
+                        paddingRight: "2.2em",
+                        cursor: "pointer",
+                      }}
+                    />
+                  }
+                  calendarClassName="modal-datepicker"
+                  popperPlacement="bottom-end"
+                />
+                <FaRegCalendarAlt
+                  style={{
+                    position: "absolute",
+                    right: "0.8em",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    color: "#1ab3f0",
+                    fontSize: "1.25em",
+                    pointerEvents: "none",
+                    opacity: 0.85,
+                    transition: "color 0.2s",
+                  }}
+                />
+                <label
+                  style={{
+                    position: "absolute",
+                    left: "0.75rem",
+                    top: form.petDob ? "-0.5rem" : "1rem",
+                    fontSize: form.petDob ? "0.75rem" : "0.8rem",
+                    color: form.petDob ? "#1ab3f0" : "#aaa",
+                    background: form.petDob ? "#181f2a" : "transparent",
+                    padding: "0 0.3rem",
+                    pointerEvents: "none",
+                    transition:
+                      "top 0.25s, font-size 0.25s, color 0.25s, background 0.25s",
+                    zIndex: 2,
+                  }}
+                >
+                  Pet Date of Birth
+                </label>
+              </div>
+              <div className="input-group">
+                <input
+                  type="text"
+                  name="petAge"
+                  placeholder="Pet Age"
+                  value={form.petAge}
+                  readOnly
+                  tabIndex={-1}
+                  style={{
+                    background: "#222",
+                    color: "#eaf6fb",
+                    border: "1px solid #333",
+                    pointerEvents: "none", // disables mouse interaction
+                  }}
+                />
+                <label>Pet Age (Auto)</label>
+              </div>
+              {/* --- Pet Food Habit --- */}
+              <div className="input-group" style={{ position: "relative" }}>
+                <textarea
+                  name="petFood"
+                  placeholder=""
+                  required
+                  value={form.petFood}
+                  onChange={handleChange}
+                  rows={2}
+                />
+                <label
+                  style={{
+                    position: "absolute",
+                    left: "0.75rem",
+                    top: form.petFood ? "-0.5rem" : "1rem",
+                    fontSize: form.petFood ? "0.75rem" : "0.8rem",
+                    color: form.petFood ? "#1ab3f0" : "#aaa",
+                    background: form.petFood ? "#181f2a" : "transparent",
+                    padding: "0 0.3rem",
+                    pointerEvents: "none",
+                    transition:
+                      "top 0.25s, font-size 0.25s, color 0.25s, background 0.25s",
+                    zIndex: 2,
+                  }}
+                >
+                  Pet Food Habit
+                </label>
+              </div>
             </div>
           </div>
-          <div style={{ marginTop: "1em", width: "100%", textAlign: "left" }}>
-            <div className="input-group" style={{ width: "100%" }}>
-              <input
-                type="checkbox"
-                id="acknowledge"
-                name="acknowledge"
-                required
-                checked={!!form.acknowledge}
-                onChange={(e) =>
-                  setForm((f) => ({ ...f, acknowledge: e.target.checked }))
-                }
-                style={{ width: "auto", marginRight: "0.5em" }}
-              />
-              <label
-                htmlFor="acknowledge"
-                style={{
-                  position: "static",
-                  transform: "none",
-                  fontSize: "0.97em",
-                  color: "#eaf6fb",
-                }}
-              >
-                By signing this form, I hereby acknowledge that I am at least 18
-                years old and the information given is true.
-              </label>
-            </div>
-            <div className="input-group" style={{ width: "100%" }}>
-              <input
-                type="text"
-                id="signature"
-                name="signature"
-                placeholder="Signature"
-                required
-                value={form.signature || ""}
-                onChange={handleChange}
-              />
-              <label htmlFor="signature">Signature</label>
-            </div>
+          <label
+            htmlFor="acknowledge"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              width: "100%",
+              margin: "1em 0",
+              cursor: "pointer",
+              userSelect: "none",
+              gap: "0.7em",
+            }}
+          >
+            <input
+              type="checkbox"
+              id="acknowledge"
+              name="acknowledge"
+              checked={form.acknowledge}
+              onChange={handleChange}
+              style={{
+                accentColor: "#1ab3f0",
+                width: "1.3em",
+                height: "1.3em",
+                minWidth: "1.3em",
+                minHeight: "1.3em",
+                cursor: "pointer",
+                margin: 0,
+                marginTop: "0.1em", // fine-tune vertical alignment
+              }}
+              required
+            />
+            <span
+              style={{
+                color: "#1ab3f0",
+                fontWeight: 500,
+                fontSize: "1.04em",
+                lineHeight: 1.4,
+                cursor: "pointer",
+                margin: 0,
+              }}
+            >
+              By signing this form, I hereby acknowledge that I am at least 18
+              years old and the information given is true.
+            </span>
+          </label>
+          <div className="input-group" style={{ width: "30%" }}>
+            <input
+              type="text"
+              name="signature"
+              placeholder="Signature"
+              required
+              value={form.signature}
+              onChange={handleChange}
+            />
+            <label>Signature</label>
           </div>
           {error && <p className="error-text">{error}</p>}
-          <button
-            type="submit"
-            className="btn modal-btn"
-            style={{ marginTop: "1rem" }}
-          >
+          <button type="submit" className="btn modal-btn">
             Submit
           </button>
         </form>

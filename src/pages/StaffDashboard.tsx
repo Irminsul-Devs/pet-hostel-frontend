@@ -14,7 +14,7 @@ export default function StaffDashboard() {
   useEffect(() => {
     const stored = localStorage.getItem("user");
     if (stored) setUser(JSON.parse(stored));
-    setBookings([]); // Empty bookings or fetch here
+    setBookings([]); // can fetch bookings here later
   }, []);
 
   useEffect(() => {
@@ -45,7 +45,7 @@ export default function StaffDashboard() {
                 <th>Action</th>
               </tr>
             </thead>
-            <tbody>{/* No bookings */}</tbody>
+            <tbody>{/* No bookings yet */}</tbody>
           </table>
         )}
       </div>
