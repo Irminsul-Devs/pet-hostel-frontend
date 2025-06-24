@@ -1,11 +1,14 @@
 .modal-backdrop {
   position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2000;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
 }
 
 .modal {
@@ -376,4 +379,120 @@ input[type="text"][name$="To"] {
   border-radius: 4px;
   box-sizing: border-box;
   display: block;
+}
+
+/* Toggle Switch for Pet Vaccinated */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 56px;
+  height: 28px;
+  margin-right: 1em;
+  vertical-align: middle;
+}
+.toggle-switch .slider {
+  position: absolute;
+  cursor: pointer;
+  background: #444;
+  border-radius: 34px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 6px;
+  font-size: 0.95em;
+}
+.toggle-switch input:checked + .slider {
+  background: #1ab3f0;
+}
+.toggle-switch .slider:before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 22px;
+  height: 22px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 4px #0003;
+}
+.toggle-switch input:checked + .slider:before {
+  transform: translateX(26px);
+}
+.toggle-label {
+  z-index: 1;
+  color: #aaa;
+  font-weight: 600;
+  user-select: none;
+  pointer-events: none;
+  transition: color 0.2s;
+}
+.toggle-label.yes {
+  color: #fff;
+  opacity: 0.7;
+}
+.toggle-label.no {
+  color: #fff;
+  opacity: 0.7;
+}
+.toggle-switch input:checked + .slider .yes {
+  color: #fff;
+  opacity: 1;
+}
+.toggle-switch input:not(:checked) + .slider .no {
+  color: #fff;
+  opacity: 1;
+}
+
+input[type="file"]::-webkit-file-upload-button {
+  background: #1ab3f0;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.35em 1em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+input[type="file"]::-webkit-file-upload-button:hover {
+  background: #1692c3;
+}
+input[type="file"]::file-selector-button {
+  background: #000000;
+  color: #1ab3f0;
+  border: none;
+  border-radius: 4px;
+  padding: 0.35em 0.3em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+input[type="file"]::file-selector-button:hover {
+  background: #2b2b2b;
+}
+
+@media (max-width: 600px) {
+  .pet-vaccinated-row {
+    flex-wrap: wrap !important;
+    gap: 0.7em !important;
+    align-items: flex-start !important;
+  }
+  .pet-vaccinated-row > span,
+  .pet-vaccinated-row > label,
+  .pet-vaccinated-row > div {
+    min-width: 0 !important;
+    width: auto !important;
+    flex: unset !important;
+  }
+  .pet-vaccinated-row .toggle-switch {
+    margin-bottom: 0.3em;
+    min-width: 0 !important;
+    width: 56px !important;
+    flex-shrink: 0;
+  }
 }

@@ -4,34 +4,32 @@ import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FaRegCalendarAlt } from "react-icons/fa";
 
-type Props = {
-  onClose: () => void;
-};
-
-const initialFormState = {
-  ownerName: "",
-  ownerMobile: "",
-  ownerDob: "",
-  ownerEmail: "",
-  ownerAddress: "",
-  petName: "",
-  petType: "",
-  bookingFrom: "",
-  bookingTo: "",
-  services: [] as string[],
-  petDob: "",
-  petAge: "",
-  petFood: "",
-  signature: "",
-  acknowledge: false,
-  vaccinationCertificate: null as File | null,
-};
-
-export default function CreateBookingModal({ onClose }: Props) {
+export default function EditBookingModal({ booking, onClose, onSave }: any) {
   const ref = useRef<HTMLDivElement>(null);
-  const [form, setForm] = useState(initialFormState);
+  const [form, setForm] = useState({
+    ...booking,
+    services: booking.services || [],
+    petAge: booking.petAge || "",
+    petFood: booking.petFood || "",
+    signature: booking.signature || "",
+    acknowledge: booking.acknowledge || false,
+    vaccinationCertificate: booking.vaccinationCertificate || null,
+  });
+  const [petVaccinated, setPetVaccinated] = useState(!!booking.petVaccinated);
   const [error, setError] = useState("");
-  const [petVaccinated, setPetVaccinated] = useState(false);
+
+  useEffect(() => {
+    setForm({
+      ...booking,
+      services: booking.services || [],
+      petAge: booking.petAge || "",
+      petFood: booking.petFood || "",
+      signature: booking.signature || "",
+      acknowledge: booking.acknowledge || false,
+      vaccinationCertificate: booking.vaccinationCertificate || null,
+    });
+    setPetVaccinated(!!booking.petVaccinated);
+  }, [booking]);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -49,7 +47,6 @@ export default function CreateBookingModal({ onClose }: Props) {
     >
   ) => {
     const { name, value, type, checked, files } = e.target as any;
-
     if (type === "file") {
       setForm((f) => ({ ...f, [name]: files[0] }));
     } else if (type === "checkbox") {
@@ -71,6 +68,7 @@ export default function CreateBookingModal({ onClose }: Props) {
       !form.petType ||
       !form.bookingFrom ||
       !form.bookingTo ||
+      !form.services ||
       form.services.length === 0 ||
       !form.petDob ||
       !form.petFood ||
@@ -80,10 +78,8 @@ export default function CreateBookingModal({ onClose }: Props) {
       setError("Please fill all required fields.");
       return;
     }
-
     setError("");
-    alert("Booking created!\n\n" + JSON.stringify(form, null, 2));
-    setForm(initialFormState);
+    if (onSave) onSave({ ...form, petVaccinated });
     onClose();
   };
 
@@ -95,7 +91,7 @@ export default function CreateBookingModal({ onClose }: Props) {
         <button className="modal-close" onClick={onClose}>
           ✕
         </button>
-        <h2>Create Booking</h2>
+        <h2>Edit Booking</h2>
         <form onSubmit={handleSubmit}>
           <div className="modal-form-columns">
             <div className="modal-form-col">
@@ -431,17 +427,22 @@ export default function CreateBookingModal({ onClose }: Props) {
                         type="checkbox"
                         name="services"
                         value={s}
-                        checked={form.services.includes(s)}
+                        checked={
+                          Array.isArray(form.services) &&
+                          form.services.includes(s)
+                        }
                         onChange={(e) => {
                           if (e.target.checked) {
                             setForm((f) => ({
                               ...f,
-                              services: [...f.services, s],
+                              services: [...(f.services || []), s],
                             }));
                           } else {
                             setForm((f) => ({
                               ...f,
-                              services: f.services.filter((val) => val !== s),
+                              services: (f.services || []).filter(
+                                (val) => val !== s
+                              ),
                             }));
                           }
                         }}
@@ -650,7 +651,7 @@ export default function CreateBookingModal({ onClose }: Props) {
                     fontSize: "0.9em",
                     outline: "none",
                     boxShadow: "none",
-                    width: "180px", // or "8em" or "10ch" for a compact look
+                    width: "180px",
                     cursor: "pointer",
                   }}
                   onChange={(e) => {
@@ -687,7 +688,7 @@ export default function CreateBookingModal({ onClose }: Props) {
                 minHeight: "1.3em",
                 cursor: "pointer",
                 margin: 0,
-                marginTop: "0.1em", // fine-tune vertical alignment
+                marginTop: "0.1em",
               }}
               required
             />
@@ -718,7 +719,7 @@ export default function CreateBookingModal({ onClose }: Props) {
           </div>
           {error && <p className="error-text">{error}</p>}
           <button type="submit" className="btn modal-btn">
-            Submit
+            Save Changes
           </button>
         </form>
       </div>

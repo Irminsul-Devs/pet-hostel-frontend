@@ -35,6 +35,8 @@ export default function StaffNavbar({ activeTab, setActiveTab }: Props) {
         </span>
       </div>
       <div className="navbar-right">
+        {/* REMOVE this block: */}
+        {/* 
         <button
           className="btn create-booking-btn"
           style={{ marginRight: "0.5rem" }}
@@ -44,6 +46,7 @@ export default function StaffNavbar({ activeTab, setActiveTab }: Props) {
         >
           + Create Booking
         </button>
+        */}
         <button onClick={handleLogout} className="btn login-btn">
           Logout
         </button>

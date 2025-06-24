@@ -2,12 +2,19 @@
 .staff-dashboard-table {
   margin: 1.5rem auto;
   border-collapse: collapse;
-  min-width: 850px;
+  min-width: 0; /* Remove or set to 0 to avoid extra space */
+  width: 100%;
   background: #000000;
   border-radius: 5px;
   overflow: hidden;
   box-shadow: 0 4px 18px rgba(26, 179, 240, 0.1);
   font-size: 0.9rem;
+}
+
+/* Optional: For horizontal scroll on small screens */
+.staff-dashboard-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
 }
 
 .staff-dashboard-table th,
@@ -106,22 +113,22 @@
 
 /* Blue themed create booking button for navbar */
 .create-booking-btn {
-  background-color: #0b4d66;
   color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 0.6rem 1.3rem;
-  font-size: 0.9rem;
+  background: #2f3132;
+  border-color: #fafafa;
   font-weight: 600;
-  margin-bottom: 0;
-  margin-top: 0;
-  box-shadow: 0 2px 8px rgba(26, 179, 240, 0.12);
-  transition: background 0.2s, color 0.2s;
+  font-size: 1em;
+  border-radius: 4px;
+  padding: 0.6em 1.4em;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #0002;
+  transition: background 0.2s, border-color 0.2s;
 }
 
-.create-booking-btn:hover {
-  background-color: #1ab3f0;
-  color: #eaf6fb;
+.create-booking-btn:hover,
+.create-booking-btn:focus {
+  background: #000000;
+  border: 2px solid #1ab3f0; /* blue border */
 }
 
 /* Responsive: Make dashboard table horizontally scrollable on small screens */
