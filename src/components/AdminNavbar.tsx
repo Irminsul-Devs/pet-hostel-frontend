@@ -44,7 +44,7 @@ export default function AdminNavbar({ activeTab, setActiveTab }: Props) {
         </span>
       </div>
       <div className="navbar-right">
-        <button
+        {/* <button
           className="btn create-booking-btn"
           style={{ marginRight: "0.5rem" }}
           onClick={() =>
@@ -52,7 +52,7 @@ export default function AdminNavbar({ activeTab, setActiveTab }: Props) {
           }
         >
           + Add Staff
-        </button>
+        </button> */}
         <button onClick={handleLogout} className="btn login-btn">
           Logout
         </button>
