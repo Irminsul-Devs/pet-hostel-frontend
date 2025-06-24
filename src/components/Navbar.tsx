@@ -106,6 +106,7 @@ export default function Navbar() {
               + Create Booking
             </button>
           )}
+          
           {!user ? (
             <>
               <button
