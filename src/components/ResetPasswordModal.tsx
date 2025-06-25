@@ -34,7 +34,7 @@ export default function ResetPasswordModal({ onClose, onBackToLogin }: Props) {
         </form>
         <div className="modal-footer">
           <p>
-            <button onClick={onBackToLogin} className="modal-link">Back to Login</button>
+            <button onClick={onBackToLogin} className="modal-link">Back to Profile</button>
           </p>
         </div>
       </div>
