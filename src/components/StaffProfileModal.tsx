@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from "react";
-import ResetPasswordModal from "./ResetPasswordModal";
+import ChangePasswordModal from "./ChangePasswordModal";
 import "../styles/Modal.css";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -235,9 +235,8 @@ export default function StaffProfileModal({ onClose }: Props) {
       )}
 
       {showResetModal && (
-        <ResetPasswordModal
+        <ChangePasswordModal
           onClose={() => setShowResetModal(false)}
-          onBackToLogin={() => setShowResetModal(false)}
         />
       )}
     </>
