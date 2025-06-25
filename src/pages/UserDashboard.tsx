@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import "../styles/StaffDashboard.css";
-import "../styles/UserDashboard.css";
 import UserNavbar from "../components/UserNavbar";
 import BookingInfoModal from "../components/BookingInfoModal";
 import CreateBookingModal from "../components/CreateBookingModal";
