@@ -1,27 +1,27 @@
 import { useRef, useEffect, useState } from "react";
+import ResetPasswordModal from "./ResetPasswordModal";
 import "../styles/Modal.css";
 import "../styles/UserDashboard.css";
+
 type Props = {
-  user: any;
   onClose: () => void;
 };
 
-export default function UserProfileModal({ user, onClose }: Props) {
+export default function UserProfileModal({ onClose }: Props) {
   const ref = useRef<HTMLDivElement>(null);
 
+  const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+
   const defaultForm = {
-    ownerName: user?.ownerName || "John Doe",
-    ownerMobile: user?.ownerMobile || "9876543210",
-    ownerEmail: user?.ownerEmail || "john@example.com",
-    ownerDob: user?.ownerDob || "1990-01-01",
-    ownerAddress: user?.ownerAddress || "123 Pet Street",
-    services: user?.services || ["Boarding", "Grooming"],
-    petName: user?.petName || "Tommy",
-    petDob: user?.petDob || "2020-06-10",
-    petType: user?.petType || "Dog",
+    ownerName: storedUser.ownerName || "John Doe",
+    ownerMobile: storedUser.ownerMobile || "9876543210",
+    ownerEmail: storedUser.ownerEmail || "john@example.com",
+    ownerDob: storedUser.ownerDob || " 1990-01-01",
+    ownerAddress: storedUser.ownerAddress || " 123, ABC Street",
   };
 
   const [form, setForm] = useState(defaultForm);
+  const [showResetModal, setShowResetModal] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -44,13 +44,12 @@ export default function UserProfileModal({ user, onClose }: Props) {
     e.preventDefault();
 
     const updatedUser = {
-      ...user,
+      ...storedUser,
       ownerName: form.ownerName,
       ownerMobile: form.ownerMobile,
       ownerEmail: form.ownerEmail,
       ownerDob: form.ownerDob,
-      ownerAddress: form.ownerAddress,
-      services: form.services, // preserve this in storage
+      ownerAddress: form.ownerAddress
     };
 
     localStorage.setItem("user", JSON.stringify(updatedUser));
@@ -60,122 +59,128 @@ export default function UserProfileModal({ user, onClose }: Props) {
   };
 
   return (
-    <div className="modal-backdrop">
-      <div className="modal" ref={ref}>
-        <button className="modal-close" onClick={onClose}>✕</button>
-        <h2>User Profile</h2>
-        <form onSubmit={handleSave}>
-          <div className="modal-form-columns">
-            <div className="modal-form-col">
-              <div className="input-group">
-                <input
-                  type="text"
-                  name="ownerName"
-                  value={form.ownerName}
-                  onChange={handleChange}
-                  required
-                />
-                <label>Owner Name</label>
-              </div>
-              <div className="input-group">
-                <input
-                  type="text"
-                  name="ownerMobile"
-                  value={form.ownerMobile}
-                  onChange={handleChange}
-                  required
-                />
-                <label>Mobile Number</label>
-              </div>
-              <div className="input-group">
-                <input
-                  type="email"
-                  name="ownerEmail"
-                  value={form.ownerEmail}
-                  onChange={handleChange}
-                  required
-                />
-                <label>Email</label>
-              </div>
-              <div className="input-group">
-                <input
-                  type="date"
-                  name="ownerDob"
-                  value={form.ownerDob}
-                  onChange={handleChange}
-                  required
-                />
-                <label>Date of Birth</label>
-              </div>
-              <div className="input-group">
-                <textarea
-                  name="ownerAddress"
-                  value={form.ownerAddress}
-                  onChange={handleChange}
-                  required
-                />
-                <label>Address</label>
-              </div>
-            </div>
+    <>
+      {!showResetModal && (
+        <div className="modal-backdrop">
+          <div className="modal" ref={ref} onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={onClose}>✕</button>
+            <h2>User Profile</h2>
+            <form onSubmit={handleSave}>
+              <div className="modal-form-columns">
+                <div className="modal-form-col">
+                  <div className="input-group">
+                    <input
+                      type="text"
+                      name="ownerName"
+                      value={form.ownerName}
+                      onChange={handleChange}
+                    />
+                    <label>Owner Name</label>
+                  </div>
+                  <div className="input-group">
+                    <input
+                      type="text"
+                      name="ownerMobile"
+                      value={form.ownerMobile}
+                      onChange={handleChange}
+                    />
+                    <label>Mobile Number</label>
+                  </div>
+                  <div className="input-group">
+                    <input
+                      type="email"
+                      name="ownerEmail"
+                      value={form.ownerEmail}
+                      disabled
+                    />
+                    <label>Email</label>
+                  </div>
+                </div>
 
-            <div className="modal-form-col">
-              <div >
-                <label style={{ marginBottom: "0.5rem", display: "block", marginTop:"1rem"}}>
-                  Services Opted
+                <div className="modal-form-col">
+                  <div className="input-group">
+                    <input
+                      type="date"
+                      name="ownerDob"
+                      value={form.ownerDob}
+                      onChange={handleChange}
+                      required
+                    />
+                    <label>Date of Birth</label>
+                  </div>
+                  <div className="input-group">
+                    <textarea
+                      name="ownerAddress"
+                      value={form.ownerAddress}
+                      onChange={handleChange}
+                      required
+                    />
+                    <label
+                  style={{
+                    position: "absolute",
+                    left: "0.75rem",
+                    top: form.ownerAddress ? "-0.5rem" : "1rem",
+                    fontSize: form.ownerAddress ? "0.75rem" : "0.8rem",
+                    color: form.ownerAddress ? "#1ab3f0" : "#aaa",
+                    background: form.ownerAddress ? "#181f2a" : "transparent",
+                    padding: "0 0.3rem",
+                    pointerEvents: "none",
+                    transition:
+                      "top 0.25s, font-size 0.25s, color 0.25s, background 0.25s",
+                    zIndex: 2,
+                  }}
+                >
+                  Address
                 </label>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
-                  {["Boarding", "Grooming", "Training", "Day Care"].map((svc) => (
-                    <label key={svc} style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
-                      <input
-                        type="checkbox"
-                        checked={form.services.includes(svc)}
-                        disabled
-                      />
-                      <span>{svc}</span>
-                    </label>
-                  ))}
+                  </div>
                 </div>
               </div>
 
-              <div className="input-group">
-                <input type="text" value={form.petName} readOnly disabled />
-                <label>Pet Name</label>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: "10px",
+                  marginTop: "20px"
+                }}
+              >
+                <button
+                  type="submit"
+                  className="btn modal-btn"
+                  style={{
+                    padding: "9px 25px",
+                    fontSize: "0.85rem",
+                    height: "48px"
+                  }}
+                >
+                  Save Changes
+                </button>
+                <button
+                  type="button"
+                  className="btn modal-btn"
+                  onClick={() => setShowResetModal(true)}
+                  style={{
+                    padding: "9px 25px",
+                    fontSize: "0.85rem",
+                    height: "48px",
+                    backgroundColor: "black",
+                    marginTop: "10px"
+                  }}
+                >
+                  Reset Password
+                </button>
               </div>
-              <div className="input-group">
-                <input type="date" value={form.petDob} readOnly disabled />
-                <label>Pet DOB</label>
-              </div>
-              <div className="input-group">
-                <input type="text" value={form.petType} readOnly disabled />
-                <label>Pet Type</label>
-              </div>
-            </div>
+            </form>
           </div>
+        </div>
+      )}
 
-<div style={{ display: "flex", gap: "10px", alignItems: "right" }}>
-            <button type="button" className="btn modal-btn"  style={{  marginLeft:"200px" ,padding: "9px 25px ",marginTop:"10px", fontSize: "0.85rem",height: "48px",alignItems: "right"}}
-              onClick={() => {
-    setForm({
-      ownerName: user?.ownerName || "John Doe",
-      ownerMobile: user?.ownerMobile || "9876543210",
-      ownerEmail: user?.ownerEmail || "john@example.com",
-      ownerDob: user?.ownerDob || "1990-01-01",
-      ownerAddress: user?.ownerAddress || "123 Pet Street",
-      services: user?.services || ["Boarding", "Grooming"],
-      petName: user?.petName || "Tommy",
-      petDob: user?.petDob || "2020-06-10",
-      petType: user?.petType || "Dog",
-    });
-  }}
-            >
-              Cancel
-            </button>
-            <button type="submit" className="btn modal-btn " style={{  marginLeft:"20px",paddingBottom:"10px",padding: "9px 25px", fontSize: "0.85rem", height: "48px",alignItems: "right" }}>
-              Save Changes
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+      {showResetModal && (
+        <ResetPasswordModal
+          onClose={() => setShowResetModal(false)}
+          onBackToLogin={() => setShowResetModal(false)}
+        />
+      )}
+    </>
   );
 }

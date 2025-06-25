@@ -35,7 +35,7 @@ export default function UserNavbar({ activeTab, setActiveTab, onProfileClick }: 
         </span>
       </div>
      <div className="navbar-right" style={{ display: "flex", alignItems: "center" }}>
-  <button
+  {/* <button
     className="btn create-booking-btn"
     style={{ marginRight: "0.5rem" }}
     onClick={() =>
@@ -43,7 +43,7 @@ export default function UserNavbar({ activeTab, setActiveTab, onProfileClick }: 
     }
   >
     + Create Booking
-  </button>
+  </button> */}
 
   <FaUserCircle
     size={25}
