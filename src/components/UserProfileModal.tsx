@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from "react";
-import ResetPasswordModal from "./ResetPasswordModal";
+import ChangePasswordModal from "./ChangePasswordModal";
 import "../styles/Modal.css";
-import "../styles/UserDashboard.css";
+import "../styles/StaffDashboard.css";
 
 type Props = {
   onClose: () => void;
@@ -16,12 +16,12 @@ export default function UserProfileModal({ onClose }: Props) {
     ownerName: storedUser.ownerName || "John Doe",
     ownerMobile: storedUser.ownerMobile || "9876543210",
     ownerEmail: storedUser.ownerEmail || "john@example.com",
-    ownerDob: storedUser.ownerDob || " 1990-01-01",
-    ownerAddress: storedUser.ownerAddress || " 123, ABC Street",
+    ownerDob: storedUser.ownerDob || "1990-01-01",
+    ownerAddress: storedUser.ownerAddress || "123, ABC Street",
   };
 
   const [form, setForm] = useState(defaultForm);
-  const [showResetModal, setShowResetModal] = useState(false);
+  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -49,7 +49,7 @@ export default function UserProfileModal({ onClose }: Props) {
       ownerMobile: form.ownerMobile,
       ownerEmail: form.ownerEmail,
       ownerDob: form.ownerDob,
-      ownerAddress: form.ownerAddress
+      ownerAddress: form.ownerAddress,
     };
 
     localStorage.setItem("user", JSON.stringify(updatedUser));
@@ -60,7 +60,7 @@ export default function UserProfileModal({ onClose }: Props) {
 
   return (
     <>
-      {!showResetModal && (
+      {!showChangePasswordModal && (
         <div className="modal-backdrop">
           <div className="modal" ref={ref} onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={onClose}>✕</button>
@@ -116,22 +116,22 @@ export default function UserProfileModal({ onClose }: Props) {
                       required
                     />
                     <label
-                  style={{
-                    position: "absolute",
-                    left: "0.75rem",
-                    top: form.ownerAddress ? "-0.5rem" : "1rem",
-                    fontSize: form.ownerAddress ? "0.75rem" : "0.8rem",
-                    color: form.ownerAddress ? "#1ab3f0" : "#aaa",
-                    background: form.ownerAddress ? "#181f2a" : "transparent",
-                    padding: "0 0.3rem",
-                    pointerEvents: "none",
-                    transition:
-                      "top 0.25s, font-size 0.25s, color 0.25s, background 0.25s",
-                    zIndex: 2,
-                  }}
-                >
-                  Address
-                </label>
+                      style={{
+                        position: "absolute",
+                        left: "0.75rem",
+                        top: form.ownerAddress ? "-0.5rem" : "1rem",
+                        fontSize: form.ownerAddress ? "0.75rem" : "0.8rem",
+                        color: form.ownerAddress ? "#1ab3f0" : "#aaa",
+                        background: form.ownerAddress ? "#181f2a" : "transparent",
+                        padding: "0 0.3rem",
+                        pointerEvents: "none",
+                        transition:
+                          "top 0.25s, font-size 0.25s, color 0.25s, background 0.25s",
+                        zIndex: 2,
+                      }}
+                    >
+                      Address
+                    </label>
                   </div>
                 </div>
               </div>
@@ -141,33 +141,30 @@ export default function UserProfileModal({ onClose }: Props) {
                   display: "flex",
                   justifyContent: "flex-end",
                   gap: "10px",
-                  marginTop: "20px"
+                  marginTop: "20px",
                 }}
               >
                 <button
                   type="submit"
                   className="btn modal-btn"
-                  style={{
-                    padding: "9px 25px",
-                    fontSize: "0.85rem",
-                    height: "48px"
-                  }}
+                  style={{ padding: "9px 25px", fontSize: "0.85rem", height: "48px" }}
                 >
                   Save Changes
                 </button>
+
                 <button
                   type="button"
                   className="btn modal-btn"
-                  onClick={() => setShowResetModal(true)}
+                  onClick={() => setShowChangePasswordModal(true)}
                   style={{
                     padding: "9px 25px",
                     fontSize: "0.85rem",
                     height: "48px",
                     backgroundColor: "black",
-                    marginTop: "10px"
+                    marginTop: "10px",
                   }}
                 >
-                  Reset Password
+                  Change Password
                 </button>
               </div>
             </form>
@@ -175,11 +172,8 @@ export default function UserProfileModal({ onClose }: Props) {
         </div>
       )}
 
-      {showResetModal && (
-        <ResetPasswordModal
-          onClose={() => setShowResetModal(false)}
-          onBackToLogin={() => setShowResetModal(false)}
-        />
+      {showChangePasswordModal && (
+        <ChangePasswordModal onClose={() => setShowChangePasswordModal(false)} />
       )}
     </>
   );
