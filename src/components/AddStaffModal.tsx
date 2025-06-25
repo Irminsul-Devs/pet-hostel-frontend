@@ -7,7 +7,6 @@ export type StaffData = {
   address: string;
   email: string;
   mobile: string;
-  username: string;
   password: string;
 };
 
@@ -24,7 +23,6 @@ export default function AddStaffModal({ initialData, onClose, onSave }: Props) {
     address: "",
     email: "",
     mobile: "",
-    username: "",
     password: "",
   });
 
@@ -36,7 +34,7 @@ export default function AddStaffModal({ initialData, onClose, onSave }: Props) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -47,7 +45,9 @@ export default function AddStaffModal({ initialData, onClose, onSave }: Props) {
   return (
     <div className="modal-backdrop">
       <div className="modal">
-        <button className="modal-close" onClick={onClose}>✕</button>
+        <button className="modal-close" onClick={onClose}>
+          ✕
+        </button>
         <h2>{initialData ? "Edit Staff" : "Add Staff"}</h2>
         <form onSubmit={handleSubmit}>
           <div className="input-group">
@@ -83,17 +83,7 @@ export default function AddStaffModal({ initialData, onClose, onSave }: Props) {
             />
             <label>Address</label>
           </div>
-          <div className="input-group">
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Email"
-              required
-            />
-            <label>Email</label>
-          </div>
+
           <div className="input-group">
             <input
               type="tel"
@@ -107,33 +97,35 @@ export default function AddStaffModal({ initialData, onClose, onSave }: Props) {
           </div>
           <div className="input-group">
             <input
-              type="text"
-              name="username"
-              value={formData.username}
+              type="email"
+              name="email"
+              value={formData.email}
               onChange={handleChange}
-              placeholder="Username"
+              placeholder="Email"
               required
-              disabled={!!initialData} // prevent changing username in edit mode
             />
-            <label>Username</label>
-          </div>
-          <div className="input-group">
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Password"
-              required
-              disabled={!!initialData} // prevent changing password in edit mode
-            />
-            <label>Password</label>
+            <label>Email</label>
           </div>
 
-          <div className="modal-buttons" style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
-            <button type="submit">
-              {initialData ? "Update" : "Save"}
-            </button>
+          {!initialData && (
+            <div className="input-group">
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Password"
+                required
+              />
+              <label>Password</label>
+            </div>
+          )}
+
+          <div
+            className="modal-buttons"
+            style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}
+          >
+            <button type="submit">{initialData ? "Save" : "Submit"}</button>
             <button type="button" onClick={onClose}>
               Cancel
             </button>
