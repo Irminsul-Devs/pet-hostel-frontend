@@ -4,6 +4,7 @@ import StaffNavbar from "../components/StaffNavbar";
 import CreateBookingModal from "../components/CreateBookingModal";
 import BookingInfoModal from "../components/BookingInfoModal";
 import EditBookingModal from "../components/EditBookingModal";
+import DeleteConfirmModal from "../components/DeleteConfirmModal";
 import { MdInfoOutline, MdEdit, MdDelete } from "react-icons/md";
 
 export default function StaffDashboard() {
@@ -15,6 +16,7 @@ export default function StaffDashboard() {
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [infoBooking, setInfoBooking] = useState<any | null>(null);
   const [editBooking, setEditBooking] = useState<any | null>(null);
+  const [deleteBookingId, setDeleteBookingId] = useState<number | null>(null);
 
   useEffect(() => {
     const stored = localStorage.getItem("user");
@@ -85,7 +87,10 @@ export default function StaffDashboard() {
       <StaffNavbar activeTab={activeTab} setActiveTab={setActiveTab} />
       <div className="staff-dashboard">
         {activeTab === "dashboard" ? (
-          <h1 style={{ color: "#1ab3f0", marginBottom: "0.5em" }}>
+          <h1
+            className="staff-dashboard-welcome"
+            style={{ marginBottom: "0.5em" }}
+          >
             Welcome, {user?.name || "Staff"}!
           </h1>
         ) : (
@@ -158,6 +163,7 @@ export default function StaffDashboard() {
                               cursor: "pointer",
                               color: "#e74c3c",
                             }}
+                            onClick={() => setDeleteBookingId(b.id)} // <-- open modal with booking id
                           >
                             <MdDelete size={20} />
                           </button>
@@ -189,10 +195,21 @@ export default function StaffDashboard() {
         <EditBookingModal
           booking={editBooking}
           onClose={() => setEditBooking(null)}
-          onSave={(updated) => {
+          onSave={(updated: any) => {
             setBookings((prev) =>
               prev.map((bk) => (bk.id === updated.id ? updated : bk))
             );
+          }}
+        />
+      )}
+      {deleteBookingId !== null && (
+        <DeleteConfirmModal
+          onCancel={() => setDeleteBookingId(null)}
+          onConfirm={() => {
+            setBookings((prev) =>
+              prev.filter((bk) => bk.id !== deleteBookingId)
+            );
+            setDeleteBookingId(null);
           }}
         />
       )}

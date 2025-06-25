@@ -90,7 +90,7 @@
   padding: 32px;
   min-height: 100vh;
   /* Replace the URL below with your homepage image path */
-  background-image: url("/assets/images/z.jpg"); /* Use your homepage/about bg */
+  background-image: url("/assets/images/fish.jpg"); /* Use your homepage/about bg */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -107,7 +107,7 @@
   left: 0;
   height: 100%;
   width: 100%;
-  background: rgba(0, 0, 0, 0.5); /* semi-transparent black */
+  background: rgba(0, 0, 0, 0.3); /* semi-transparent black */
   z-index: -1;
 }
 
@@ -155,4 +155,9 @@
   .staff-dashboard {
     padding: 6px;
   }
+}
+
+/* Welcome text styling */
+.staff-dashboard-welcome {
+  color: #1ab3f0 !important;
 }

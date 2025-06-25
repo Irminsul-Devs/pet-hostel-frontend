@@ -1,52 +1,54 @@
 /* Home.css */
 
 .home-container {
-  background-color: #161616;
-  color: white;
   min-height: 100vh;
+  background-color: transparent;
+  color: white;
   padding: 2rem;
-  text-align: center;
+  padding-top: 70px; /* adjust to your navbar height */
+  text-align: left;
 
   position: relative;
-  background-image: url('/assets/images/bg.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   z-index: 0;
   overflow: hidden;
 }
 
 /* Overlay */
 .home-container::before {
-  content: '';
-  position: absolute;
+  content: "";
+  position: fixed;
   top: 0;
   left: 0;
-  height: 100%;
-  width: 100%;
-  background: rgba(0, 0, 0, 0.1); /* dark overlay */
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.1);
   z-index: -1;
+  pointer-events: none;
 }
 
 .home-title {
   font-size: 2.5rem;
-  color: #1ab3f0;
+  color: #ffffff;
+  text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.7), 0 2px 12px rgba(0, 0, 0, 0.5);
 }
 
 .book-button {
-  margin-top: 1.5rem;
+  margin-top: 2rem;
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
   border-radius: 4px;
-  background-color: #36e333;
+  background-color: #000000;
   border: none;
-  color: #222222;
+  color: #ffffff;
   cursor: pointer;
 }
 
 .home-content {
-  margin-top: 2rem;
+  margin-top: 3rem;
   font-size: 1rem;
+  max-width: 520px;
+  text-align: left;
+  line-height: 1.7;
 }
 
 .home-image {
@@ -54,4 +56,15 @@
   max-width: 100%;
   height: auto;
   margin-top: 1rem;
+}
+
+.home-video-bg {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: fill;
+  z-index: -2;
+  pointer-events: none;
+  background: #000;
 }
