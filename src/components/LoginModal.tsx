@@ -35,11 +35,11 @@ export default function LoginModal({
 
     let fakeUser = null;
     if (email === "staff@example.com") {
-      fakeUser = { name: "Staff User", role: "staff" };
+      fakeUser = { name: "Staff", role: "staff" };
     } else if (email === "admin@example.com") {
-      fakeUser = { name: "Admin User", role: "admin" };
+      fakeUser = { name: "Admin", role: "admin" };
     } else if (email === "user@example.com") {
-      fakeUser = { name: "Customer User", role: "customer" };
+      fakeUser = { name: "Customer", role: "customer" };
     }
 
     if (!fakeUser) {

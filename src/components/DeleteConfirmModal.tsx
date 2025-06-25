@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 // import "../styles/Modal.css";
 
 type Props = {
@@ -36,8 +36,8 @@ export default function DeleteConfirmModal({ onConfirm, onCancel }: Props) {
             type="button"
             onClick={onConfirm}
             style={{
-              backgroundColor: "#0eb2f2",
-              color: "black",
+              backgroundColor: "#e74c3c", // red for confirmation
+              color: "#fff",
               padding: "0.75rem 1.2rem",
               border: "none",
               borderRadius: "6px",

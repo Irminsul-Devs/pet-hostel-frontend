@@ -48,11 +48,11 @@ export default function EditBookingModal({ booking, onClose, onSave }: any) {
   ) => {
     const { name, value, type, checked, files } = e.target as any;
     if (type === "file") {
-      setForm((f) => ({ ...f, [name]: files[0] }));
+      setForm((f: any) => ({ ...f, [name]: files[0] }));
     } else if (type === "checkbox") {
-      setForm((f) => ({ ...f, [name]: checked }));
+      setForm((f: any) => ({ ...f, [name]: checked }));
     } else {
-      setForm((f) => ({ ...f, [name]: value }));
+      setForm((f: any) => ({ ...f, [name]: value }));
     }
   };
 
@@ -125,7 +125,7 @@ export default function EditBookingModal({ booking, onClose, onSave }: any) {
                 <ReactDatePicker
                   selected={parseDate(form.ownerDob)}
                   onChange={(date) =>
-                    setForm((f) => ({
+                    setForm((f: any) => ({
                       ...f,
                       ownerDob: date ? date.toISOString().slice(0, 10) : "",
                     }))
@@ -261,7 +261,7 @@ export default function EditBookingModal({ booking, onClose, onSave }: any) {
                   <ReactDatePicker
                     selected={parseDate(form.bookingFrom)}
                     onChange={(date) =>
-                      setForm((f) => ({
+                      setForm((f: any) => ({
                         ...f,
                         bookingFrom: date
                           ? date.toISOString().slice(0, 10)
@@ -331,7 +331,7 @@ export default function EditBookingModal({ booking, onClose, onSave }: any) {
                   <ReactDatePicker
                     selected={parseDate(form.bookingTo)}
                     onChange={(date) =>
-                      setForm((f) => ({
+                      setForm((f: any) => ({
                         ...f,
                         bookingTo: date ? date.toISOString().slice(0, 10) : "",
                       }))
@@ -433,15 +433,15 @@ export default function EditBookingModal({ booking, onClose, onSave }: any) {
                         }
                         onChange={(e) => {
                           if (e.target.checked) {
-                            setForm((f) => ({
+                            setForm((f: any) => ({
                               ...f,
                               services: [...(f.services || []), s],
                             }));
                           } else {
-                            setForm((f) => ({
+                            setForm((f: any) => ({
                               ...f,
                               services: (f.services || []).filter(
-                                (val) => val !== s
+                                (val: any) => val !== s // <-- add : any here
                               ),
                             }));
                           }
@@ -461,7 +461,7 @@ export default function EditBookingModal({ booking, onClose, onSave }: any) {
                 <ReactDatePicker
                   selected={parseDate(form.petDob)}
                   onChange={(date) => {
-                    setForm((f) => {
+                    setForm((f: any) => {
                       const dob = date;
                       const age =
                         dob && !isNaN(dob.getTime())
@@ -656,7 +656,10 @@ export default function EditBookingModal({ booking, onClose, onSave }: any) {
                   }}
                   onChange={(e) => {
                     const file = e.target.files?.[0] || null;
-                    setForm((f) => ({ ...f, vaccinationCertificate: file }));
+                    setForm((f: any) => ({
+                      ...f,
+                      vaccinationCertificate: file,
+                    }));
                   }}
                 />
               </label>
