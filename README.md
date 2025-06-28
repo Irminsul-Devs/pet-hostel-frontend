@@ -104,4 +104,4 @@ VITE_API_URL=http://your-backend:5000/api
 
 ## 📜 License
 
-ISC © 2025 Irminsul Devs
+This project is licensed under the **ISC License** © 2025 Irminsul Devs
