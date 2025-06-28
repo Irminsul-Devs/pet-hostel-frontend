@@ -1,4 +1,3 @@
-```markdown
 # Pet Hostel Frontend
 
 ![React](https://img.shields.io/badge/React-18%2B-blue)
@@ -106,4 +105,3 @@ VITE_API_URL=http://your-backend:5000/api
 ## 📜 License
 
 ISC © 2025 Irminsul Devs
-```
