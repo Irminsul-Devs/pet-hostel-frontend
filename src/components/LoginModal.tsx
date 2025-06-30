@@ -8,6 +8,8 @@ type Props = {
   onSwitchToReset: () => void;
 };
 
+type UserRole = 'staff' | 'admin' | 'customer';
+
 export default function LoginModal({
   onClose,
   onSwitchToSignup,
@@ -36,9 +38,7 @@ export default function LoginModal({
     try {
       const res = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
@@ -49,17 +49,30 @@ export default function LoginModal({
         return;
       }
 
-      localStorage.setItem("user", JSON.stringify(data.user));
+      // Store complete user data
+      localStorage.setItem("user", JSON.stringify({
+        id: data.user.id,
+        name: data.user.name,
+        email: data.user.email,
+        role: data.user.role,
+        mobile: data.user.mobile,
+        dob: data.user.dob,
+        address: data.user.address
+      }));
+      
+      localStorage.setItem("token", data.token);
       window.dispatchEvent(new Event("user-login"));
       onClose();
 
-      if (data.user.role === "staff") {
-        navigate("/staff-dashboard");
-      } else if (data.user.role === "admin") {
-        navigate("/admin-dashboard");
-      } else {
-        navigate("/user-dashboard");
-      }
+      // Type-safe role-based redirection
+      const rolePaths: Record<UserRole, string> = {
+        staff: "/staff-dashboard",
+        admin: "/admin-dashboard",
+        customer: "/user-dashboard"
+      };
+
+      const path = rolePaths[data.user.role as UserRole] || "/";
+      navigate(path);
     } catch (err) {
       setError("Something went wrong. Try again later.");
     }
@@ -72,24 +85,30 @@ export default function LoginModal({
         <h2>Login</h2>
 
         <form onSubmit={handleSubmit}>
-          <div className="input-group">
+          <div className={`input-group ${error ? 'error' : ''}`}>
             <input
               type="email"
               placeholder="Email"
               required
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setError(''); // Clear error when typing
+              }}
             />
             <label>Email</label>
           </div>
 
-          <div className="input-group">
+          <div className={`input-group ${error ? 'error' : ''}`}>
             <input
               type="password"
               placeholder="Password"
               required
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setError(''); // Clear error when typing
+              }}
             />
             <label>Password</label>
           </div>

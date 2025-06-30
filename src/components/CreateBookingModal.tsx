@@ -3,33 +3,41 @@ import "../styles/Modal.css";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FaRegCalendarAlt } from "react-icons/fa";
+import type { Booking, BookingFormData } from "../types";
 
 type Props = {
   onClose: () => void;
+  onCreate: (newBooking: Booking) => Promise<void>;
 };
 
-const initialFormState = {
+const initialFormState: BookingFormData = {
+  bookingDate: new Date().toISOString().split('T')[0],
+  name: "",
+  mobile: "",
+  email: "",
+  remarks: "",
   ownerName: "",
   ownerMobile: "",
   ownerDob: "",
   ownerEmail: "",
   ownerAddress: "",
   petName: "",
-  petType: "",
+  petType: "Dog",
   bookingFrom: "",
   bookingTo: "",
-  services: [] as string[],
+  services: [],
   petDob: "",
   petAge: "",
   petFood: "",
   signature: "",
   acknowledge: false,
-  vaccinationCertificate: null as File | null,
+  vaccinationCertificate: null,
+  petVaccinated: false,
 };
 
-export default function CreateBookingModal({ onClose }: Props) {
+export default function CreateBookingModal({ onClose, onCreate }: Props) {
   const ref = useRef<HTMLDivElement>(null);
-  const [form, setForm] = useState(initialFormState);
+  const [form, setForm] = useState<BookingFormData>(initialFormState);
   const [error, setError] = useState("");
   const [petVaccinated, setPetVaccinated] = useState(false);
 
@@ -44,50 +52,84 @@ export default function CreateBookingModal({ onClose }: Props) {
   }, [onClose]);
 
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    const { name, value, type, checked, files } = e.target as any;
+    const { name, value, type } = e.target;
+    const checked = type === 'checkbox' ? (e.target as HTMLInputElement).checked : undefined;
+    const files = type === 'file' ? (e.target as HTMLInputElement).files : null;
 
     if (type === "file") {
-      setForm((f) => ({ ...f, [name]: files[0] }));
+      setForm(f => ({ ...f, [name]: files ? files[0] : null }));
     } else if (type === "checkbox") {
-      setForm((f) => ({ ...f, [name]: checked }));
+      setForm(f => ({ ...f, [name]: checked }));
     } else {
-      setForm((f) => ({ ...f, [name]: value }));
+      setForm(f => ({ ...f, [name]: value }));
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleDateChange = (date: Date | null, field: 'ownerDob' | 'petDob' | 'bookingFrom' | 'bookingTo') => {
+    setForm(prev => ({
+      ...prev,
+      [field]: date ? date.toISOString().split('T')[0] : ""
+    }));
+  };
+
+  const convertFileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = error => reject(error);
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (
-      !form.ownerName ||
-      !form.ownerMobile ||
-      !form.ownerDob ||
-      !form.ownerEmail ||
-      !form.ownerAddress ||
-      !form.petName ||
-      !form.petType ||
-      !form.bookingFrom ||
-      !form.bookingTo ||
-      form.services.length === 0 ||
-      !form.petDob ||
-      !form.petFood ||
-      !form.signature ||
-      !form.acknowledge
-    ) {
+    
+    if (!validateForm()) {
       setError("Please fill all required fields.");
       return;
     }
 
-    setError("");
-    alert("Booking created!\n\n" + JSON.stringify(form, null, 2));
-    setForm(initialFormState);
-    onClose();
+    try {
+      const vaccinationCertificate = form.vaccinationCertificate 
+        ? await convertFileToBase64(form.vaccinationCertificate) 
+        : null;
+
+      await onCreate({
+        id: 0,
+        ...form,
+        vaccinationCertificate,
+        petVaccinated
+      });
+      
+      setForm(initialFormState);
+      setError("");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to create booking");
+    }
   };
 
-  const parseDate = (val: string) => (val ? new Date(val) : null);
+  const validateForm = (): boolean => {
+    return (
+      !!form.ownerName &&
+      !!form.ownerMobile &&
+      !!form.ownerDob &&
+      !!form.ownerEmail &&
+      !!form.ownerAddress &&
+      !!form.petName &&
+      !!form.petType &&
+      !!form.bookingFrom &&
+      !!form.bookingTo &&
+      form.services.length > 0 &&
+      !!form.petDob &&
+      !!form.petFood &&
+      !!form.signature &&
+      form.acknowledge
+    );
+  };
+
+  const parseDate = (val: string) => val ? new Date(val) : null;
 
   return (
     <div className="modal-backdrop">
@@ -99,7 +141,6 @@ export default function CreateBookingModal({ onClose }: Props) {
         <form onSubmit={handleSubmit}>
           <div className="modal-form-columns">
             <div className="modal-form-col">
-              {/* LEFT COLUMN */}
               <div className="input-group">
                 <input
                   type="text"
@@ -124,16 +165,10 @@ export default function CreateBookingModal({ onClose }: Props) {
                 />
                 <label>Mobile Number</label>
               </div>
-              {/* --- Owner Date of Birth --- */}
               <div className="input-group" style={{ position: "relative" }}>
                 <ReactDatePicker
-                  selected={parseDate(form.ownerDob)}
-                  onChange={(date) =>
-                    setForm((f) => ({
-                      ...f,
-                      ownerDob: date ? date.toISOString().slice(0, 10) : "",
-                    }))
-                  }
+                  selected={form.ownerDob ? new Date(form.ownerDob) : null}
+                  onChange={(date) => handleDateChange(date, 'ownerDob')}
                   dateFormat="yyyy-MM-dd"
                   customInput={
                     <input
@@ -197,7 +232,6 @@ export default function CreateBookingModal({ onClose }: Props) {
                 />
                 <label>Email</label>
               </div>
-              {/* --- Address --- */}
               <div className="input-group" style={{ position: "relative" }}>
                 <textarea
                   name="ownerAddress"
@@ -254,24 +288,14 @@ export default function CreateBookingModal({ onClose }: Props) {
               </div>
             </div>
             <div className="modal-form-col">
-              {/* RIGHT COLUMN */}
-              {/* --- Booking Date From & To on the same row --- */}
               <div style={{ display: "flex", gap: "1em", width: "100%" }}>
                 <div
                   className="input-group"
                   style={{ position: "relative", flex: 1 }}
                 >
-                  {/* Booking Date From */}
                   <ReactDatePicker
                     selected={parseDate(form.bookingFrom)}
-                    onChange={(date) =>
-                      setForm((f) => ({
-                        ...f,
-                        bookingFrom: date
-                          ? date.toISOString().slice(0, 10)
-                          : "",
-                      }))
-                    }
+                    onChange={(date) => handleDateChange(date, 'bookingFrom')}
                     dateFormat="yyyy-MM-dd"
                     customInput={
                       <input
@@ -310,7 +334,7 @@ export default function CreateBookingModal({ onClose }: Props) {
                     style={{
                       position: "absolute",
                       left: "0.5rem",
-                      right: "0.6rem", // NEW: constrain label width
+                      right: "0.6rem",
                       top: form.bookingFrom ? "-0.5rem" : "1rem",
                       fontSize: form.bookingFrom ? "0.75rem" : "0.7rem",
                       color: form.bookingFrom ? "#1ab3f0" : "#aaa",
@@ -331,15 +355,9 @@ export default function CreateBookingModal({ onClose }: Props) {
                   className="input-group"
                   style={{ position: "relative", flex: 1 }}
                 >
-                  {/* Booking Date To */}
                   <ReactDatePicker
                     selected={parseDate(form.bookingTo)}
-                    onChange={(date) =>
-                      setForm((f) => ({
-                        ...f,
-                        bookingTo: date ? date.toISOString().slice(0, 10) : "",
-                      }))
-                    }
+                    onChange={(date) => handleDateChange(date, 'bookingTo')}
                     dateFormat="yyyy-MM-dd"
                     customInput={
                       <input
@@ -378,7 +396,7 @@ export default function CreateBookingModal({ onClose }: Props) {
                     style={{
                       position: "absolute",
                       left: "0.5rem",
-                      right: "0.6rem", // NEW: constrain label width
+                      right: "0.6rem",
                       top: form.bookingTo ? "-0.5rem" : "1rem",
                       fontSize: form.bookingTo ? "0.75rem" : "0.7rem",
                       color: form.bookingTo ? "#1ab3f0" : "#aaa",
@@ -455,27 +473,10 @@ export default function CreateBookingModal({ onClose }: Props) {
                   ))}
                 </div>
               </div>
-              {/* --- Pet Date of Birth --- */}
               <div className="input-group" style={{ position: "relative" }}>
                 <ReactDatePicker
                   selected={parseDate(form.petDob)}
-                  onChange={(date) => {
-                    setForm((f) => {
-                      const dob = date;
-                      const age =
-                        dob && !isNaN(dob.getTime())
-                          ? Math.floor(
-                              (Date.now() - dob.getTime()) /
-                                (365.25 * 24 * 60 * 60 * 1000)
-                            )
-                          : "";
-                      return {
-                        ...f,
-                        petDob: dob ? dob.toISOString().slice(0, 10) : "",
-                        petAge: age.toString(),
-                      };
-                    });
-                  }}
+                  onChange={(date) => handleDateChange(date, 'petDob')}
                   dateFormat="yyyy-MM-dd"
                   customInput={
                     <input
@@ -540,12 +541,11 @@ export default function CreateBookingModal({ onClose }: Props) {
                     background: "#222",
                     color: "#eaf6fb",
                     border: "1px solid #333",
-                    pointerEvents: "none", // disables mouse interaction
+                    pointerEvents: "none",
                   }}
                 />
                 <label>Pet Age (Auto)</label>
               </div>
-              {/* --- Pet Food Habit --- */}
               <div className="input-group" style={{ position: "relative" }}>
                 <textarea
                   name="petFood"
@@ -622,7 +622,6 @@ export default function CreateBookingModal({ onClose }: Props) {
               {petVaccinated ? "Yes" : "No"}
             </span>
             <div style={{ flex: 1, minWidth: 0 }} />
-            {/* This pushes the next item to the right */}
             {petVaccinated && (
               <label
                 style={{
@@ -650,7 +649,7 @@ export default function CreateBookingModal({ onClose }: Props) {
                     fontSize: "0.9em",
                     outline: "none",
                     boxShadow: "none",
-                    width: "180px", // or "8em" or "10ch" for a compact look
+                    width: "180px",
                     cursor: "pointer",
                   }}
                   onChange={(e) => {
@@ -687,7 +686,7 @@ export default function CreateBookingModal({ onClose }: Props) {
                 minHeight: "1.3em",
                 cursor: "pointer",
                 margin: 0,
-                marginTop: "0.1em", // fine-tune vertical alignment
+                marginTop: "0.1em",
               }}
               required
             />
