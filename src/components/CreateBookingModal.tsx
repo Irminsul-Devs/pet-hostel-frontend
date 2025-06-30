@@ -22,7 +22,7 @@ const initialFormState: BookingFormData = {
   ownerEmail: "",
   ownerAddress: "",
   petName: "",
-  petType: "Dog",
+  petType: "",
   bookingFrom: "",
   bookingTo: "",
   services: [],
