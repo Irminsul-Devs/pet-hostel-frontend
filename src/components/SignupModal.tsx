@@ -10,12 +10,12 @@ export default function SignupModal({ onClose, onSwitchToLogin }: Props) {
   const ref = useRef<HTMLDivElement>(null);
 
   const [form, setForm] = useState({
-    ownerName: "",
-    ownerEmail: "",
-    ownerMobile: "",
-    ownerPassword: "",
-    ownerDob: "",
-    ownerAddress: ""
+    ownerName: '',
+    ownerEmail: '',
+    ownerMobile: '',
+    ownerPassword: '',
+    ownerDob: '',
+    ownerAddress: '',
   });
 
   useEffect(() => {
@@ -33,17 +33,41 @@ export default function SignupModal({ onClose, onSwitchToLogin }: Props) {
     setForm(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSignup = (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const newUser = {
-      ...form
+      name: form.ownerName,
+      email: form.ownerEmail,
+      password: form.ownerPassword,
+      mobile: form.ownerMobile,
+      dob: form.ownerDob,
+      address: form.ownerAddress,
+      role: 'customer',
     };
 
-    localStorage.setItem("user", JSON.stringify(newUser));
-    alert("Signup successful!");
-    onClose();
-    window.dispatchEvent(new Event("user-login"));
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newUser),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message || "Signup failed");
+        return;
+      }
+
+      alert("Signup successful!");
+      onClose();
+      window.dispatchEvent(new Event("user-login"));
+    } catch (err) {
+      alert("Something went wrong. Try again later.");
+    }
   };
 
   return (
@@ -55,58 +79,53 @@ export default function SignupModal({ onClose, onSwitchToLogin }: Props) {
           <div className="input-group">
             <input
               type="text"
-              id="signup-name"
               name="ownerName"
               placeholder=" "
               value={form.ownerName}
               onChange={handleChange}
               required
             />
-            <label htmlFor="signup-name">Name</label>
+            <label>Name</label>
           </div>
 
           <div className="input-group">
             <input
               type="email"
-              id="signup-email"
               name="ownerEmail"
               placeholder=" "
               value={form.ownerEmail}
               onChange={handleChange}
               required
             />
-            <label htmlFor="signup-email">Email</label>
+            <label>Email</label>
           </div>
 
           <div className="input-group">
             <input
               type="text"
-              id="signup-mobileno"
               name="ownerMobile"
               placeholder=" "
               value={form.ownerMobile}
               onChange={handleChange}
               required
             />
-            <label htmlFor="signup-mobileno">Mobile No.</label>
+            <label>Mobile No.</label>
           </div>
 
           <div className="input-group">
             <input
               type="date"
-              id="signup-dob"
               name="ownerDob"
               placeholder=" "
               value={form.ownerDob}
               onChange={handleChange}
               required
             />
-            <label htmlFor="signup-dob">Date of Birth</label>
+            <label>Date of Birth</label>
           </div>
 
           <div className="input-group" style={{ position: "relative" }}>
             <textarea
-              id="signup-address"
               name="ownerAddress"
               placeholder=" "
               value={form.ownerAddress}
@@ -134,14 +153,13 @@ export default function SignupModal({ onClose, onSwitchToLogin }: Props) {
           <div className="input-group">
             <input
               type="password"
-              id="signup-password"
               name="ownerPassword"
               placeholder=" "
               value={form.ownerPassword}
               onChange={handleChange}
               required
             />
-            <label htmlFor="signup-password">Password</label>
+            <label>Password</label>
           </div>
 
           <button type="submit">Register</button>

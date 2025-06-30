@@ -6,96 +6,133 @@ import BookingInfoModal from "../components/BookingInfoModal";
 import EditBookingModal from "../components/EditBookingModal";
 import DeleteConfirmModal from "../components/DeleteConfirmModal";
 import { MdInfoOutline, MdEdit, MdDelete } from "react-icons/md";
+import type { User, Booking } from "../types";
 
 export default function StaffDashboard() {
-  const [user, setUser] = useState<{ name?: string } | null>(null);
-  const [activeTab, setActiveTab] = useState<"dashboard" | "bookings">(
-    "dashboard"
-  );
-  const [bookings, setBookings] = useState<any[]>([]);
-  const [showBookingModal, setShowBookingModal] = useState(false);
-  const [infoBooking, setInfoBooking] = useState<any | null>(null);
-  const [editBooking, setEditBooking] = useState<any | null>(null);
-  const [deleteBookingId, setDeleteBookingId] = useState<number | null>(null);
-
-  useEffect(() => {
+  const user: User | null = (() => {
+  try {
     const stored = localStorage.getItem("user");
-    if (stored) setUser(JSON.parse(stored));
-    // Add some dummy bookings with all required fields
-    setBookings([
-      {
-        id: 1,
-        bookingDate: "2025-06-24",
-        name: "Charlie",
-        mobile: "9876543210",
-        email: "charlie@pet.com",
-        remarks: "First time boarding",
-        ownerName: "Charlie Owner",
-        ownerMobile: "9876543210",
-        ownerDob: "1990-01-01",
-        ownerEmail: "charlie.owner@pet.com",
-        ownerAddress: "123 Main St",
-        petName: "Charlie",
-        petType: "Dog",
-        bookingFrom: "2025-06-24",
-        bookingTo: "2025-06-28",
-        services: ["Boarding"],
-        petDob: "2020-05-01",
-        petAge: "5",
-        petFood: "Dry food",
-        signature: "Charlie Owner",
-        acknowledge: true,
-        vaccinationCertificate: null,
-        petVaccinated: true,
-      },
-      {
-        id: 2,
-        bookingDate: "2025-06-23",
-        name: "Bella",
-        mobile: "9876500000",
-        email: "bella@pet.com",
-        remarks: "Grooming only",
-        ownerName: "Bella Owner",
-        ownerMobile: "9876500000",
-        ownerDob: "1988-03-15",
-        ownerEmail: "bella.owner@pet.com",
-        ownerAddress: "456 Park Ave",
-        petName: "Bella",
-        petType: "Cat",
-        bookingFrom: "2025-06-23",
-        bookingTo: "2025-06-24",
-        services: ["Grooming"],
-        petDob: "2019-08-10",
-        petAge: "6",
-        petFood: "Wet food",
-        signature: "Bella Owner",
-        acknowledge: true,
-        vaccinationCertificate: null,
-        petVaccinated: false,
-      },
-    ]);
-  }, []);
+    return stored ? JSON.parse(stored) : null;
+  } catch (error) {
+    console.error("Error parsing user data:", error);
+    return null;
+  }
+})();
+  const [activeTab, setActiveTab] = useState<"dashboard" | "bookings">("dashboard");
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [showBookingModal, setShowBookingModal] = useState(false);
+  const [infoBooking, setInfoBooking] = useState<Booking | null>(null);
+  const [editBooking, setEditBooking] = useState<Booking | null>(null);
+  const [deleteBookingId, setDeleteBookingId] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    const handler = () => setShowBookingModal(true);
-    window.addEventListener("open-create-booking", handler);
-    return () => window.removeEventListener("open-create-booking", handler);
-  }, []);
+    const fetchData = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        // Only fetch bookings if we have a user
+        if (user) {
+          const bookingsRes = await fetch("http://localhost:5000/api/bookings", {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          
+          if (!bookingsRes.ok) throw new Error("Failed to fetch bookings");
+          
+          const bookingsData = await bookingsRes.json();
+          setBookings(bookingsData);
+        }
+      } catch (err) {
+        console.error("Error in fetchData:", err);
+        setError(err instanceof Error ? err.message : "Loading error");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [user]); // Add user as dependency
+
+  const handleCreateBooking = async (newBooking: Booking) => {
+    try {
+      const response = await fetch("http://localhost:5000/api/bookings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        },
+        body: JSON.stringify(newBooking)
+      });
+
+      if (!response.ok) throw new Error("Failed to create booking");
+      
+      const data = await response.json();
+      setBookings(prev => [...prev, data]);
+      setShowBookingModal(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Creation error");
+    }
+  };
+
+  const handleUpdateBooking = async (updatedBooking: Booking) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`http://localhost:5000/api/bookings/${updatedBooking.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(updatedBooking),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update booking");
+      }
+
+      const data = await response.json();
+      setBookings(prev => prev.map(b => b.id === data.id ? data : b));
+      setEditBooking(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to update booking");
+      console.error("Update booking error:", err);
+    }
+  };
+
+  const handleDeleteBooking = async (id: number) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`http://localhost:5000/api/bookings/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete booking");
+      }
+
+      setBookings(prev => prev.filter(b => b.id !== id));
+      setDeleteBookingId(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to delete booking");
+      console.error("Delete booking error:", err);
+    }
+  };
 
   return (
     <>
       <StaffNavbar activeTab={activeTab} setActiveTab={setActiveTab} />
       <div className="staff-dashboard">
+        {error && <div className="error-message">{error}</div>}
+        
         {activeTab === "dashboard" ? (
-          <h1
-            className="staff-dashboard-welcome"
-            style={{ marginBottom: "0.5em" }}
-          >
-            Welcome, {user?.name || "Staff"}!
+          <h1 className="staff-dashboard-welcome" style={{ marginBottom: "0.5em" }}>
+            Welcome, {user?.name || "User"}!
           </h1>
         ) : (
           <>
-            {/* Add Create Booking button here */}
             <button
               className="btn create-booking-btn"
               style={{ marginBottom: "1.2em" }}
@@ -103,86 +140,95 @@ export default function StaffDashboard() {
             >
               + Create Booking
             </button>
-            <div style={{ overflowX: "auto" }}>
-              <table className="staff-dashboard-table">
-                <thead>
-                  <tr>
-                    <th>S.No</th>
-                    <th>Booking Date</th>
-                    <th>Name</th>
-                    <th>Mobile No</th>
-                    <th>Email</th>
-                    <th>Remarks</th>
-                    <th>More Info</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {bookings.length > 0 ? (
-                    bookings.map((b, i) => (
-                      <tr key={b.id}>
-                        <td>{i + 1}</td>
-                        <td>{b.bookingDate}</td>
-                        <td>{b.name}</td>
-                        <td>{b.mobile}</td>
-                        <td>{b.email}</td>
-                        <td>{b.remarks}</td>
-                        <td>
-                          <button
-                            title="More Info"
-                            style={{
-                              background: "none",
-                              border: "none",
-                              cursor: "pointer",
-                              color: "#1ab3f0",
-                            }}
-                            onClick={() => setInfoBooking(b)}
-                          >
-                            <MdInfoOutline size={22} />
-                          </button>
-                        </td>
-                        <td>
-                          <button
-                            title="Edit"
-                            style={{
-                              background: "none",
-                              border: "none",
-                              cursor: "pointer",
-                              color: "#1ab3f0",
-                              marginRight: 6,
-                            }}
-                            onClick={() => setEditBooking(b)}
-                          >
-                            <MdEdit size={20} />
-                          </button>
-                          <button
-                            title="Delete"
-                            style={{
-                              background: "none",
-                              border: "none",
-                              cursor: "pointer",
-                              color: "#e74c3c",
-                            }}
-                            onClick={() => setDeleteBookingId(b.id)} // <-- open modal with booking id
-                          >
-                            <MdDelete size={20} />
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
+            
+            {loading ? (
+              <div>Loading bookings...</div>
+            ) : (
+              <div style={{ overflowX: "auto" }}>
+                <table className="staff-dashboard-table">
+                  <thead>
                     <tr>
-                      <td colSpan={8}>No bookings found</td>
+                      <th>S.No</th>
+                      <th>Booking Date</th>
+                      <th>Name</th>
+                      <th>Mobile No</th>
+                      <th>Email</th>
+                      <th>Remarks</th>
+                      <th>More Info</th>
+                      <th>Action</th>
                     </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {bookings.length > 0 ? (
+                      bookings.map((b, i) => (
+                        <tr key={b.id}>
+                          <td>{i + 1}</td>
+                          <td>{b.bookingDate}</td>
+                          <td>{b.name}</td>
+                          <td>{b.mobile}</td>
+                          <td>{b.email}</td>
+                          <td>{b.remarks}</td>
+                          <td>
+                            <button
+                              title="More Info"
+                              style={{
+                                background: "none",
+                                border: "none",
+                                cursor: "pointer",
+                                color: "#1ab3f0",
+                              }}
+                              onClick={() => setInfoBooking(b)}
+                            >
+                              <MdInfoOutline size={22} />
+                            </button>
+                          </td>
+                          <td>
+                            <button
+                              title="Edit"
+                              style={{
+                                background: "none",
+                                border: "none",
+                                cursor: "pointer",
+                                color: "#1ab3f0",
+                                marginRight: 6,
+                              }}
+                              onClick={() => setEditBooking(b)}
+                            >
+                              <MdEdit size={20} />
+                            </button>
+                            <button
+                              title="Delete"
+                              style={{
+                                background: "none",
+                                border: "none",
+                                cursor: "pointer",
+                                color: "#e74c3c",
+                              }}
+                              onClick={() => setDeleteBookingId(b.id)}
+                            >
+                              <MdDelete size={20} />
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={8}>No bookings found</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </>
         )}
       </div>
+
       {showBookingModal && (
-        <CreateBookingModal onClose={() => setShowBookingModal(false)} />
+        <CreateBookingModal 
+          onClose={() => setShowBookingModal(false)}
+          onCreate={handleCreateBooking}
+        />
       )}
 
       {infoBooking && (
@@ -191,26 +237,19 @@ export default function StaffDashboard() {
           onClose={() => setInfoBooking(null)}
         />
       )}
+      
       {editBooking && (
         <EditBookingModal
           booking={editBooking}
           onClose={() => setEditBooking(null)}
-          onSave={(updated: any) => {
-            setBookings((prev) =>
-              prev.map((bk) => (bk.id === updated.id ? updated : bk))
-            );
-          }}
+          onSave={handleUpdateBooking}
         />
       )}
+      
       {deleteBookingId !== null && (
         <DeleteConfirmModal
           onCancel={() => setDeleteBookingId(null)}
-          onConfirm={() => {
-            setBookings((prev) =>
-              prev.filter((bk) => bk.id !== deleteBookingId)
-            );
-            setDeleteBookingId(null);
-          }}
+          onConfirm={() => handleDeleteBooking(deleteBookingId)}
         />
       )}
     </>
