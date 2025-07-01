@@ -1,12 +1,12 @@
 import { useEffect, useRef } from "react";
-// import "../styles/Modal.css";
 
 type Props = {
-  onConfirm: () => void;
+  staffId: number;
+  onSuccess: () => void;
   onCancel: () => void;
 };
 
-export default function DeleteConfirmModal({ onConfirm, onCancel }: Props) {
+export default function DeleteConfirmModal({ staffId, onSuccess, onCancel }: Props) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -19,12 +19,30 @@ export default function DeleteConfirmModal({ onConfirm, onCancel }: Props) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onCancel]);
 
+  const handleDelete = async () => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/auth/delete-staff/${staffId}`, {
+        method: "DELETE",
+      });
+      const result = await res.json();
+
+      if (!res.ok) {
+        alert(result.message || "Failed to delete staff");
+        return;
+      }
+
+      alert("Staff deleted successfully");
+      onSuccess(); // Refresh staff list in parent
+    } catch (err) {
+      console.error("Delete staff error:", err);
+      alert("Something went wrong");
+    }
+  };
+
   return (
     <div className="modal-backdrop">
       <div className="modal" ref={ref}>
-        <button className="modal-close" onClick={onCancel}>
-          ✕
-        </button>
+        <button className="modal-close" onClick={onCancel}>✕</button>
         <h2>Delete Confirmation</h2>
 
         <p style={{ textAlign: "center", color: "#ccc", marginBottom: "1rem" }}>
@@ -34,16 +52,15 @@ export default function DeleteConfirmModal({ onConfirm, onCancel }: Props) {
         <div style={{ display: "flex", justifyContent: "center", gap: "1em" }}>
           <button
             type="button"
-            onClick={onConfirm}
+            onClick={handleDelete}
             style={{
-              backgroundColor: "#e74c3c", // red for confirmation
+              backgroundColor: "#e74c3c",
               color: "#fff",
               padding: "0.75rem 1.2rem",
               border: "none",
               borderRadius: "6px",
               fontWeight: "bold",
               cursor: "pointer",
-              transition: "background-color 0.3s ease",
             }}
           >
             Yes
@@ -58,7 +75,6 @@ export default function DeleteConfirmModal({ onConfirm, onCancel }: Props) {
               borderRadius: "6px",
               fontWeight: "bold",
               cursor: "pointer",
-              transition: "background-color 0.3s ease",
             }}
           >
             No
