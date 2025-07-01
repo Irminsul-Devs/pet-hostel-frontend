@@ -32,9 +32,21 @@ export default function SignupModal({ onClose, onSwitchToLogin }: Props) {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
   };
+  const isAtLeast18 = (ownerDob: string) => {
+    const today = new Date();
+    const birthDate = new Date(ownerDob);
+    const age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    const d = today.getDate() - birthDate.getDate();
+    return age > 18 || (age === 18 && (m > 0 || (m === 0 && d >= 0)));
+  };
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isAtLeast18(form.ownerDob)) {
+      alert("Customer must be at least 18 years old.");
+      return;
+    }
 
     const newUser = {
       name: form.ownerName,
@@ -84,6 +96,8 @@ export default function SignupModal({ onClose, onSwitchToLogin }: Props) {
               value={form.ownerName}
               onChange={handleChange}
               required
+              pattern="^[A-Z][a-zA-Z\s]*$"
+              title="Name must start with a capital letter and contain only letters or spaces."
             />
             <label>Name</label>
           </div>
@@ -108,6 +122,9 @@ export default function SignupModal({ onClose, onSwitchToLogin }: Props) {
               value={form.ownerMobile}
               onChange={handleChange}
               required
+              pattern="^\d{10}$"
+              title="Enter a valid 10-digit mobile number."
+              maxLength={10}
             />
             <label>Mobile No.</label>
           </div>
@@ -120,8 +137,10 @@ export default function SignupModal({ onClose, onSwitchToLogin }: Props) {
               value={form.ownerDob}
               onChange={handleChange}
               required
+              max={new Date().toISOString().split("T")[0]}
+              min="1900-01-01"
             />
-            <label>Date of Birth</label>
+            <label></label>
           </div>
 
           <div className="input-group" style={{ position: "relative" }}>
@@ -158,6 +177,8 @@ export default function SignupModal({ onClose, onSwitchToLogin }: Props) {
               value={form.ownerPassword}
               onChange={handleChange}
               required
+              pattern=".{6,}"
+              title="Password must be at least 6 characters long."
             />
             <label>Password</label>
           </div>
