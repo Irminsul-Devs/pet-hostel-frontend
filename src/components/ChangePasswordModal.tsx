@@ -9,16 +9,20 @@ type Props = {
 export default function ChangePasswordModal({ onClose }: Props) {
   const ref = useRef<HTMLDivElement>(null);
 
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [currentPassword, setCurrentPassword] = useState<string>("");
+  const [newPassword, setNewPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
 
-  const [showCurrent, setShowCurrent] = useState(false);
-  const [showNew, setShowNew] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
-  const [error, setError] = useState("");
+  const [showCurrent, setShowCurrent] = useState<boolean>(false);
+  const [showNew, setShowNew] = useState<boolean>(false);
+  const [showConfirm, setShowConfirm] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
 
-  const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const storedUser = JSON.parse(localStorage.getItem("user") || "{}") as {
+    id: number;
+    name: string;
+    email: string;
+  };
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -30,35 +34,60 @@ export default function ChangePasswordModal({ onClose }: Props) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onClose]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
 
     if (!currentPassword || !newPassword || !confirmPassword) {
       setError("All fields are required.");
       return;
     }
 
-    if (currentPassword !== storedUser.ownerPassword) {
-      setError("Current password is incorrect.");
+    if (newPassword === currentPassword) {
+      setError("New password must be different from the current password.");
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setError("New passwords do not match.");
+      setError("New password and confirm password do not match.");
       return;
     }
 
-    const updatedUser = { ...storedUser, ownerPassword: newPassword };
-    localStorage.setItem("user", JSON.stringify(updatedUser));
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/auth/change-password/${storedUser.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            currentPassword,
+            newPassword,
+          }),
+        }
+      );
 
-    alert("Password changed successfully!");
-    onClose();
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || "Failed to change password.");
+      } else {
+        alert("Password changed successfully!");
+        onClose();
+      }
+    } catch (err) {
+      console.error("Error changing password:", err);
+      setError("Server error while changing password.");
+    }
   };
 
   return (
     <div className="modal-backdrop">
       <div className="modal" ref={ref}>
-        <button className="modal-close" onClick={onClose}>✕</button>
+        <button className="modal-close" onClick={onClose}>
+          ✕
+        </button>
         <h2>Change Password</h2>
         <form onSubmit={handleSubmit}>
           {/* Current Password */}
@@ -72,7 +101,7 @@ export default function ChangePasswordModal({ onClose }: Props) {
             />
             <label>Current Password</label>
             <span
-              onClick={() => setShowCurrent(!showCurrent)}
+              onClick={() => setShowCurrent((prev) => !prev)}
               style={{
                 position: "absolute",
                 right: "10px",
@@ -97,7 +126,7 @@ export default function ChangePasswordModal({ onClose }: Props) {
             />
             <label>New Password</label>
             <span
-              onClick={() => setShowNew(!showNew)}
+              onClick={() => setShowNew((prev) => !prev)}
               style={{
                 position: "absolute",
                 right: "10px",
@@ -122,7 +151,7 @@ export default function ChangePasswordModal({ onClose }: Props) {
             />
             <label>Confirm Password</label>
             <span
-              onClick={() => setShowConfirm(!showConfirm)}
+              onClick={() => setShowConfirm((prev) => !prev)}
               style={{
                 position: "absolute",
                 right: "10px",
