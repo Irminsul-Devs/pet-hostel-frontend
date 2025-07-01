@@ -3,10 +3,12 @@ import "../styles/Modal.css";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FaRegCalendarAlt } from "react-icons/fa";
+import type { EditBookingModalProps, EditBookingForm } from "../types";
 
-export default function EditBookingModal({ booking, onClose, onSave }: any) {
+export default function EditBookingModal({ booking, onClose, onSave }: EditBookingModalProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [form, setForm] = useState({
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [form, setForm] = useState<EditBookingForm>({
     ...booking,
     services: booking.services || [],
     petAge: booking.petAge || "",
@@ -56,33 +58,72 @@ export default function EditBookingModal({ booking, onClose, onSave }: any) {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (
-      !form.ownerName ||
-      !form.ownerMobile ||
-      !form.ownerDob ||
-      !form.ownerEmail ||
-      !form.ownerAddress ||
-      !form.petName ||
-      !form.petType ||
-      !form.bookingFrom ||
-      !form.bookingTo ||
-      !form.services ||
-      form.services.length === 0 ||
-      !form.petDob ||
-      !form.petFood ||
-      !form.signature ||
-      !form.acknowledge
-    ) {
-      setError("Please fill all required fields.");
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  
+  if (isSubmitting) return;
+  
+  if (!validateForm()) {
+    setError("Please fill all required fields.");
+    return;
+  }
+
+  try {
+    setIsSubmitting(true);
+    
+    const isConfirmed = window.confirm("Are you sure you want to update this booking?");
+    if (!isConfirmed) {
+      setIsSubmitting(false);
       return;
     }
-    setError("");
-    if (onSave) onSave({ ...form, petVaccinated });
-    onClose();
-  };
 
+    const updatedBooking = { 
+      ...form, 
+      petVaccinated,
+      vaccinationCertificate: form.vaccinationCertificate instanceof File
+        ? await convertFileToBase64(form.vaccinationCertificate)
+        : form.vaccinationCertificate
+    };
+    
+    await onSave(updatedBooking);
+    
+    alert("Booking updated successfully!");
+    onClose();
+  } catch (err) {
+    setError(err instanceof Error ? err.message : "Failed to update booking");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+const validateForm = () => {
+  return (
+    form.ownerName &&
+    form.ownerMobile &&
+    form.ownerDob &&
+    form.ownerEmail &&
+    form.ownerAddress &&
+    form.petName &&
+    form.petType &&
+    form.bookingFrom &&
+    form.bookingTo &&
+    form.services?.length > 0 &&
+    form.petDob &&
+    form.petFood &&
+    form.signature &&
+    form.acknowledge
+  );
+};
+
+// Add this to your imports if not already there
+const convertFileToBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = error => reject(error);
+  });
+};
   const parseDate = (val: string) => (val ? new Date(val) : null);
 
   return (
@@ -720,10 +761,19 @@ export default function EditBookingModal({ booking, onClose, onSave }: any) {
             />
             <label>Signature</label>
           </div>
-          {error && <p className="error-text">{error}</p>}
-          <button type="submit" className="btn modal-btn">
-            Save Changes
-          </button>
+{error && (
+  <div className="error-message">
+    {error}
+    <button onClick={() => setError("")}>×</button>
+  </div>
+)}
+<button 
+  type="submit" 
+  className="btn modal-btn"
+  disabled={isSubmitting}
+>
+  {isSubmitting ? "Saving..." : "Save Changes"}
+</button>
         </form>
       </div>
     </div>

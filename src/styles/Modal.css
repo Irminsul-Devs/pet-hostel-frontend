@@ -332,6 +332,11 @@ input[type="text"][name$="To"] {
   }
 }
 
+.btn.modal-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 @media (max-width: 400px) {
   .modal {
     padding: 1.5rem 1rem;

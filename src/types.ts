@@ -1,11 +1,16 @@
+export type UserRole = 'staff' | 'admin' | 'customer';
+
 export type User = {
   id: number;
-  name: string;
+  name: string | null;
   email: string;
-  role: 'staff' | 'admin' | 'customer';
-  mobile?: string;
-  dob?: string;
-  address?: string;
+  password: string;
+  mobile: string | null;
+  dob: string | null;
+  address: string | null;
+  role: UserRole;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export type Booking = {
@@ -14,7 +19,7 @@ export type Booking = {
   name: string;
   mobile: string;
   email: string;
-  remarks: string;
+  remarks: string | null;
   ownerName: string;
   ownerMobile: string;
   ownerDob: string;
@@ -26,14 +31,41 @@ export type Booking = {
   bookingTo: string;
   services: string[];
   petDob: string;
-  petAge?: string;
-  petFood?: string;
+  petAge: string | null;
+  petFood: string;
   signature: string;
   acknowledge: boolean;
-  vaccinationCertificate?: string | null;
+  vaccinationCertificate: string | null;
   petVaccinated: boolean;
+  userId: number | null;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
-export type BookingFormData = Omit<Booking, 'id' | 'vaccinationCertificate'> & {
-  vaccinationCertificate?: File | null;
+export type BookingFormData = Omit<Booking, 
+  'id' | 'createdAt' | 'updatedAt' | 'userId'
+> & {
+  vaccinationCertificate: File | null;
+  petAge: string;
 };
+
+export type ApiResponse<T> = {
+  success: boolean;
+  message?: string;
+  data?: T;
+  error?: string;
+};
+
+export type EditBookingModalProps = {
+  booking: Booking;
+  onClose: () => void;
+  onSave: (updatedBooking: Booking) => Promise<void>;
+};
+
+export type EditBookingForm = Omit<Booking, 'vaccinationCertificate' | 'petAge'> & {
+  vaccinationCertificate: File | string | null;
+  petAge: string; // Ensure petAge is always a string
+};
+
+export type DateString = string;
+export type DateTimeString = string;
