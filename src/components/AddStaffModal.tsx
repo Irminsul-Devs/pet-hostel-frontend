@@ -2,12 +2,13 @@ import { useState, useEffect } from "react";
 import "../styles/Modal.css";
 
 export type StaffData = {
+  id?: number; // <-- add this
   name: string;
-  age: string;
+  dob: string;
   address: string;
   email: string;
   mobile: string;
-  password: string;
+  password?: string; // optional during edit
 };
 
 type Props = {
@@ -19,16 +20,18 @@ type Props = {
 export default function AddStaffModal({ initialData, onClose, onSave }: Props) {
   const [formData, setFormData] = useState<StaffData>({
     name: "",
-    age: "",
+    dob: "",
     address: "",
     email: "",
     mobile: "",
     password: "",
   });
-
   useEffect(() => {
     if (initialData) {
-      setFormData(initialData);
+      setFormData({
+        ...initialData,
+        dob: initialData.dob.split("T")[0], // ✅ Strip time part for date input
+      });
     }
   }, [initialData]);
 
@@ -37,8 +40,22 @@ export default function AddStaffModal({ initialData, onClose, onSave }: Props) {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const isAtLeast18 = (dob: string) => {
+    const today = new Date();
+    const birthDate = new Date(dob);
+    const age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    const d = today.getDate() - birthDate.getDate();
+    return age > 18 || (age === 18 && (m > 0 || (m === 0 && d >= 0)));
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isAtLeast18(formData.dob)) {
+      alert("Staff must be at least 18 years old.");
+      return;
+    }
+    // Delegate API call to parent
     onSave(formData);
   };
 
@@ -61,17 +78,20 @@ export default function AddStaffModal({ initialData, onClose, onSave }: Props) {
             />
             <label>Name</label>
           </div>
+
           <div className="input-group">
             <input
-              type="number"
-              name="age"
-              value={formData.age}
+              type="date"
+              name="dob"
+              value={formData.dob}
               onChange={handleChange}
-              placeholder="Age"
               required
+              placeholder=" "
+              max={new Date().toISOString().split("T")[0]}
+              min="1900-01-01"
             />
-            <label>Age</label>
           </div>
+
           <div className="input-group">
             <input
               type="text"
@@ -92,9 +112,13 @@ export default function AddStaffModal({ initialData, onClose, onSave }: Props) {
               onChange={handleChange}
               placeholder="Mobile"
               required
+              pattern="[0-9]{10}"
+              maxLength={10}
+              title="Enter a 10-digit mobile number"
             />
             <label>Mobile</label>
           </div>
+
           <div className="input-group">
             <input
               type="email"
