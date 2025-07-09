@@ -9,18 +9,17 @@ type Props = {
 
 export default function UserProfileModal({ onClose }: Props) {
   const ref = useRef<HTMLDivElement>(null);
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-  const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const [form, setForm] = useState({
+    ownerName: "",
+    ownerMobile: "",
+    ownerEmail: "",
+    ownerDob: "",
+    ownerAddress: "",
+  });
 
-  const defaultForm = {
-    ownerName: storedUser.ownerName || "John Doe",
-    ownerMobile: storedUser.ownerMobile || "9876543210",
-    ownerEmail: storedUser.ownerEmail || "john@example.com",
-    ownerDob: storedUser.ownerDob || "1990-01-01",
-    ownerAddress: storedUser.ownerAddress || "123, ABC Street",
-  };
-
-  const [form, setForm] = useState(defaultForm);
+  const [loading, setLoading] = useState(true);
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
 
   useEffect(() => {
@@ -33,6 +32,26 @@ export default function UserProfileModal({ onClose }: Props) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onClose]);
 
+  useEffect(() => {
+    if (!user?.id) return;
+    fetch(`http://localhost:5000/api/auth/user/${user.id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setForm({
+          ownerName: data.name || "",
+          ownerMobile: data.mobile || "",
+          ownerEmail: data.email || "",
+          ownerDob: data.dob?.slice(0, 10) || "",
+          ownerAddress: data.address || "",
+        });
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch user data", err);
+        setLoading(false);
+      });
+  }, []);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -40,23 +59,80 @@ export default function UserProfileModal({ onClose }: Props) {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
+const handleSave = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    const updatedUser = {
-      ...storedUser,
-      ownerName: form.ownerName,
-      ownerMobile: form.ownerMobile,
-      ownerEmail: form.ownerEmail,
-      ownerDob: form.ownerDob,
-      ownerAddress: form.ownerAddress,
-    };
+  const nameRegex = /^[A-Z][a-zA-Z\s]*$/;
+  const mobileRegex = /^\d{10}$/;
+  const dobDate = new Date(form.ownerDob);
+  const today = new Date();
+  const age = today.getFullYear() - dobDate.getFullYear();
+  const hasHadBirthdayThisYear =
+    today.getMonth() > dobDate.getMonth() ||
+    (today.getMonth() === dobDate.getMonth() && today.getDate() >= dobDate.getDate());
 
-    localStorage.setItem("user", JSON.stringify(updatedUser));
-    alert("Profile updated!");
-    onClose();
-    window.dispatchEvent(new Event("user-login"));
-  };
+  const actualAge = hasHadBirthdayThisYear ? age : age - 1;
+
+  // 🚨 VALIDATIONS
+  if (!form.ownerName || !nameRegex.test(form.ownerName)) {
+    return alert("Name is required and must start with a capital letter.");
+  }
+
+  if (!form.ownerMobile || !mobileRegex.test(form.ownerMobile)) {
+    return alert("Mobile number must be exactly 10 digits.");
+  }
+
+  if (!form.ownerDob || isNaN(dobDate.getTime())) {
+    return alert("Please enter a valid date of birth.");
+  }
+
+  if (dobDate > today) {
+    return alert("Date of birth cannot be in the future.");
+  }
+
+  if (actualAge < 18) {
+    return alert("User must be at least 18 years old.");
+  }
+
+  if (!form.ownerAddress.trim()) {
+    return alert("Address is required.");
+  }
+
+  try {
+    const res = await fetch(`http://localhost:5000/api/auth/user/${user.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name: form.ownerName,
+        mobile: form.ownerMobile,
+        dob: form.ownerDob,
+        address: form.ownerAddress
+      })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert(data.message || "Profile updated!");
+      localStorage.setItem("user", JSON.stringify({
+        ...user,
+        name: form.ownerName,
+        mobile: form.ownerMobile,
+        dob: form.ownerDob,
+        address: form.ownerAddress
+      }));
+      onClose();
+    } else {
+      alert(data.message || "Failed to update profile");
+    }
+  } catch (err) {
+    console.error("Error updating profile:", err);
+    alert("Something went wrong while updating profile.");
+  }
+};
+  if (loading) return null;
 
   return (
     <>
