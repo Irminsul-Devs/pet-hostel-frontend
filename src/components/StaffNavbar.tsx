@@ -48,17 +48,18 @@ export default function StaffNavbar({ activeTab, setActiveTab }: Props) {
             size={26}
             style={{
               marginRight: "1.2rem",
-              color: "#fff",
+              color: "#3498db",
               background: "#222",
               borderRadius: "50%",
               padding: "0.3em",
-              boxShadow: "0 1px 6px #1ab3f055",
+              boxShadow: "0 1px 6px rgba(52, 152, 219, 0.5)",
               cursor: "pointer",
+              transition: "all 0.3s ease",
             }}
             title="Staff Profile"
             onClick={() => setShowProfile(true)}
           />
-          <button onClick={handleLogout} className="btn login-btn">
+          <button onClick={handleLogout} className="btn logout-btn">
             Logout
           </button>
         </div>

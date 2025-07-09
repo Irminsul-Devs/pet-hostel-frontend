@@ -1,5 +1,5 @@
 .navbar {
-  background-color: #000000;
+  background-color: #1a1a1a;
   color: white;
   display: flex;
   justify-content: space-between;
@@ -9,6 +9,13 @@
   top: 0;
   z-index: 100;
   font-size: 0.9rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4),
+    inset 0 -2px 10px rgba(0, 0, 0, 0.3);
+  /* Enhanced pet-themed background */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 512 512' opacity='0.04' fill='%233498db'%3E%3Cpath d='M226.5 92.9c14.3 42.9-.3 86.2-32.6 96.8s-70.1-15.6-84.4-58.5.3-86.2 32.6-96.8s70.1 15.6 84.4 58.5zm-126.1 105.7c18.9 32.4 14.3 70.1-10.2 84.1s-59.7-.9-78.5-33.3-14.3-70.1 10.2-84.1 59.7.9 78.5 33.3zm321.5 0c-18.9 32.4-14.3 70.1 10.2 84.1s59.7-.9 78.5-33.3 14.3-70.1-10.2-84.1-59.7.9-78.5 33.3z'/%3E%3C/svg%3E");
+  background-position: center;
+  background-repeat: repeat;
+  border-bottom: 1px solid #333;
 }
 
 .navbar a {
@@ -16,29 +23,32 @@
   text-decoration: none;
   margin: 0 1rem;
   font-weight: 500;
-  transition: color 0.2s ease-in-out;
+  transition: all 0.3s ease;
   position: relative;
 }
 
 /* Only affect nav links, not buttons */
 .navbar-left a:hover {
-  color: #1ab3f0;
+  color: #3498db;
+  text-shadow: 0 0 5px rgba(52, 152, 219, 0.4);
 }
 
 .active-link {
-  color: #1ab3f0 !important; /* overrides default link color */
+  color: #3498db !important; /* overrides default link color - using blue to match pet theme */
 }
 
-/* Underline effect for active nav links */
+/* Enhanced underline effect for active nav links */
 .active-link::after {
   content: "";
   display: block;
   width: 100%;
-  height: 2px;
-  background-color: #1ab3f0;
+  height: 3px;
+  background-color: #3498db;
   position: absolute;
   bottom: -24px;
   left: 0;
+  box-shadow: 0 0 12px rgba(52, 152, 219, 0.6);
+  border-radius: 2px;
 }
 
 /* Buttons */
@@ -50,19 +60,114 @@
   text-decoration: none;
 }
 
+/* Pet-themed logout button - blue theme */
 .login-btn {
-  background-color: #04b1f6;
-  color: #1a1a2e;
+  background-color: #3498db;
+  color: #ffffff;
   margin-right: 0.5rem;
-  border: 1px solid #5ed1ff;
-  transition: background-color 0.3s, color 0.3s;
+  border: none;
+  transition: all 0.3s;
+  box-shadow: 0 3px 10px rgba(52, 152, 219, 0.3);
+  font-weight: 600;
+  padding: 0.7em 1.6em;
+  border-radius: 30px;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.5px;
+}
+
+/* Add subtle paw print pattern to logout button */
+.login-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 512 512' opacity='0.07' fill='%23ffffff'%3E%3Cpath d='M226.5 92.9c14.3 42.9-.3 86.2-32.6 96.8s-70.1-15.6-84.4-58.5.3-86.2 32.6-96.8s70.1 15.6 84.4 58.5zm-126.1 105.7c18.9 32.4 14.3 70.1-10.2 84.1s-59.7-.9-78.5-33.3-14.3-70.1 10.2-84.1 59.7.9 78.5 33.3zm321.5 0c-18.9 32.4-14.3 70.1 10.2 84.1s59.7-.9 78.5-33.3 14.3-70.1-10.2-84.1-59.7.9-78.5 33.3z'/%3E%3C/svg%3E");
+  background-position: center;
+  background-repeat: repeat;
+  z-index: 1;
+  pointer-events: none;
 }
 
 .login-btn:hover,
 .login-btn:focus {
-  border: 2px solid #1ab3f0;
-  background-color: #000000;
+  background-color: #2980b9;
+  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.5);
+  transform: translateY(-2px);
   color: #ffffff;
+}
+
+/* Red paw-themed logout button */
+.logout-btn {
+  background-color: #e74c3c;
+  color: #ffffff;
+  margin-right: 0.5rem;
+  border: none;
+  transition: all 0.3s;
+  box-shadow: 0 3px 10px rgba(231, 76, 60, 0.3);
+  font-weight: 600;
+  padding: 0.7em 1.6em 0.7em 2.8em;
+  border-radius: 30px;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.5px;
+}
+
+.logout-btn::before {
+  content: "";
+  position: absolute;
+  left: 1em;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.2em;
+  height: 1.2em;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' fill='%23ffffff' opacity='0.9'%3E%3Cpath d='M226.5 92.9c14.3 42.9-.3 86.2-32.6 96.8s-70.1-15.6-84.4-58.5.3-86.2 32.6-96.8s70.1 15.6 84.4 58.5zM100.4 198.6c18.9 32.4 14.3 70.1-10.2 84.1s-59.7-.9-78.5-33.3-14.3-70.1 10.2-84.1 59.7.9 78.5 33.3z'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Add subtle paw print pattern to logout button background */
+.logout-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 512 512' opacity='0.07' fill='%23ffffff'%3E%3Cpath d='M226.5 92.9c14.3 42.9-.3 86.2-32.6 96.8s-70.1-15.6-84.4-58.5.3-86.2 32.6-96.8s70.1 15.6 84.4 58.5zm-126.1 105.7c18.9 32.4 14.3 70.1-10.2 84.1s-59.7-.9-78.5-33.3-14.3-70.1 10.2-84.1 59.7.9 78.5 33.3zm321.5 0c-18.9 32.4-14.3 70.1 10.2 84.1s59.7-.9 78.5-33.3 14.3-70.1-10.2-84.1-59.7.9-78.5 33.3z'/%3E%3C/svg%3E");
+  background-position: center;
+  background-repeat: repeat;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.15;
+}
+
+.logout-btn:hover,
+.logout-btn:focus {
+  background-color: #c0392b;
+  box-shadow: 0 5px 15px rgba(231, 76, 60, 0.5);
+  transform: translateY(-2px);
+  color: #ffffff;
+}
+
+.logout-btn:hover::before {
+  animation: wiggle 1s ease-in-out;
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: translateY(-50%) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-50%) rotate(-10deg);
+  }
+  75% {
+    transform: translateY(-50%) rotate(10deg);
+  }
 }
 
 /* Signup Button */
@@ -70,13 +175,15 @@
   background-color: #f2f1f1;
   color: #000000;
   border: 1px solid #ffffff;
-  transition: background-color 0.3s, color 0.3s;
+  transition: all 0.3s;
+  border-radius: 30px;
 }
 
 .navbar .signup-btn:hover {
   background-color: #000000;
-  border: 2px solid #1af033;
+  border: 2px solid #3498db;
   color: #ffffff;
+  transform: translateY(-2px);
 }
 
 .navbar .signup-btn:focus {
@@ -85,7 +192,7 @@
   color: #ffffff;
 }
 
-/* Add for staff tab underline effect */
+/* Enhanced staff tab styling */
 .staff-tab {
   position: relative;
   cursor: pointer;
@@ -96,27 +203,31 @@
   background: none;
   border: none;
   outline: none;
-  transition: color 0.2s;
+  transition: all 0.3s ease;
   display: inline-block;
 }
 
 .staff-tab:hover {
-  color: #1ab3f0;
+  color: #3498db;
+  text-shadow: 0 0 5px rgba(52, 152, 219, 0.4);
 }
 
 .staff-tab.active-link {
-  color: #1ab3f0 !important;
+  color: #3498db !important;
 }
 
+/* Enhanced underline effect for active staff tab */
 .staff-tab.active-link::after {
   content: "";
   display: block;
   width: 100%;
-  height: 2px;
-  background-color: #1ab3f0;
+  height: 3px;
+  background-color: #3498db;
   position: absolute;
-  bottom: -19px;
+  bottom: -24px;
   left: 0;
+  box-shadow: 0 0 12px rgba(52, 152, 219, 0.6);
+  border-radius: 2px;
 }
 
 /* Responsive styles for StaffNavbar */

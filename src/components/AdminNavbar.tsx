@@ -53,7 +53,7 @@ export default function AdminNavbar({ activeTab, setActiveTab }: Props) {
         >
           + Add Staff
         </button> */}
-        <button onClick={handleLogout} className="btn login-btn">
+        <button onClick={handleLogout} className="btn logout-btn">
           Logout
         </button>
       </div>
