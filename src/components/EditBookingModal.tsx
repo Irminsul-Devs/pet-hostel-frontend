@@ -5,7 +5,11 @@ import "react-datepicker/dist/react-datepicker.css";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import type { EditBookingModalProps, EditBookingForm } from "../types";
 
-export default function EditBookingModal({ booking, onClose, onSave }: EditBookingModalProps) {
+export default function EditBookingModal({
+  booking,
+  onClose,
+  onSave,
+}: EditBookingModalProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [form, setForm] = useState<EditBookingForm>({
@@ -13,8 +17,6 @@ export default function EditBookingModal({ booking, onClose, onSave }: EditBooki
     services: booking.services || [],
     petAge: booking.petAge || "",
     petFood: booking.petFood || "",
-    signature: booking.signature || "",
-    acknowledge: booking.acknowledge || false,
     vaccinationCertificate: booking.vaccinationCertificate || null,
   });
   const [petVaccinated, setPetVaccinated] = useState(!!booking.petVaccinated);
@@ -26,8 +28,6 @@ export default function EditBookingModal({ booking, onClose, onSave }: EditBooki
       services: booking.services || [],
       petAge: booking.petAge || "",
       petFood: booking.petFood || "",
-      signature: booking.signature || "",
-      acknowledge: booking.acknowledge || false,
       vaccinationCertificate: booking.vaccinationCertificate || null,
     });
     setPetVaccinated(!!booking.petVaccinated);
@@ -50,7 +50,30 @@ export default function EditBookingModal({ booking, onClose, onSave }: EditBooki
   ) => {
     const { name, value, type, checked, files } = e.target as any;
     if (type === "file") {
-      setForm((f: any) => ({ ...f, [name]: files[0] }));
+      const file = files[0];
+      if (file) {
+        // Validate that the file is a PDF
+        if (
+          name === "vaccinationCertificate" &&
+          !file.type.match("application/pdf")
+        ) {
+          setError("Only PDF files are allowed.");
+          // Clear the file input so the invalid file isn't stored
+          e.target.value = "";
+          // Show popup alert
+          alert("Please select a PDF file only.");
+          return;
+        }
+        // Validate file size (1MB limit)
+        if (file.size > 1 * 1024 * 1024) {
+          setError("File too large (max 1MB)");
+          // Clear the file input
+          e.target.value = "";
+          alert("The file is too large. Maximum size is 1MB.");
+          return;
+        }
+        setForm((f: any) => ({ ...f, [name]: file }));
+      }
     } else if (type === "checkbox") {
       setForm((f: any) => ({ ...f, [name]: checked }));
     } else {
@@ -58,72 +81,151 @@ export default function EditBookingModal({ booking, onClose, onSave }: EditBooki
     }
   };
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  
-  if (isSubmitting) return;
-  
-  if (!validateForm()) {
-    setError("Please fill all required fields.");
-    return;
-  }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  try {
-    setIsSubmitting(true);
-    
-    const isConfirmed = window.confirm("Are you sure you want to update this booking?");
-    if (!isConfirmed) {
-      setIsSubmitting(false);
+    if (isSubmitting) return;
+
+    // Clear any previous errors
+    setError("");
+
+    // Comprehensive validation before proceeding
+    if (!validateForm()) {
+      // Don't set a generic error here since validateForm may set specific errors
+      if (!error) {
+        setError("Please fill all required fields.");
+      }
       return;
     }
 
-    const updatedBooking = { 
-      ...form, 
-      petVaccinated,
-      vaccinationCertificate: form.vaccinationCertificate instanceof File
-        ? await convertFileToBase64(form.vaccinationCertificate)
-        : form.vaccinationCertificate
-    };
-    
-    await onSave(updatedBooking);
-    
-    alert("Booking updated successfully!");
-    onClose();
-  } catch (err) {
-    setError(err instanceof Error ? err.message : "Failed to update booking");
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+    // Explicitly check for vaccination certificate if pet is vaccinated
+    if (petVaccinated) {
+      if (form.vaccinationCertificate === null) {
+        setError("Please upload a vaccination certificate.");
+        alert("Please upload a vaccination certificate.");
+        return;
+      }
 
-const validateForm = () => {
-  return (
-    form.ownerName &&
-    form.ownerMobile &&
-    form.ownerDob &&
-    form.ownerEmail &&
-    form.ownerAddress &&
-    form.petName &&
-    form.petType &&
-    form.bookingFrom &&
-    form.bookingTo &&
-    form.services?.length > 0 &&
-    form.petDob &&
-    form.petFood &&
-    form.signature &&
-    form.acknowledge
-  );
-};
+      // If it's a File object, validate it's a PDF and check size
+      if (form.vaccinationCertificate instanceof File) {
+        if (!form.vaccinationCertificate.type.match("application/pdf")) {
+          setError("Only PDF files are allowed for vaccination certificate.");
+          alert("Only PDF files are allowed. Please select a PDF file.");
+          return;
+        }
 
-// Add this to your imports if not already there
-const convertFileToBase64 = (file: File): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = error => reject(error);
-  });
-};
+        // Double-check file size again before submission (1MB limit)
+        if (form.vaccinationCertificate.size > 1 * 1024 * 1024) {
+          setError("Vaccination certificate too large (max 1MB)");
+          alert(
+            "The vaccination certificate is too large. Maximum size is 1MB."
+          );
+          return;
+        }
+      }
+    }
+
+    try {
+      setIsSubmitting(true);
+
+      const isConfirmed = window.confirm(
+        "Are you sure you want to update this booking?"
+      );
+      if (!isConfirmed) {
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Prepare the updated booking data
+      let finalCertificate = null;
+
+      // Log file info if it's a File instance
+      if (petVaccinated && form.vaccinationCertificate instanceof File) {
+        const file = form.vaccinationCertificate;
+        console.log(
+          `File size before conversion: ${(file.size / 1024).toFixed(2)}KB`
+        );
+
+        finalCertificate = await convertFileToBase64(file);
+
+        // Log base64 size after conversion
+        if (finalCertificate) {
+          console.log(
+            `Base64 size after conversion: ${(
+              finalCertificate.length / 1024
+            ).toFixed(2)}KB`
+          );
+        }
+      } else if (
+        petVaccinated &&
+        typeof form.vaccinationCertificate === "string"
+      ) {
+        // Keep existing certificate
+        finalCertificate = form.vaccinationCertificate;
+        console.log(
+          `Using existing certificate, length: ${(
+            finalCertificate.length / 1024
+          ).toFixed(2)}KB`
+        );
+      }
+
+      const updatedBooking = {
+        ...form,
+        petVaccinated,
+        vaccinationCertificate: finalCertificate,
+      };
+
+      // Ensure we're sending null when pet is not vaccinated
+      if (!petVaccinated) {
+        updatedBooking.vaccinationCertificate = null;
+      }
+
+      await onSave(updatedBooking);
+
+      alert("Booking updated successfully!");
+      onClose();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to update booking");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const validateForm = () => {
+    // Check if a file is present and is not a PDF
+    if (petVaccinated && form.vaccinationCertificate instanceof File) {
+      const fileType = form.vaccinationCertificate.type;
+      if (!fileType.match("application/pdf")) {
+        setError("Only PDF files are allowed for vaccination certificate.");
+        return false;
+      }
+    }
+
+    return (
+      form.ownerName &&
+      form.ownerMobile &&
+      form.ownerDob &&
+      form.ownerEmail &&
+      form.ownerAddress &&
+      form.petName &&
+      form.petType &&
+      form.bookingFrom &&
+      form.bookingTo &&
+      form.services?.length > 0 &&
+      form.petDob &&
+      form.petFood
+    );
+  };
+
+  // Add this to your imports if not already there
+  const convertFileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  };
   const parseDate = (val: string) => (val ? new Date(val) : null);
 
   return (
@@ -643,7 +745,14 @@ const convertFileToBase64 = (file: File): Promise<string> => {
               <input
                 type="checkbox"
                 checked={petVaccinated}
-                onChange={() => setPetVaccinated((v) => !v)}
+                onChange={() => {
+                  const newVaccinatedStatus = !petVaccinated;
+                  setPetVaccinated(newVaccinatedStatus);
+                  // Clear certificate immediately when toggling to "No"
+                  if (!newVaccinatedStatus) {
+                    setForm((f) => ({ ...f, vaccinationCertificate: null }));
+                  }
+                }}
                 style={{ display: "none" }}
               />
               <span className="slider"></span>
@@ -682,7 +791,8 @@ const convertFileToBase64 = (file: File): Promise<string> => {
                 <input
                   type="file"
                   name="vaccinationCertificate"
-                  accept=".pdf,.jpg,.jpeg,.png"
+                  accept=".pdf"
+                  onChange={handleChange} // Use the existing handleChange function
                   style={{
                     color: "#eaf6fb",
                     background: "#2a2a2a",
@@ -695,85 +805,24 @@ const convertFileToBase64 = (file: File): Promise<string> => {
                     width: "180px",
                     cursor: "pointer",
                   }}
-                  onChange={(e) => {
-                    const file = e.target.files?.[0] || null;
-                    setForm((f: any) => ({
-                      ...f,
-                      vaccinationCertificate: file,
-                    }));
-                  }}
                 />
               </label>
             )}
           </div>
-          <label
-            htmlFor="acknowledge"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              width: "100%",
-              margin: "1em 0",
-              cursor: "pointer",
-              userSelect: "none",
-              gap: "0.7em",
-            }}
+
+          {error && (
+            <div className="error-message">
+              {error}
+              <button onClick={() => setError("")}>×</button>
+            </div>
+          )}
+          <button
+            type="submit"
+            className="btn modal-btn"
+            disabled={isSubmitting}
           >
-            <input
-              type="checkbox"
-              id="acknowledge"
-              name="acknowledge"
-              checked={form.acknowledge}
-              onChange={handleChange}
-              style={{
-                accentColor: "#1ab3f0",
-                width: "1.3em",
-                height: "1.3em",
-                minWidth: "1.3em",
-                minHeight: "1.3em",
-                cursor: "pointer",
-                margin: 0,
-                marginTop: "0.1em",
-              }}
-              required
-            />
-            <span
-              style={{
-                color: "#1ab3f0",
-                fontWeight: 500,
-                fontSize: "1.04em",
-                lineHeight: 1.4,
-                cursor: "pointer",
-                margin: 0,
-              }}
-            >
-              By signing this form, I hereby acknowledge that I am at least 18
-              years old and the information given is true.
-            </span>
-          </label>
-          <div className="input-group" style={{ width: "30%" }}>
-            <input
-              type="text"
-              name="signature"
-              placeholder="Signature"
-              required
-              value={form.signature}
-              onChange={handleChange}
-            />
-            <label>Signature</label>
-          </div>
-{error && (
-  <div className="error-message">
-    {error}
-    <button onClick={() => setError("")}>×</button>
-  </div>
-)}
-<button 
-  type="submit" 
-  className="btn modal-btn"
-  disabled={isSubmitting}
->
-  {isSubmitting ? "Saving..." : "Save Changes"}
-</button>
+            {isSubmitting ? "Saving..." : "Save Changes"}
+          </button>
         </form>
       </div>
     </div>

@@ -30,16 +30,15 @@ export default function ChangePasswordModal({ onClose }: Props) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onClose]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (isSubmitting) return;
 
     if (!currentPassword || !newPassword || !confirmPassword) {
       setError("All fields are required.");
-      return;
-    }
-
-    if (currentPassword !== storedUser.ownerPassword) {
-      setError("Current password is incorrect.");
       return;
     }
 
@@ -48,17 +47,54 @@ export default function ChangePasswordModal({ onClose }: Props) {
       return;
     }
 
-    const updatedUser = { ...storedUser, ownerPassword: newPassword };
-    localStorage.setItem("user", JSON.stringify(updatedUser));
+    if (newPassword.length < 6) {
+      setError("New password must be at least 6 characters long.");
+      return;
+    }
 
-    alert("Password changed successfully!");
-    onClose();
+    try {
+      setIsSubmitting(true);
+      setError("");
+
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        "http://localhost:5000/api/auth/change-password",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            currentPassword,
+            newPassword,
+            userId: storedUser.id,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to change password");
+      }
+
+      alert("Password changed successfully!");
+      onClose();
+    } catch (err: any) {
+      setError(err.message || "An error occurred while changing password");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className="modal-backdrop">
       <div className="modal" ref={ref}>
-        <button className="modal-close" onClick={onClose}>✕</button>
+        <button className="modal-close" onClick={onClose}>
+          ✕
+        </button>
         <h2>Change Password</h2>
         <form onSubmit={handleSubmit}>
           {/* Current Password */}
@@ -138,8 +174,12 @@ export default function ChangePasswordModal({ onClose }: Props) {
 
           {error && <p className="error-text">{error}</p>}
 
-          <button type="submit" className="btn modal-btn">
-            Save Password
+          <button
+            type="submit"
+            className="btn modal-btn"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Saving..." : "Save Password"}
           </button>
         </form>
       </div>

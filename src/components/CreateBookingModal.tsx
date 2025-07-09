@@ -4,17 +4,17 @@ import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import type { Booking, BookingFormData } from "../types";
-import type { CSSProperties } from 'react';
+import type { CSSProperties } from "react";
 
 type Props = {
   onClose: () => void;
-  onCreate: (newBooking: Omit<Booking, 'id' | 'createdAt' | 'updatedAt'>) => Promise<void>;
+  onCreate: (newBooking: Omit<Booking, "id">) => Promise<void>;
 };
 
-type DateField = 'ownerDob' | 'petDob' | 'bookingFrom' | 'bookingTo';
+type DateField = "ownerDob" | "petDob" | "bookingFrom" | "bookingTo";
 
 const initialFormState: BookingFormData = {
-  bookingDate: new Date().toISOString().split('T')[0],
+  bookingDate: new Date().toISOString().split("T")[0],
   name: "",
   mobile: "",
   email: "",
@@ -32,8 +32,6 @@ const initialFormState: BookingFormData = {
   petDob: "",
   petAge: "",
   petFood: "",
-  signature: "",
-  acknowledge: false,
   vaccinationCertificate: null,
   petVaccinated: false,
 };
@@ -51,27 +49,35 @@ export default function CreateBookingModal({ onClose, onCreate }: Props) {
       const today = new Date();
       let age = today.getFullYear() - birthDate.getFullYear();
       const monthDiff = today.getMonth() - birthDate.getMonth();
-      
-      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+
+      if (
+        monthDiff < 0 ||
+        (monthDiff === 0 && today.getDate() < birthDate.getDate())
+      ) {
         age--;
       }
 
-      let ageString = '';
+      let ageString = "";
       if (age > 0) {
-        ageString = `${age} year${age > 1 ? 's' : ''}`;
+        ageString = `${age} year${age > 1 ? "s" : ""}`;
         const remainingMonths = today.getMonth() - birthDate.getMonth();
         if (remainingMonths > 0) {
-          ageString += `, ${remainingMonths} month${remainingMonths > 1 ? 's' : ''}`;
+          ageString += `, ${remainingMonths} month${
+            remainingMonths > 1 ? "s" : ""
+          }`;
         }
       } else {
-        const months = Math.max(0, (today.getFullYear() - birthDate.getFullYear()) * 12 + 
-          (today.getMonth() - birthDate.getMonth()));
-        ageString = `${months} month${months !== 1 ? 's' : ''}`;
+        const months = Math.max(
+          0,
+          (today.getFullYear() - birthDate.getFullYear()) * 12 +
+            (today.getMonth() - birthDate.getMonth())
+        );
+        ageString = `${months} month${months !== 1 ? "s" : ""}`;
       }
 
-      setForm(prev => ({ ...prev, petAge: ageString }));
+      setForm((prev) => ({ ...prev, petAge: ageString }));
     } else {
-      setForm(prev => ({ ...prev, petAge: "" }));
+      setForm((prev) => ({ ...prev, petAge: "" }));
     }
   }, [form.petDob]);
 
@@ -87,95 +93,166 @@ export default function CreateBookingModal({ onClose, onCreate }: Props) {
   }, [onClose]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value, type } = e.target;
-    
+
     if (type === "file") {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (file) {
-        // Validate file size (5MB example)
-        if (file.size > 5 * 1024 * 1024) {
-          setError("File too large (max 5MB)");
+        // Validate that the file is a PDF
+        if (
+          name === "vaccinationCertificate" &&
+          !file.type.match("application/pdf")
+        ) {
+          setError("Only PDF files are allowed.");
+          // Clear the file input so the invalid file isn't stored
+          e.target.value = "";
+          // Show popup alert
+          alert("Please select a PDF file only.");
           return;
         }
-        setForm(prev => ({ ...prev, [name]: file }));
+        // Validate file size (1MB limit)
+        if (file.size > 1 * 1024 * 1024) {
+          setError("File too large (max 1MB)");
+          // Clear the file input
+          e.target.value = "";
+          alert("The file is too large. Maximum size is 1MB.");
+          return;
+        }
+        setForm((prev) => ({ ...prev, [name]: file }));
       }
-    }
-    else if (type === "checkbox") {
+    } else if (type === "checkbox") {
       const checked = (e.target as HTMLInputElement).checked;
-      setForm(prev => ({ ...prev, [name]: checked }));
-    } 
-    else {
-      setForm(prev => ({ ...prev, [name]: value }));
+      setForm((prev) => ({ ...prev, [name]: checked }));
+    } else {
+      setForm((prev) => ({ ...prev, [name]: value }));
     }
   };
 
   const handleDateChange = (date: Date | null, field: DateField) => {
-    setForm(prev => ({
+    setForm((prev) => ({
       ...prev,
-      [field]: date ? date.toISOString().split('T')[0] : ""
+      [field]: date ? date.toISOString().split("T")[0] : "",
     }));
   };
 
   const handleServiceChange = (service: string, isChecked: boolean) => {
-    setForm(prev => ({
+    setForm((prev) => ({
       ...prev,
-      services: isChecked 
-        ? [...prev.services, service] 
-        : prev.services.filter(s => s !== service)
+      services: isChecked
+        ? [...prev.services, service]
+        : prev.services.filter((s) => s !== service),
     }));
   };
 
   const convertFileToBase64 = (file: File | null): Promise<string | null> => {
     return new Promise((resolve, reject) => {
       if (!file) {
-      resolve(null);
-      return;
+        resolve(null);
+        return;
       }
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => resolve(reader.result as string);
-      reader.onerror = error => reject(error);
+      reader.onerror = (error) => reject(error);
     });
   };
 
   const validateForm = (): boolean => {
     const requiredFields: Array<keyof BookingFormData> = [
-      'ownerName', 'ownerMobile', 'ownerDob', 'ownerEmail', 'ownerAddress',
-      'petName', 'petType', 'bookingFrom', 'bookingTo', 'petDob', 
-      'petFood', 'signature'
+      "ownerName",
+      "ownerMobile",
+      "ownerDob",
+      "ownerEmail",
+      "ownerAddress",
+      "petName",
+      "petType",
+      "bookingFrom",
+      "bookingTo",
+      "petDob",
+      "petFood",
     ];
 
+    // Check if a file is present and is not a PDF
+    if (petVaccinated && form.vaccinationCertificate) {
+      // Check if it's a File object (during upload)
+      const file = form.vaccinationCertificate as File;
+      if (file && file.type && !file.type.match("application/pdf")) {
+        setError("Only PDF files are allowed for vaccination certificate.");
+        return false;
+      }
+    }
+
     return (
-      requiredFields.every(field => !!form[field]) &&
-      form.services.length > 0 &&
-      form.acknowledge
+      requiredFields.every((field) => !!form[field]) && form.services.length > 0
     );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
+    // Clear any previous errors
+    setError("");
+
     if (!validateForm()) {
-      setError("Please fill all required fields.");
+      // Don't set a generic error here since validateForm may set specific errors
+      if (!error) {
+        setError("Please fill all required fields.");
+      }
       return;
+    }
+
+    // Explicitly check for vaccination certificate if pet is vaccinated
+    if (petVaccinated) {
+      if (!form.vaccinationCertificate) {
+        setError("Please upload a vaccination certificate.");
+        alert("Please upload a vaccination certificate.");
+        return;
+      }
+
+      // If it's a File object, validate it's a PDF
+      const file = form.vaccinationCertificate as File;
+      if (file && file.type && !file.type.match("application/pdf")) {
+        setError("Only PDF files are allowed for vaccination certificate.");
+        alert("Only PDF files are allowed. Please select a PDF file.");
+        return;
+      }
     }
 
     try {
       let vaccinationCertificate = null;
       // Only try to read file if it exists
       if (form.vaccinationCertificate) {
-        vaccinationCertificate = await convertFileToBase64(form.vaccinationCertificate);
+        // Log file size before conversion for debugging
+        const file = form.vaccinationCertificate as File;
+        console.log(
+          `File size before conversion: ${(file.size / 1024).toFixed(2)}KB`
+        );
+
+        vaccinationCertificate = await convertFileToBase64(
+          form.vaccinationCertificate
+        );
+
+        // Log base64 size after conversion
+        if (vaccinationCertificate) {
+          console.log(
+            `Base64 size after conversion: ${(
+              vaccinationCertificate.length / 1024
+            ).toFixed(2)}KB`
+          );
+        }
       }
 
       await onCreate({
         ...form,
         vaccinationCertificate,
         petVaccinated,
-        userId: null // Or get from current user if available
+        userId: null, // Or get from current user if available
       });
-      
+
       setForm(initialFormState);
       setError("");
       alert("Booking created successfully!");
@@ -185,12 +262,12 @@ export default function CreateBookingModal({ onClose, onCreate }: Props) {
     }
   };
 
-  const parseDate = (val: string) => val ? new Date(val) : null;
+  const parseDate = (val: string) => (val ? new Date(val) : null);
 
   // Render functions for better organization
   const renderInputGroup = (
-    name: keyof BookingFormData, 
-    label: string, 
+    name: keyof BookingFormData,
+    label: string,
     type = "text",
     additionalProps: any = {}
   ) => (
@@ -257,7 +334,8 @@ export default function CreateBookingModal({ onClose, onCreate }: Props) {
           background: form[field] ? "#181f2a" : "transparent",
           padding: "0 0.3rem",
           pointerEvents: "none",
-          transition: "top 0.25s, font-size 0.25s, color 0.25s, background 0.25s",
+          transition:
+            "top 0.25s, font-size 0.25s, color 0.25s, background 0.25s",
           zIndex: 2,
         }}
       >
@@ -273,19 +351,19 @@ export default function CreateBookingModal({ onClose, onCreate }: Props) {
           ✕
         </button>
         <h2>Create Booking</h2>
-        
+
         <form onSubmit={handleSubmit}>
           <div className="modal-form-columns">
             <div className="modal-form-col">
-              {renderInputGroup('ownerName', 'Owner Name')}
-              {renderInputGroup('ownerMobile', 'Mobile Number', 'tel', {
+              {renderInputGroup("ownerName", "Owner Name")}
+              {renderInputGroup("ownerMobile", "Mobile Number", "tel", {
                 pattern: "[0-9]{10}",
                 maxLength: 10,
-                title: "Please enter a 10-digit phone number"
+                title: "Please enter a 10-digit phone number",
               })}
-              {renderDatePicker('ownerDob', 'Owner Date of Birth')}
-              {renderInputGroup('ownerEmail', 'Email', 'email')}
-              
+              {renderDatePicker("ownerDob", "Owner Date of Birth")}
+              {renderInputGroup("ownerEmail", "Email", "email")}
+
               <div className="input-group" style={{ position: "relative" }}>
                 <textarea
                   name="ownerAddress"
@@ -305,16 +383,17 @@ export default function CreateBookingModal({ onClose, onCreate }: Props) {
                     background: form.ownerAddress ? "#181f2a" : "transparent",
                     padding: "0 0.3rem",
                     pointerEvents: "none",
-                    transition: "top 0.25s, font-size 0.25s, color 0.25s, background 0.25s",
+                    transition:
+                      "top 0.25s, font-size 0.25s, color 0.25s, background 0.25s",
                     zIndex: 2,
                   }}
                 >
                   Address
                 </label>
               </div>
-              
-              {renderInputGroup('petName', 'Pet Name')}
-              
+
+              {renderInputGroup("petName", "Pet Name")}
+
               <div className="input-group">
                 <select
                   name="petType"
@@ -335,31 +414,52 @@ export default function CreateBookingModal({ onClose, onCreate }: Props) {
 
             <div className="modal-form-col">
               <div style={{ display: "flex", gap: "1em", width: "100%" }}>
-                {renderDatePicker('bookingFrom', 'Booking Date From')}
-                {renderDatePicker('bookingTo', 'Booking Date To')}
+                {renderDatePicker("bookingFrom", "Booking Date From")}
+                {renderDatePicker("bookingTo", "Booking Date To")}
               </div>
-              
+
               <div style={{ marginTop: "1.2em", marginBottom: "1.2em" }}>
-                <div style={{ marginBottom: "0.5em", color: "#eaf6fb", fontWeight: 500, fontSize: "0.9em" }}>
+                <div
+                  style={{
+                    marginBottom: "0.5em",
+                    color: "#eaf6fb",
+                    fontWeight: 500,
+                    fontSize: "0.9em",
+                  }}
+                >
                   Select Services
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", color: "#aaa", gap: "0.7em" }}>
-                  {["Boarding", "Grooming", "Training", "Day Care"].map((service) => (
-                    <label key={service} style={serviceLabelStyle}>
-                      <input
-                        type="checkbox"
-                        checked={form.services.includes(service)}
-                        onChange={(e) => handleServiceChange(service, e.target.checked)}
-                        style={{ marginRight: "0.4em", accentColor: "#1ab3f0" }}
-                      />
-                      {service}
-                    </label>
-                  ))}
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    color: "#aaa",
+                    gap: "0.7em",
+                  }}
+                >
+                  {["Boarding", "Grooming", "Training", "Day Care"].map(
+                    (service) => (
+                      <label key={service} style={serviceLabelStyle}>
+                        <input
+                          type="checkbox"
+                          checked={form.services.includes(service)}
+                          onChange={(e) =>
+                            handleServiceChange(service, e.target.checked)
+                          }
+                          style={{
+                            marginRight: "0.4em",
+                            accentColor: "#1ab3f0",
+                          }}
+                        />
+                        {service}
+                      </label>
+                    )
+                  )}
                 </div>
               </div>
-              
-              {renderDatePicker('petDob', 'Pet Date of Birth')}
-              
+
+              {renderDatePicker("petDob", "Pet Date of Birth")}
+
               <div className="input-group">
                 <input
                   type="text"
@@ -377,7 +477,7 @@ export default function CreateBookingModal({ onClose, onCreate }: Props) {
                 />
                 <label>Pet Age (Auto)</label>
               </div>
-              
+
               <div className="input-group" style={{ position: "relative" }}>
                 <textarea
                   name="petFood"
@@ -401,7 +501,7 @@ export default function CreateBookingModal({ onClose, onCreate }: Props) {
               <input
                 type="checkbox"
                 checked={petVaccinated}
-                onChange={() => setPetVaccinated(v => !v)}
+                onChange={() => setPetVaccinated((v) => !v)}
                 style={{ display: "none" }}
               />
               <span className="slider"></span>
@@ -416,7 +516,7 @@ export default function CreateBookingModal({ onClose, onCreate }: Props) {
                 <input
                   type="file"
                   name="vaccinationCertificate"
-                  accept=".pdf,.jpg,.jpeg,.png"
+                  accept=".pdf"
                   style={fileInputStyle}
                   onChange={handleChange}
                 />
@@ -424,38 +524,8 @@ export default function CreateBookingModal({ onClose, onCreate }: Props) {
             )}
           </div>
 
-          {/* Acknowledge Checkbox */}
-          <label htmlFor="acknowledge" style={acknowledgeLabelStyle}>
-            <input
-              type="checkbox"
-              id="acknowledge"
-              name="acknowledge"
-              checked={form.acknowledge}
-              onChange={handleChange}
-              style={acknowledgeCheckboxStyle}
-              required
-            />
-            <span style={acknowledgeTextStyle}>
-              By signing this form, I hereby acknowledge that I am at least 18
-              years old and the information given is true.
-            </span>
-          </label>
-
-          {/* Signature */}
-          <div className="input-group" style={{ width: "30%" }}>
-            <input
-              type="text"
-              name="signature"
-              placeholder="Signature"
-              required
-              value={form.signature}
-              onChange={handleChange}
-            />
-            <label>Signature</label>
-          </div>
-
           {error && <p className="error-text">{error}</p>}
-          
+
           <button type="submit" className="btn modal-btn">
             Submit
           </button>
@@ -541,34 +611,4 @@ const fileInputStyle: CSSProperties = {
   boxShadow: "none",
   width: "180px",
   cursor: "pointer",
-};
-
-const acknowledgeLabelStyle: CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  width: "100%",
-  margin: "1em 0",
-  cursor: "pointer",
-  userSelect: "none",
-  gap: "0.7em",
-};
-
-const acknowledgeCheckboxStyle: CSSProperties = {
-  accentColor: "#1ab3f0",
-  width: "1.3em",
-  height: "1.3em",
-  minWidth: "1.3em",
-  minHeight: "1.3em",
-  cursor: "pointer",
-  margin: 0,
-  marginTop: "0.1em",
-};
-
-const acknowledgeTextStyle: CSSProperties = {
-  color: "#1ab3f0",
-  fontWeight: 500,
-  fontSize: "1.04em",
-  lineHeight: 1.4,
-  cursor: "pointer",
-  margin: 0,
 };

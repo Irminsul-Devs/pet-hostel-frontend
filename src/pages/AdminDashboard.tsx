@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import "../styles/StaffDashboard.css";
 import AdminNavbar from "../components/AdminNavbar";
 import AddStaffModal from "../components/AddStaffModal";
+// import type { StaffData } from "../components/AddStaffModal";
 import BookingInfoModal from "../components/BookingInfoModal";
 import DeleteConfirmModal from "../components/DeleteConfirmModal";
-import type { StaffData } from "../components/AddStaffModal";
 import { MdInfoOutline, MdEdit, MdDelete } from "react-icons/md";
 
 export default function AdminDashboard() {
@@ -22,56 +22,23 @@ export default function AdminDashboard() {
   useEffect(() => {
     const stored = localStorage.getItem("user");
     if (stored) setUser(JSON.parse(stored));
-
-    setBookings([
-      {
-        id: 1,
-        name: "Charlie",
-        bookingDate: "2025-06-24",
-        mobile: "9876543210",
-        email: "charlie@pet.com",
-        remarks: "First time boarding",
-      },
-      {
-        id: 2,
-        name: "Bella",
-        bookingDate: "2025-06-23",
-        mobile: "9876500000",
-        email: "bella@pet.com",
-        remarks: "Grooming only",
-      },
-    ]);
-
-    setStaff([
-      {
-        id: 1,
-        name: "Alice",
-        age: "30",
-        mobile: "9876543210",
-        email: "alice@hostel.com",
-        address: "Chennai",
-      },
-      {
-        id: 2,
-        name: "Bob",
-        age: "28",
-        mobile: "9876500000",
-        email: "bob@hostel.com",
-        address: "Bangalore",
-      },
-    ]);
+    fetchStaff();
   }, []);
-
-  const handleAddStaff = (newStaff: StaffData) => {
-    setStaff((prev) => [
-      ...prev,
-      { ...newStaff, id: Math.max(0, ...prev.map((s) => s.id)) + 1 },
-    ]);
+  const fetchStaff = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/staff");
+      const data = await res.json();
+      console.log("Staff fetched:", data); // 👀 Check what’s returned
+      setStaff(data);
+    } catch (err) {
+      console.error("Error fetching staff", err);
+    }
   };
 
   return (
     <>
       <AdminNavbar activeTab={activeTab} setActiveTab={setActiveTab} />
+
       <div className="staff-dashboard">
         {activeTab === "dashboard" && (
           <h1 style={{ color: "#1ab3f0", marginBottom: "0.5em" }}>
@@ -144,7 +111,7 @@ export default function AdminDashboard() {
                 <tr>
                   <th>S.No</th>
                   <th>Name</th>
-                  <th>Age</th>
+                  <th>DOB</th>
                   <th>Mobile No</th>
                   <th>Email</th>
                   <th>Address</th>
@@ -157,7 +124,7 @@ export default function AdminDashboard() {
                     <tr key={s.id}>
                       <td>{i + 1}</td>
                       <td>{s.name}</td>
-                      <td>{s.age}</td>
+                      <td>{s.dob?.split("T")[0]}</td>
                       <td>{s.mobile}</td>
                       <td>{s.email}</td>
                       <td>{s.address}</td>
@@ -211,18 +178,57 @@ export default function AdminDashboard() {
             setShowAddModal(false);
             setEditStaff(null);
           }}
-          onSave={(data) => {
-            if (editStaff) {
-              setStaff((prev) =>
-                prev.map((st) =>
-                  st.username === editStaff.username ? { ...st, ...data } : st
-                )
-              );
-            } else {
-              handleAddStaff(data);
+          onSave={async (data) => {
+            try {
+              let result;
+
+              if (editStaff) {
+                // Update staff
+                const res = await fetch(
+                  `http://localhost:5000/api/auth/update-staff/${editStaff.id}`,
+                  {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data),
+                  }
+                );
+                result = await res.json();
+
+                if (!res.ok) {
+                  alert(result.message || "Update failed");
+                  return;
+                }
+
+                alert("Staff updated successfully");
+              } else {
+                // Add new staff
+                const res = await fetch(
+                  "http://localhost:5000/api/auth/add-staff",
+                  {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data),
+                  }
+                );
+                result = await res.json();
+
+                if (!res.ok) {
+                  alert(result.message || "Add failed");
+                  return;
+                }
+
+                alert("Staff added successfully");
+              }
+
+              // ✅ Always fetch the latest staff list from DB after any change
+              await fetchStaff();
+            } catch (err) {
+              console.error("Error saving staff:", err);
+              alert("Something went wrong");
+            } finally {
+              setShowAddModal(false);
+              setEditStaff(null);
             }
-            setShowAddModal(false);
-            setEditStaff(null);
           }}
         />
       )}
@@ -236,11 +242,12 @@ export default function AdminDashboard() {
 
       {confirmDeleteId !== null && (
         <DeleteConfirmModal
-          onCancel={() => setConfirmDeleteId(null)}
-          onConfirm={() => {
-            setStaff((prev) => prev.filter((st) => st.id !== confirmDeleteId));
+          staffId={confirmDeleteId}
+          onSuccess={async () => {
+            await fetchStaff(); // Refresh updated staff list
             setConfirmDeleteId(null);
           }}
+          onCancel={() => setConfirmDeleteId(null)}
         />
       )}
     </>

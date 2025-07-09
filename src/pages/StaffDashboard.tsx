@@ -10,7 +10,9 @@ import type { User, Booking } from "../types";
 
 export default function StaffDashboard() {
   const [user, setUser] = useState<User | null>(null);
-  const [activeTab, setActiveTab] = useState<"dashboard" | "bookings">("dashboard");
+  const [activeTab, setActiveTab] = useState<"dashboard" | "bookings">(
+    "dashboard"
+  );
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [infoBooking, setInfoBooking] = useState<Booking | null>(null);
@@ -37,10 +39,10 @@ export default function StaffDashboard() {
     if (!dateString || dateString === "0000-00-00 00:00:00") return "N/A";
     try {
       const date = new Date(dateString);
-      return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
+      return date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
       });
     } catch {
       return "N/A";
@@ -53,12 +55,17 @@ export default function StaffDashboard() {
       const token = localStorage.getItem("token");
       try {
         if (user) {
-          const response = await fetch("http://localhost:5000/api/bookings", {
-            headers: { Authorization: `Bearer ${token}` }
-          });
-          
+          // Modify the endpoint to fetch all bookings (staff should see all bookings)
+          // The backend should handle authorization and return all bookings for staff users
+          const response = await fetch(
+            "http://localhost:5000/api/bookings/all",
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+
           if (!response.ok) throw new Error("Failed to fetch bookings");
-          
+
           const data = await response.json();
           console.log("API Response:", data);
 
@@ -83,13 +90,9 @@ export default function StaffDashboard() {
             petDob: item.pet_dob,
             petAge: item.pet_age,
             petFood: item.pet_food,
-            signature: item.signature,
-            acknowledge: Boolean(item.acknowledge), // Convert 1/0 to boolean
             vaccinationCertificate: item.vaccination_certificate,
             petVaccinated: Boolean(item.pet_vaccinated), // Convert 1/0 to boolean
             userId: item.user_id,
-            createdAt: item.created_at,
-            updatedAt: item.updated_at
           }));
 
           console.log("Transformed Bookings:", transformedData);
@@ -111,114 +114,107 @@ export default function StaffDashboard() {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => resolve(reader.result as string);
-      reader.onerror = error => reject(error);
+      reader.onerror = (error) => reject(error);
     });
   };
 
   const handleCreateBooking = async (formData: BookingFormData) => {
-  try {
-    const token = localStorage.getItem("token");
-    
-    // Convert form data to full booking
-    const newBooking: Omit<Booking, 'id' | 'createdAt' | 'updatedAt'> = {
-      ...formData,
-      vaccinationCertificate: formData.vaccinationCertificate 
-        ? await convertFileToBase64(formData.vaccinationCertificate)
-        : null,
-      userId: user?.id || null,
-      petVaccinated: formData.petVaccinated
-    };
+    try {
+      const token = localStorage.getItem("token");
 
-    const response = await fetch("http://localhost:5000/api/bookings", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify(newBooking)
-    });
+      // Convert form data to full booking
+      const newBooking: Omit<Booking, "id"> = {
+        ...formData,
+        vaccinationCertificate: formData.vaccinationCertificate
+          ? await convertFileToBase64(formData.vaccinationCertificate)
+          : null,
+        userId: user?.id || null,
+        petVaccinated: formData.petVaccinated,
+      };
 
-    if (!response.ok) throw new Error("Failed to create booking");
-    
-    const data = await response.json();
-    setBookings(prev => [...prev, data]);
-    setShowBookingModal(false);
-  } catch (err) {
-    setError(err instanceof Error ? err.message : "Creation error");
-  }
-};
-
-const handleUpdateBooking = async (updatedBooking: Booking) => {
-  try {
-    const token = localStorage.getItem("token");
-    const response = await fetch(
-      `http://localhost:5000/api/bookings/${updatedBooking.id}`,
-      {
-        method: "PUT",
+      const response = await fetch("http://localhost:5000/api/bookings", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(updatedBooking),
-      }
-    );
+        body: JSON.stringify(newBooking),
+      });
 
-    if (!response.ok) throw new Error("Failed to update booking");
+      if (!response.ok) throw new Error("Failed to create booking");
 
-    const data = await response.json();
-    
-    // Transform the response data to match your Booking type
-    const transformedBooking = {
-      id: data.id,
-      bookingDate: data.booking_date,
-      name: data.name,
-      mobile: data.mobile,
-      email: data.email,
-      remarks: data.remarks,
-      ownerName: data.owner_name,
-      ownerMobile: data.owner_mobile,
-      ownerDob: data.owner_dob,
-      ownerEmail: data.owner_email,
-      ownerAddress: data.owner_address,
-      petName: data.pet_name,
-      petType: data.pet_type,
-      bookingFrom: data.booking_from,
-      bookingTo: data.booking_to,
-      services: data.services,
-      petDob: data.pet_dob,
-      petAge: data.pet_age,
-      petFood: data.pet_food,
-      signature: data.signature,
-      acknowledge: Boolean(data.acknowledge),
-      vaccinationCertificate: data.vaccination_certificate,
-      petVaccinated: Boolean(data.pet_vaccinated),
-      userId: data.user_id,
-      createdAt: data.created_at,
-      updatedAt: data.updated_at
-    };
-    
-    return transformedBooking;
-  } catch (err) {
-    throw err;
-  }
-};
+      const data = await response.json();
+      setBookings((prev) => [...prev, data]);
+      setShowBookingModal(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Creation error");
+    }
+  };
+
+  const handleUpdateBooking = async (updatedBooking: Booking) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `http://localhost:5000/api/bookings/${updatedBooking.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(updatedBooking),
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to update booking");
+
+      const data = await response.json();
+
+      // Transform the response data to match your Booking type
+      const transformedBooking = {
+        id: data.id,
+        bookingDate: data.booking_date,
+        name: data.name,
+        mobile: data.mobile,
+        email: data.email,
+        remarks: data.remarks,
+        ownerName: data.owner_name,
+        ownerMobile: data.owner_mobile,
+        ownerDob: data.owner_dob,
+        ownerEmail: data.owner_email,
+        ownerAddress: data.owner_address,
+        petName: data.pet_name,
+        petType: data.pet_type,
+        bookingFrom: data.booking_from,
+        bookingTo: data.booking_to,
+        services: data.services,
+        petDob: data.pet_dob,
+        petAge: data.pet_age,
+        petFood: data.pet_food,
+        vaccinationCertificate: data.vaccination_certificate,
+        petVaccinated: Boolean(data.pet_vaccinated),
+        userId: data.user_id,
+      };
+
+      return transformedBooking;
+    } catch (err) {
+      throw err;
+    }
+  };
 
   const handleDeleteBooking = async (id: number) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(
-        `http://localhost:5000/api/bookings/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`http://localhost:5000/api/bookings/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (!response.ok) throw new Error("Failed to delete booking");
 
-      setBookings(prev => prev.filter(b => b.id !== id));
+      setBookings((prev) => prev.filter((b) => b.id !== id));
       setDeleteBookingId(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Deletion error");
@@ -228,7 +224,7 @@ const handleUpdateBooking = async (updatedBooking: Booking) => {
   return (
     <>
       <StaffNavbar activeTab={activeTab} setActiveTab={setActiveTab} />
-      
+
       <div className="staff-dashboard">
         {error && (
           <div className="error-message">
@@ -236,7 +232,7 @@ const handleUpdateBooking = async (updatedBooking: Booking) => {
             <button onClick={() => setError("")}>×</button>
           </div>
         )}
-        
+
         {activeTab === "dashboard" ? (
           <div className="dashboard-welcome">
             <h1 className="staff-dashboard-welcome">
@@ -249,12 +245,15 @@ const handleUpdateBooking = async (updatedBooking: Booking) => {
               </div>
               <div className="stat-card">
                 <h3>Active Bookings</h3>
-                <p>{
-                  bookings.filter(b => 
-                    new Date(b.bookingFrom) <= new Date() && 
-                    new Date(b.bookingTo) >= new Date()
-                  ).length
-                }</p>
+                <p>
+                  {
+                    bookings.filter(
+                      (b) =>
+                        new Date(b.bookingFrom) <= new Date() &&
+                        new Date(b.bookingTo) >= new Date()
+                    ).length
+                  }
+                </p>
               </div>
             </div>
           </div>
@@ -268,7 +267,7 @@ const handleUpdateBooking = async (updatedBooking: Booking) => {
                 + Create Booking
               </button>
             </div>
-            
+
             {loading ? (
               <div className="loading-spinner">Loading bookings...</div>
             ) : (
@@ -281,7 +280,7 @@ const handleUpdateBooking = async (updatedBooking: Booking) => {
                       <th>Pet Name</th>
                       <th>Owner</th>
                       <th>Contact</th>
-                      <th>Period</th>
+                      <th>Booking Period</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -291,14 +290,19 @@ const handleUpdateBooking = async (updatedBooking: Booking) => {
                         <tr key={booking.id}>
                           <td>{index + 1}</td>
                           <td>{formatDate(booking.bookingDate)}</td>
-                          <td>{booking.petName} ({booking.petType})</td>
+                          <td>
+                            {booking.petName} ({booking.petType})
+                          </td>
                           <td>{booking.ownerName}</td>
                           <td>
                             <div>{booking.ownerMobile}</div>
-                            <div className="text-muted">{booking.ownerEmail}</div>
+                            <div className="text-muted">
+                              {booking.ownerEmail}
+                            </div>
                           </td>
                           <td>
-                            {formatDate(booking.bookingFrom)}&nbsp; - &nbsp;{formatDate(booking.bookingTo)}
+                            {formatDate(booking.bookingFrom)}&nbsp; - &nbsp;
+                            {formatDate(booking.bookingTo)}
                           </td>
                           <td className="actions-cell">
                             <button
@@ -342,7 +346,7 @@ const handleUpdateBooking = async (updatedBooking: Booking) => {
 
       {/* Modals */}
       {showBookingModal && (
-        <CreateBookingModal 
+        <CreateBookingModal
           onClose={() => setShowBookingModal(false)}
           onCreate={handleCreateBooking}
         />
@@ -354,25 +358,27 @@ const handleUpdateBooking = async (updatedBooking: Booking) => {
           onClose={() => setInfoBooking(null)}
         />
       )}
-      
-{editBooking && (
-  <EditBookingModal
-    booking={editBooking}
-    onClose={() => setEditBooking(null)}
-    onSave={async (updatedBooking) => {
-      try {
-        const updated = await handleUpdateBooking(updatedBooking);
-        setBookings(prev => prev.map(b => 
-          b.id === updated.id ? updated : b
-        ));
-        setEditBooking(null);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to update booking");
-      }
-    }}
-  />
-)}
-      
+
+      {editBooking && (
+        <EditBookingModal
+          booking={editBooking}
+          onClose={() => setEditBooking(null)}
+          onSave={async (updatedBooking) => {
+            try {
+              const updated = await handleUpdateBooking(updatedBooking);
+              setBookings((prev) =>
+                prev.map((b) => (b.id === updated.id ? updated : b))
+              );
+              setEditBooking(null);
+            } catch (err) {
+              setError(
+                err instanceof Error ? err.message : "Failed to update booking"
+              );
+            }
+          }}
+        />
+      )}
+
       {deleteBookingId !== null && (
         <DeleteBookingModal
           onCancel={() => setDeleteBookingId(null)}

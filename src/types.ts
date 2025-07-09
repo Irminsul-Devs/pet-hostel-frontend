@@ -1,4 +1,4 @@
-export type UserRole = 'staff' | 'admin' | 'customer';
+export type UserRole = "staff" | "admin" | "customer";
 
 export type User = {
   id: number;
@@ -33,20 +33,15 @@ export type Booking = {
   petDob: string;
   petAge: string | null;
   petFood: string;
-  signature: string;
-  acknowledge: boolean;
   vaccinationCertificate: string | null;
   petVaccinated: boolean;
   userId: number | null;
-  createdAt?: string;
-  updatedAt?: string;
 };
 
-export type BookingFormData = Omit<Booking, 
-  'id' | 'createdAt' | 'updatedAt' | 'userId'
-> & {
+export type BookingFormData = Omit<Booking, "id" | "userId"> & {
   vaccinationCertificate: File | null;
   petAge: string;
+  userId?: number | null;
 };
 
 export type ApiResponse<T> = {
@@ -62,7 +57,10 @@ export type EditBookingModalProps = {
   onSave: (updatedBooking: Booking) => Promise<void>;
 };
 
-export type EditBookingForm = Omit<Booking, 'vaccinationCertificate' | 'petAge'> & {
+export type EditBookingForm = Omit<
+  Booking,
+  "vaccinationCertificate" | "petAge"
+> & {
   vaccinationCertificate: File | string | null;
   petAge: string; // Ensure petAge is always a string
 };
