@@ -11,16 +11,12 @@
   font-size: 0.9rem;
 }
 
-/* Optional: For horizontal scroll on small screens */
+/* Original table wrapper style */
 .staff-dashboard-table-wrapper {
   width: 100%;
+  max-width: 1200px;
   overflow-x: auto;
-
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   margin-top: 1.5rem;
-  background: #222;
-  border: 1px solid #333;
 }
 
 .staff-dashboard-table thead {
@@ -42,6 +38,7 @@
   padding: 0.9rem 0.75rem;
   border-bottom: 1px solid #333;
   vertical-align: middle;
+  height: 2.5rem; /* Set a consistent height for all cells */
 }
 
 .staff-dashboard-table tbody tr {
@@ -59,39 +56,47 @@
 
 .staff-dashboard-table .actions-cell {
   display: flex;
-  gap: 0.5rem;
-  padding-right: 1rem;
+  gap: 0.8rem;
+  padding: 0.9rem 1rem 0.9rem 0.75rem;
+  justify-content: flex-end;
+  position: relative;
 }
 
 .staff-dashboard-table .icon-btn {
-  background: transparent;
+  background: rgba(255, 255, 255, 0.05);
   border: none;
-  padding: 0.75rem 0.35rem;
+  width: 36px;
+  height: 36px;
+  padding: 0;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .staff-dashboard-table .icon-btn:hover {
-  transform: scale(1.1);
+  transform: scale(1.12);
 }
 
 .staff-dashboard-table .info-btn:hover {
   color: #1ab3f0;
-  background: rgba(26, 179, 240, 0.1);
+  background: rgba(26, 179, 240, 0.15);
+  box-shadow: 0 0 12px rgba(26, 179, 240, 0.3);
 }
 
 .staff-dashboard-table .edit-btn:hover {
   color: #f0b41a;
-  background: rgba(240, 180, 26, 0.1);
+  background: rgba(240, 180, 26, 0.15);
+  box-shadow: 0 0 12px rgba(240, 180, 26, 0.3);
 }
 
 .staff-dashboard-table .delete-btn:hover {
   color: #f02e1a;
-  background: rgba(240, 46, 26, 0.1);
+  background: rgba(240, 46, 26, 0.15);
+  box-shadow: 0 0 12px rgba(240, 46, 26, 0.3);
 }
 
 .staff-dashboard-table .text-muted {
@@ -101,44 +106,100 @@
 
 .staff-dashboard-table .no-data {
   text-align: center;
-  padding: 2rem;
-  color: #888;
+  padding: 3rem;
+  color: #aaa;
   font-style: italic;
+  font-size: 1.1rem;
+  background: rgba(0, 0, 0, 0.2);
 }
 
-/* Status indicator for active bookings */
-.active-booking {
+/* Status indicators for bookings - with pet-themed paw icon */
+.active-booking,
+.past-booking,
+.future-booking {
   position: relative;
 }
 
-.active-booking::after {
-  content: '';
+/* Base style for all status indicators */
+.active-booking td.actions-cell::before,
+.past-booking td.actions-cell::before,
+.future-booking td.actions-cell::before {
+  content: "";
   position: absolute;
-  right: 0.5rem;
+  left: -16px;
   top: 50%;
   transform: translateY(-50%);
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
-  background: #38ef7d;
-  box-shadow: 0 0 0 2px rgba(56, 239, 125, 0.3);
-  animation: pulse 1.5s infinite;
+  background-size: 80%;
+  background-repeat: no-repeat;
+  background-position: center;
+  /* Adding a subtle paw shape inside the indicator */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' fill='%23ffffff' opacity='0.7'%3E%3Cpath d='M226.5 92.9c14.3 42.9-.3 86.2-32.6 96.8s-70.1-15.6-84.4-58.5.3-86.2 32.6-96.8 70.1 15.6 84.4 58.5zM100.4 198.6c18.9 32.4 14.3 70.1-10.2 84.1s-59.7-.9-78.5-33.3-14.3-70.1 10.2-84.1 59.7.9 78.5 33.3z'/%3E%3C/svg%3E");
 }
 
-@keyframes pulse {
+/* Green dot for active bookings */
+.active-booking td.actions-cell::before {
+  background-color: #2ecc71;
+  box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.3);
+  animation: pulse-green 1.5s infinite;
+}
+
+/* Red dot for past bookings */
+.past-booking td.actions-cell::before {
+  background-color: #e74c3c;
+  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.3);
+  animation: pulse-red 1.5s infinite;
+}
+
+/* Yellow dot for future bookings */
+.future-booking td.actions-cell::before {
+  background-color: #f1c40f;
+  box-shadow: 0 0 0 2px rgba(241, 196, 15, 0.3);
+  animation: pulse-yellow 1.5s infinite;
+}
+
+/* Animation for green dot (active bookings) */
+@keyframes pulse-green {
   0% {
-    box-shadow: 0 0 0 0 rgba(56, 239, 125, 0.7);
+    box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7);
   }
   70% {
-    box-shadow: 0 0 0 8px rgba(56, 239, 125, 0);
+    box-shadow: 0 0 0 8px rgba(46, 204, 113, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(56, 239, 125, 0);
+    box-shadow: 0 0 0 0 rgba(46, 204, 113, 0);
   }
 }
 
+/* Animation for red dot (past bookings) */
+@keyframes pulse-red {
+  0% {
+    box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(231, 76, 60, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
+  }
+}
 
-/* Center the dashboard content */
+/* Animation for yellow dot (future bookings) */
+@keyframes pulse-yellow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(241, 196, 15, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(241, 196, 15, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(241, 196, 15, 0);
+  }
+}
+
+/* Enhanced pet-themed dashboard background */
 .staff-dashboard {
   position: relative;
   display: flex;
@@ -146,46 +207,104 @@
   align-items: center;
   padding: 32px;
   min-height: 100vh;
-  /* Replace the URL below with your homepage image path */
-  background-image: url("/assets/images/fish.jpg"); /* Use your homepage/about bg */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed; /* <-- Add this line */
+  background-color: #1a1a1a;
+  background-image: 
+    /* Paw prints pattern - blue */ url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 512 512' opacity='0.04' fill='%233498db'%3E%3Cpath d='M226.5 92.9c14.3 42.9-.3 86.2-32.6 96.8s-70.1-15.6-84.4-58.5.3-86.2 32.6-96.8 70.1 15.6 84.4 58.5zm-126.1 105.7c18.9 32.4 14.3 70.1-10.2 84.1s-59.7-.9-78.5-33.3-14.3-70.1 10.2-84.1 59.7.9 78.5 33.3zm321.5 0c-18.9 32.4-14.3 70.1 10.2 84.1s59.7-.9 78.5-33.3 14.3-70.1-10.2-84.1-59.7.9-78.5 33.3z'/%3E%3C/svg%3E"),
+    /* Dog silhouette - green */
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 576 512' opacity='0.03' fill='%232ecc71'%3E%3Cpath d='M309.6 158.5L332.7 19.8C334.6 8.4 344.5 0 356.1 0c7.5 0 14.5 3.5 19 9.5L392 32h52.1c12.7 0 24.9 5.1 33.9 14.1L496 64h56c13.3 0 24 10.7 24 24v24c0 44.2-35.8 80-80 80H464 448 426.7l-5.1 30.5-112-64zM416 256.1L416 480c0 2.7-.2 5.4-.5 8l-.3 2.2c-1.8 10.6-6.3 20.4-12.9 28.6c-14.3 17.9-36.3 28.1-59.5 27.2l-234.5-9c-28.6-1.1-53.6-19.6-63.6-46.8c-1.9-5-2.8-10.3-2.8-15.6V288c0-35.3 28.7-64 64-64h70.8l14.6 10.9L278.3 288H416z'/%3E%3C/svg%3E"),
+    /* Cat silhouette - purple */
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 512 512' opacity='0.035' fill='%239b59b6'%3E%3Cpath d='M288 192h17.1c22.1 38.3 63.5 64 110.9 64c11 0 21.8-1.4 32-4v4 32c0 70.7-57.3 128-128 128H192 152c-13.3 0-24-10.7-24-24s10.7-24 24-24h40c35.3 0 64-28.7 64-64v-4.7c0-19.1-5.6-37.7-16-53.5L202.7 208H192c-17.7 0-32-14.3-32-32s14.3-32 32-32h24c8.8 0 16-7.2 16-16s-7.2-16-16-16h-8c-39.8 0-72-32.2-72-72S158.2 0 198 0h4c7.9 0 15.6 1.2 22.9 3.3C242.8 9.1 256 28 256 48c0 6.9-2 13.7-5.8 19.4L240.3 83.5c11.3 4.4 22.1 10.4 31.8 17.9l11.8-8.9c14.9-11.2 33.7-14 51.1-7.8C356.4 91.7 368 109.2 368 128c0 10.2-3.2 19.9-9 28L343 177c-9.6 13-29.3 17.7-45.1 9.5L264 170.3c-9-4.7-19.1-7.1-29.2-7.1c-12.1 0-23.5 3.4-33.3 9.2L181.8 184H192z'/%3E%3C/svg%3E"),
+    /* Fish silhouette - blue */
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 576 512' opacity='0.025' fill='%233498db'%3E%3Cpath d='M180.5 141.5C219.7 108.5 272.6 80 336 80s116.3 28.5 155.5 61.5c39.1 33 66.9 72.4 81 99.8c4.7 9.2 4.7 20.1 0 29.3c-14.1 27.4-41.9 66.8-81 99.8C452.3 403.5 399.4 432 336 432s-116.3-28.5-155.5-61.5c-16.2-13.7-30.5-28.5-42.7-43.1L48.1 379.6c-12.5 7.3-28.4 5.3-38.7-4.9S-3 344.5 4.2 332L50 256 4.2 180c-7.2-12.6-5-28.4 5.3-38.6s26.1-12.2 38.7-4.9l89.7 52.3c12.2-14.6 26.5-29.4 42.7-43.1zM448 256a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z'/%3E%3C/svg%3E"),
+    /* Bird silhouette - green */
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 512 512' opacity='0.02' fill='%232ecc71'%3E%3Cpath d='M32 96c0-17.7 14.3-32 32-32h384c17.7 0 32 14.3 32 32c0 65.3-28.7 121.1-74.8 153.6c1.9 9.9 2.9 20.1 2.9 30.4c0 41.7-16.6 80.4-45.2 108.9c-9.9 9.9-16.4 22.7-18.7 36.6C340.9 438.8 330 448 317.4 448H194.6c-12.6 0-23.5-9.2-25.8-22.5c-2.3-13.9-8.8-26.7-18.7-36.6C121.6 360.4 105 321.7 105 280c0-10.3 1-20.5 2.9-30.4C61.7 217.1 32 161.3 32 96zM224 240.4c0-7.5 5.4-13.8 12.7-15c7.4-1.2 14.8 2.5 18.1 8.9L272 266.3l17.1-31.9c3.4-6.3 10.7-10 18.2-8.8c7.4 1.3 12.8 7.6 12.8 15V280c0 13.3-10.7 24-24 24s-24-10.7-24-24v-.9l-17.1 31.9c-3.4 6.3-10.7 10-18.2 8.8c-7.4-1.3-12.8-7.6-12.8-15V240.4z'/%3E%3C/svg%3E");
+  background-position: 5% 15%, 90% 85%, 15% 75%, 80% 25%, 50% 50%;
+  background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat;
   z-index: 0;
   overflow: hidden;
+
+  /* Gradient overlay for depth and dimension */
+  background-attachment: fixed;
+  box-shadow: inset 0 0 150px rgba(0, 0, 0, 0.8),
+    inset 0 0 80px rgba(0, 0, 0, 0.5);
+
+  /* Animation for subtle movement */
+  animation: bg-pulse 30s ease-in-out infinite;
 }
 
-/* Overlay */
-.staff-dashboard::before {
+@keyframes bg-pulse {
+  0% {
+    background-size: 120px, 180px, 160px, 140px, 120px;
+    background-position: 5% 15%, 90% 85%, 15% 75%, 80% 25%, 50% 50%;
+  }
+  33% {
+    background-size: 125px, 185px, 165px, 145px, 125px;
+    background-position: 7% 17%, 88% 83%, 17% 77%, 78% 23%, 52% 48%;
+  }
+  66% {
+    background-size: 130px, 190px, 170px, 150px, 130px;
+    background-position: 3% 13%, 92% 87%, 13% 73%, 82% 27%, 48% 52%;
+  }
+  100% {
+    background-size: 120px, 180px, 160px, 140px, 120px;
+    background-position: 5% 15%, 90% 85%, 15% 75%, 80% 25%, 50% 50%;
+  }
+}
+
+/* Pet-themed create booking button */
+.create-booking-btn {
+  color: #fff;
+  background: #2a2a2a;
+  font-weight: 600;
+  font-size: 1em;
+  border-radius: 30px;
+  padding: 0.7em 1.6em 0.7em 2.8em;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2),
+    inset 0 1px 2px rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.5px;
+}
+
+/* Add a subtle pet paw print pattern background */
+.create-booking-btn::after {
   content: "";
   position: absolute;
   top: 0;
   left: 0;
-  height: 100%;
-  width: 100%;
-  background: rgba(0, 0, 0, 0.3); /* semi-transparent black */
-  z-index: -1;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 512 512' opacity='0.07' fill='%23ffffff'%3E%3Cpath d='M226.5 92.9c14.3 42.9-.3 86.2-32.6 96.8s-70.1-15.6-84.4-58.5.3-86.2 32.6-96.8 70.1 15.6 84.4 58.5zm-126.1 105.7c18.9 32.4 14.3 70.1-10.2 84.1s-59.7-.9-78.5-33.3-14.3-70.1 10.2-84.1 59.7.9 78.5 33.3zm321.5 0c-18.9 32.4-14.3 70.1 10.2 84.1s59.7-.9 78.5-33.3 14.3-70.1-10.2-84.1-59.7.9-78.5 33.3z'/%3E%3C/svg%3E");
+  background-position: center;
+  background-repeat: repeat;
+  z-index: 1;
+  pointer-events: none;
 }
 
-/* Blue themed create booking button for navbar */
-.create-booking-btn {
-  color: #fff;
-  background: #2f3132;
-  border-color: #fafafa;
-  font-weight: 600;
-  font-size: 1em;
-  border-radius: 4px;
-  padding: 0.6em 1.4em;
-  cursor: pointer;
-  box-shadow: 0 2px 8px #0002;
-  transition: background 0.2s, border-color 0.2s;
+.create-booking-btn::before {
+  content: "";
+  position: absolute;
+  left: 1.1em;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' fill='%232ecc71'%3E%3Cpath d='M226.5 92.9c14.3 42.9-.3 86.2-32.6 96.8s-70.1-15.6-84.4-58.5.3-86.2 32.6-96.8s70.1 15.6 84.4 58.5zm-126.1 105.7c18.9 32.4 14.3 70.1-10.2 84.1s-59.7-.9-78.5-33.3-14.3-70.1 10.2-84.1 59.7.9 78.5 33.3zm321.5 0c-18.9 32.4-14.3 70.1 10.2 84.1s59.7-.9 78.5-33.3 14.3-70.1-10.2-84.1-59.7.9-78.5 33.3zM262.2 188.5c-29.7 20.4-38.9 62.4-20.6 93.7s61.2 40.6 90.9 20.2 38.9-62.4 20.6-93.7-61.2-40.6-90.9-20.2z'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 2;
 }
 
 .create-booking-btn:hover,
 .create-booking-btn:focus {
-  background: #000000;
-  border: 2px solid #1ab3f0; /* blue border */
+  background: #212121;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(46, 204, 113, 0.3);
+  color: #2ecc71;
 }
 
 /* Responsive: Make dashboard table horizontally scrollable on small screens */
@@ -214,72 +333,296 @@
   }
 }
 
-/* Welcome text styling */
-.staff-dashboard-welcome {
-  color: #1ab3f0 !important;
+/* Enhanced Pet Hostel Themed Dashboard welcome section */
+.dashboard-welcome {
+  width: 100%;
+  max-width: 1200px;
+  text-align: left;
+  padding: 1.8rem 2.5rem 1.8rem 3.5rem;
+  margin-bottom: 2rem;
+  background: #2a2a2a;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 512 512' opacity='0.05' fill='%233498db'%3E%3Cpath d='M226.5 92.9c14.3 42.9-.3 86.2-32.6 96.8s-70.1-15.6-84.4-58.5.3-86.2 32.6-96.8 70.1 15.6 84.4 58.5zm-126.1 105.7c18.9 32.4 14.3 70.1-10.2 84.1s-59.7-.9-78.5-33.3-14.3-70.1 10.2-84.1 59.7.9 78.5 33.3zm321.5 0c-18.9 32.4-14.3 70.1 10.2 84.1s59.7-.9 78.5-33.3 14.3-70.1-10.2-84.1-59.7.9-78.5 33.3zM262.2 188.5c-29.7 20.4-38.9 62.4-20.6 93.7s61.2 40.6 90.9 20.2 38.9-62.4 20.6-93.7-61.2-40.6-90.9-20.2zm-73.8 155.9c-45.7-11.6-91.4 14.7-102.3 58.5s14 87.9 59.7 99.5 91.4-14.7 102.3-58.5-14-87.9-59.7-99.5zm225.5 0c45.7-11.6 91.4 14.7 102.3 58.5s-14 87.9-59.7 99.5-91.4-14.7-102.3-58.5 14-87.9 59.7-99.5z'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 512 512' opacity='0.04' fill='%233498db'%3E%3Cpath d='M269.4 2.9C265.2 1 260.7 0 256 0s-9.2 1-13.4 2.9L54.3 82.8c-22 9.3-38.4 31-38.3 57.2c.5 99.2 41.3 280.7 213.6 363.2c16.7 8 36.1 8 52.8 0C454.7 420.7 495.5 239.2 496 140c.1-26.2-16.3-47.9-38.3-57.2L269.4 2.9zM160.9 286.2c4.8 1.2 9.9 1.8 15.1 1.8c35.3 0 64-28.7 64-64V160h44.2c12.1 0 23.2 6.8 28.6 17.7L320 192h64c8.8 0 16 7.2 16 16v32c0 44.2-35.8 80-80 80H272v50.7c0 7.3-5.9 13.3-13.3 13.3c-1.8 0-3.6-.4-5.2-1.1l-98.7-42.3c-6.6-2.8-10.8-9.3-10.8-16.4c0-2.8 .6-5.5 1.9-8l15-30zM160 160h40 8v32 32c0 17.7-14.3 32-32 32s-32-14.3-32-32V176c0-8.8 7.2-16 16-16zm128 48a16 16 0 1 0 -32 0 16 16 0 1 0 32 0z'/%3E%3C/svg%3E");
+  background-position: right bottom, left top;
+  background-repeat: no-repeat, repeat;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  position: relative;
+  border-left: 5px solid #3498db;
+  border-top-right-radius: 0;
 }
 
-/* Stats Cards Styling */
+.dashboard-welcome::before {
+  content: "";
+  position: absolute;
+  left: -25px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 45px;
+  height: 45px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' fill='%233498db'%3E%3Cpath d='M226.5 92.9c14.3 42.9-.3 86.2-32.6 96.8s-70.1-15.6-84.4-58.5.3-86.2 32.6-96.8 70.1 15.6 84.4 58.5zM100.4 198.6c18.9 32.4 14.3 70.1-10.2 84.1s-59.7-.9-78.5-33.3-14.3-70.1 10.2-84.1 59.7.9 78.5 33.3zM69.2 401.2C121.6 259.9 214.7 224 256 224s134.4 35.9 186.8 177.2c3.6 9.7 5.2 20.1 5.2 30.5v1.6c0 25.8-20.9 46.7-46.7 46.7H110.7c-25.8 0-46.7-20.9-46.7-46.7v-1.6c0-10.4 1.6-20.8 5.2-30.5zM384.2 317.4c-23.3-11.5-61.5 11.6-89.9 48.6s-31 77.9-7.7 89.4 61.5-11.6 89.9-48.6 31-77.9 7.7-89.4z'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.85;
+  z-index: 1;
+}
+
+.dashboard-welcome::after {
+  content: "";
+  position: absolute;
+  right: 15px;
+  top: 0;
+  width: 45px;
+  height: 45px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' fill='%233498db' opacity='0.2'%3E%3Cpath d='M288 192h17.1c22.1 38.3 63.5 64 110.9 64c11 0 21.8-1.4 32-4v4 32c0 70.7-57.3 128-128 128H192 152c-13.3 0-24-10.7-24-24s10.7-24 24-24h40c35.3 0 64-28.7 64-64v-4.7c0-19.1-5.6-37.7-16-53.5L202.7 208H192c-17.7 0-32-14.3-32-32s14.3-32 32-32h24c8.8 0 16-7.2 16-16s-7.2-16-16-16h-8c-39.8 0-72-32.2-72-72S158.2 0 198 0h4c7.9 0 15.6 1.2 22.9 3.3C242.8 9.1 256 28 256 48c0 6.9-2 13.7-5.8 19.4L240.3 83.5c11.3 4.4 22.1 10.4 31.8 17.9l11.8-8.9c14.9-11.2 33.7-14 51.1-7.8C356.4 91.7 368 109.2 368 128c0 10.2-3.2 19.9-9 28L343 177c-9.6 13-29.3 17.7-45.1 9.5L264 170.3c-9-4.7-19.1-7.1-29.2-7.1c-12.1 0-23.5 3.4-33.3 9.2L181.8 184H192zm192 0c0-26.5-21.5-48-48-48c-12.4 0-23.6 4.7-32.1 12.5l-19 17.5c-5.1 4.7-7.9 11.2-7.9 18c0 6.3 2.4 12.4 6.9 16.9l10.4 10.4c4.1 4.1 9.6 6.4 15.5 6.5C343.2 240 368 215.3 368 184v8z'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+/* Updated welcome text styling with enhanced pet theme */
+.staff-dashboard-welcome {
+  color: #ffffff !important;
+  font-size: 1.8rem;
+  margin-bottom: 0.8rem;
+  font-weight: 500;
+  position: relative;
+  display: block;
+}
+
+.staff-dashboard-welcome::before {
+  content: "Pet Hostel Dashboard";
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #3498db;
+  margin-bottom: 0.6rem;
+  position: relative;
+}
+
+/* Pet Themed Stats Cards Styling */
 .stats-container {
-  display: flex;
-  gap: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.2rem;
   margin-top: 2rem;
-  justify-content: center;
-  flex-wrap: wrap;
+  width: 100%;
 }
 
 .stat-card {
-  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-  border-radius: 12px;
-  padding: 1.5rem 2rem;
-  min-width: 180px;
-  text-align: center;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: #2a2a2a;
+  border-left: 5px solid transparent;
+  border-radius: 8px;
+  padding: 1.2rem 1.5rem 1.2rem 2.2rem;
+  text-align: left;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
 }
 
-.stat-card::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    to bottom right,
-    rgba(255, 255, 255, 0.3) 0%,
-    rgba(255, 255, 255, 0) 60%
-  );
-  transform: rotate(30deg);
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
 }
 
-.stat-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+.stat-card::before {
+  content: "";
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: 30px;
+  height: 30px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.15;
 }
 
 .stat-card h3 {
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.85);
   font-size: 1rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.8rem;
   font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
   position: relative;
 }
 
 .stat-card p {
   color: white;
   font-size: 2.2rem;
-  font-weight: 700;
+  font-weight: 600;
   margin: 0;
   position: relative;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Active bookings specific styling */
+/* Pet themed stat cards */
+.stats-container .stat-card:nth-child(1) {
+  border-left-color: #9b59b6; /* Purple for total */
+}
+.stats-container .stat-card:nth-child(1)::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' fill='%239b59b6'%3E%3Cpath d='M226.5 92.9c14.3 42.9-.3 86.2-32.6 96.8s-70.1-15.6-84.4-58.5.3-86.2 32.6-96.8 70.1 15.6 84.4 58.5zM100.4 198.6c18.9 32.4 14.3 70.1-10.2 84.1s-59.7-.9-78.5-33.3-14.3-70.1 10.2-84.1 59.7.9 78.5 33.3zM69.2 401.2C121.6 259.9 214.7 224 256 224s134.4 35.9 186.8 177.2c3.6 9.7 5.2 20.1 5.2 30.5v1.6c0 25.8-20.9 46.7-46.7 46.7H110.7c-25.8 0-46.7-20.9-46.7-46.7v-1.6c0-10.4 1.6-20.8 5.2-30.5z'/%3E%3C/svg%3E");
+}
+
 .stats-container .stat-card:nth-child(2) {
-  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  border-left-color: #2ecc71; /* Green for active */
+}
+.stats-container .stat-card:nth-child(2)::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 576 512' fill='%232ecc71'%3E%3Cpath d='M309.6 158.5L332.7 19.8C334.6 8.4 344.5 0 356.1 0c7.5 0 14.5 3.5 19 9.5L392 32h52.1c12.7 0 24.9 5.1 33.9 14.1L496 64h56c13.3 0 24 10.7 24 24v24c0 44.2-35.8 80-80 80H464 448 426.7l-5.1 30.5-112-64zM416 256.1L416 480c0 2.7-.2 5.4-.5 8l-.3 2.2c-1.8 10.6-6.3 20.4-12.9 28.6c-14.3 17.9-36.3 28.1-59.5 27.2l-234.5-9c-28.6-1.1-53.6-19.6-63.6-46.8c-1.9-5-2.8-10.3-2.8-15.6V288c0-35.3 28.7-64 64-64h70.8l14.6 10.9L278.3 288H416zM464 80a16 16 0 1 0 -32 0 16 16 0 1 0 32 0z'/%3E%3C/svg%3E");
+}
+
+.stats-container .stat-card:nth-child(3) {
+  border-left-color: #e74c3c; /* Red for past */
+}
+.stats-container .stat-card:nth-child(3)::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' fill='%23e74c3c'%3E%3Cpath d='M493.7 107.9c13.1 17.8 9.3 42.8-8.5 55.9l-126.6 93.3c-14.4 10.6-34.5 9.1-47.1-3.5l-45.6-45.6c-2.1-2.1-5.3-2.9-8.4-1.9l-17.8 5.6c-4.1 1.3-6.3 5.7-4.9 9.7c27.6 77.6-67.9 161-131.1 160.8c-18.4-.1-34.7-10-43.3-25.6l-67.4-122.5C-10.7 199.2 29.5 137.5 90.9 130.1l232.9-27.4c11.8-1.4 23.8 .3 34.3 4.9L469.3 153c7.6 3.3 16.5 1.9 22.8-3.5c8.4-7.3 21-6.4 28.4 2l9.8 10.6c1.8 2 3 4.4 3.5 6.9z'/%3E%3C/svg%3E");
+}
+
+.stats-container .stat-card:nth-child(4) {
+  border-left-color: #f39c12; /* Orange for future */
+}
+.stats-container .stat-card:nth-child(4)::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 576 512' fill='%23f39c12'%3E%3Cpath d='M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c.2 35.5-28.5 64.3-64 64.3h-5.7c-10.9 0-20.4-7.3-23.4-17.9l-14.2-56.7c-2.7-10.8-12.6-18.4-23.8-18.4h-62.9c-11.2 0-21.1 7.6-23.8 18.4L272.6 494c-3 10.6-12.5 17.9-23.4 17.9h-5.7c-35.5 0-64.3-28.8-64-64.3l-.7-160.2h-32c-18 0-32-14-32-32.1c0-9 3-17 10-24L224.2 96c6.2-6.2 14.4-9.4 23.8-10.4V64c0-17.7 14.3-32 32-32s32 14.3 32 32v21.5c9.4 1 17.6 4.3 23.8 10.4L434.1 224c7 7 10 15 10 24z'/%3E%3C/svg%3E");
+}
+
+/* Bookings Header */
+.bookings-header {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+  position: relative;
+}
+
+/* Status legend styling */
+.booking-status-legend {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 8px 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  right: 0;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+}
+
+.status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-active {
+  background-color: #2ecc71;
+  box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.3);
+}
+
+.status-past {
+  background-color: #e74c3c;
+  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.3);
+}
+
+.status-future {
+  background-color: #f1c40f;
+  box-shadow: 0 0 0 2px rgba(241, 196, 15, 0.3);
+}
+
+/* Enhanced Loading Spinner */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 3rem;
+  color: #1ab3f0;
+  font-size: 1.2rem;
+  position: relative;
+}
+
+.loading-spinner::after {
+  content: "";
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-left-color: #1ab3f0;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-left: 1rem;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error Message Styling */
+.error-message {
+  width: 100%;
+  max-width: 1200px;
+  background: rgba(240, 46, 26, 0.2);
+  color: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-left: 4px solid #f02e1a;
+}
+
+.error-message button {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.3rem;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.error-message button:hover {
+  opacity: 1;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Responsive adjustments */
@@ -287,16 +630,16 @@
   .stats-container {
     gap: 1rem;
   }
-  
+
   .stat-card {
     padding: 1.2rem 1.5rem;
     min-width: 140px;
   }
-  
+
   .stat-card h3 {
     font-size: 0.9rem;
   }
-  
+
   .stat-card p {
     font-size: 1.8rem;
   }

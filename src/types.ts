@@ -16,9 +16,6 @@ export type User = {
 export type Booking = {
   id: number;
   bookingDate: string;
-  name: string;
-  mobile: string;
-  email: string;
   remarks: string | null;
   ownerName: string;
   ownerMobile: string;
@@ -35,6 +32,7 @@ export type Booking = {
   petFood: string;
   vaccinationCertificate: string | null;
   petVaccinated: boolean;
+  amount: number;
   userId: number | null;
 };
 

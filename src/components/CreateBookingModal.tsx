@@ -6,6 +6,14 @@ import { FaRegCalendarAlt } from "react-icons/fa";
 import type { Booking, BookingFormData } from "../types";
 import type { CSSProperties } from "react";
 
+// Define service prices
+const SERVICE_PRICES = {
+  Boarding: 35.0, // per day
+  Grooming: 45.0, // flat fee
+  Training: 50.0, // per session
+  "Day Care": 25.0, // per day
+};
+
 type Props = {
   onClose: () => void;
   onCreate: (newBooking: Omit<Booking, "id">) => Promise<void>;
@@ -15,9 +23,6 @@ type DateField = "ownerDob" | "petDob" | "bookingFrom" | "bookingTo";
 
 const initialFormState: BookingFormData = {
   bookingDate: new Date().toISOString().split("T")[0],
-  name: "",
-  mobile: "",
-  email: "",
   remarks: "",
   ownerName: "",
   ownerMobile: "",
@@ -34,6 +39,7 @@ const initialFormState: BookingFormData = {
   petFood: "",
   vaccinationCertificate: null,
   petVaccinated: false,
+  amount: 0.0,
 };
 
 export default function CreateBookingModal({ onClose, onCreate }: Props) {
@@ -41,6 +47,7 @@ export default function CreateBookingModal({ onClose, onCreate }: Props) {
   const [form, setForm] = useState<BookingFormData>(initialFormState);
   const [error, setError] = useState("");
   const [petVaccinated, setPetVaccinated] = useState(false);
+  const [totalAmount, setTotalAmount] = useState(0);
 
   // Calculate pet age whenever petDob changes
   useEffect(() => {
@@ -80,6 +87,45 @@ export default function CreateBookingModal({ onClose, onCreate }: Props) {
       setForm((prev) => ({ ...prev, petAge: "" }));
     }
   }, [form.petDob]);
+
+  // Calculate amount whenever services or dates change
+  useEffect(() => {
+    let amount = 0;
+
+    // Calculate boarding/day care based on days
+    if (
+      form.bookingFrom &&
+      form.bookingTo &&
+      (form.services.includes("Boarding") || form.services.includes("Day Care"))
+    ) {
+      const startDate = new Date(form.bookingFrom);
+      const endDate = new Date(form.bookingTo);
+      const days = Math.max(
+        1,
+        Math.ceil(
+          (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+        )
+      );
+
+      if (form.services.includes("Boarding")) {
+        amount += SERVICE_PRICES.Boarding * days;
+      }
+      if (form.services.includes("Day Care")) {
+        amount += SERVICE_PRICES["Day Care"] * days;
+      }
+    }
+
+    // Add flat-fee services
+    if (form.services.includes("Grooming")) {
+      amount += SERVICE_PRICES.Grooming;
+    }
+    if (form.services.includes("Training")) {
+      amount += SERVICE_PRICES.Training;
+    }
+
+    setTotalAmount(amount);
+    setForm((prev) => ({ ...prev, amount }));
+  }, [form.services, form.bookingFrom, form.bookingTo]);
 
   // Close modal when clicking outside
   useEffect(() => {
@@ -133,6 +179,26 @@ export default function CreateBookingModal({ onClose, onCreate }: Props) {
   };
 
   const handleDateChange = (date: Date | null, field: DateField) => {
+    if (field === "bookingTo" && date && form.bookingFrom) {
+      // Ensure bookingTo date is not earlier than bookingFrom
+      const fromDate = new Date(form.bookingFrom);
+      if (date < fromDate) {
+        alert("Booking end date cannot be earlier than start date");
+        return;
+      }
+    }
+
+    if (field === "bookingFrom" && date && form.bookingTo) {
+      // If setting bookingFrom and we already have a bookingTo, validate it's not later
+      const toDate = new Date(form.bookingTo);
+      if (date > toDate) {
+        // Two options: either clear the bookingTo or alert the user
+        // Here we alert and don't allow the change
+        alert("Booking start date cannot be later than end date");
+        return;
+      }
+    }
+
     setForm((prev) => ({
       ...prev,
       [field]: date ? date.toISOString().split("T")[0] : "",
@@ -175,6 +241,16 @@ export default function CreateBookingModal({ onClose, onCreate }: Props) {
       "petDob",
       "petFood",
     ];
+
+    // Validate booking dates
+    if (form.bookingFrom && form.bookingTo) {
+      const fromDate = new Date(form.bookingFrom);
+      const toDate = new Date(form.bookingTo);
+      if (fromDate > toDate) {
+        setError("Booking end date cannot be earlier than start date.");
+        return false;
+      }
+    }
 
     // Check if a file is present and is not a PDF
     if (petVaccinated && form.vaccinationCertificate) {
@@ -285,17 +361,23 @@ export default function CreateBookingModal({ onClose, onCreate }: Props) {
     </div>
   );
 
-  const renderDatePicker = (field: DateField, label: string) => (
+  const renderDatePicker = (
+    field: DateField,
+    label: string,
+    customFontSize?: { input?: string; label?: string }
+  ) => (
     <div className="input-group" style={{ position: "relative" }}>
       <ReactDatePicker
         selected={parseDate(form[field])}
         onChange={(date) => handleDateChange(date, field)}
         dateFormat="yyyy-MM-dd"
+        placeholderText={label}
         customInput={
           <input
             type="text"
             name={field}
             required
+            placeholder={label}
             autoComplete="off"
             value={form[field]}
             onKeyDown={(e) => e.preventDefault()}
@@ -305,6 +387,10 @@ export default function CreateBookingModal({ onClose, onCreate }: Props) {
               border: "1px solid #555",
               paddingRight: "2.2em",
               cursor: "pointer",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              fontSize: customFontSize?.input || "inherit",
             }}
           />
         }
@@ -329,7 +415,9 @@ export default function CreateBookingModal({ onClose, onCreate }: Props) {
           position: "absolute",
           left: "0.75rem",
           top: form[field] ? "-0.5rem" : "1rem",
-          fontSize: form[field] ? "0.75rem" : "0.8rem",
+          fontSize: form[field]
+            ? customFontSize?.label || "0.75rem"
+            : customFontSize?.label || "0.7rem",
           color: form[field] ? "#1ab3f0" : "#aaa",
           background: form[field] ? "#181f2a" : "transparent",
           padding: "0 0.3rem",
@@ -337,6 +425,10 @@ export default function CreateBookingModal({ onClose, onCreate }: Props) {
           transition:
             "top 0.25s, font-size 0.25s, color 0.25s, background 0.25s",
           zIndex: 2,
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          maxWidth: "calc(100% - 1.5rem)",
         }}
       >
         {label}
@@ -361,7 +453,9 @@ export default function CreateBookingModal({ onClose, onCreate }: Props) {
                 maxLength: 10,
                 title: "Please enter a 10-digit phone number",
               })}
-              {renderDatePicker("ownerDob", "Owner Date of Birth")}
+              <div style={{ width: "100%" }}>
+                {renderDatePicker("ownerDob", "Owner Date of Birth")}
+              </div>
               {renderInputGroup("ownerEmail", "Email", "email")}
 
               <div className="input-group" style={{ position: "relative" }}>
@@ -413,9 +507,31 @@ export default function CreateBookingModal({ onClose, onCreate }: Props) {
             </div>
 
             <div className="modal-form-col">
-              <div style={{ display: "flex", gap: "1em", width: "100%" }}>
-                {renderDatePicker("bookingFrom", "Booking Date From")}
-                {renderDatePicker("bookingTo", "Booking Date To")}
+              <div style={{ marginTop: "1rem", marginBottom: "0.5rem" }}>
+                <div
+                  style={{
+                    color: "#eaf6fb",
+                    fontWeight: 500,
+                    fontSize: "0.9em",
+                    marginBottom: "0.5em",
+                  }}
+                >
+                  Booking Date
+                </div>
+                <div style={{ display: "flex", gap: "1em", width: "100%" }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    {renderDatePicker("bookingFrom", "From", {
+                      input: "1rem",
+                      label: "0.8rem",
+                    })}
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    {renderDatePicker("bookingTo", "To", {
+                      input: "1rem",
+                      label: "0.8rem",
+                    })}
+                  </div>
+                </div>
               </div>
 
               <div style={{ marginTop: "1.2em", marginBottom: "1.2em" }}>
@@ -458,7 +574,9 @@ export default function CreateBookingModal({ onClose, onCreate }: Props) {
                 </div>
               </div>
 
-              {renderDatePicker("petDob", "Pet Date of Birth")}
+              <div style={{ width: "100%" }}>
+                {renderDatePicker("petDob", "Pet Date of Birth")}
+              </div>
 
               <div className="input-group">
                 <input
@@ -522,6 +640,90 @@ export default function CreateBookingModal({ onClose, onCreate }: Props) {
                 />
               </label>
             )}
+          </div>
+
+          {/* Total Amount Display */}
+          <div style={amountContainerStyle}>
+            <div style={amountHeaderStyle}>
+              <h3 style={amountTitleStyle}>Booking Summary</h3>
+              <div style={totalAmountStyle}>${totalAmount.toFixed(2)}</div>
+            </div>
+            {form.services.length > 0 && (
+              <div style={amountBreakdownStyle}>
+                {form.services.includes("Boarding") &&
+                  form.bookingFrom &&
+                  form.bookingTo && (
+                    <div style={amountItemStyle}>
+                      <span>Boarding</span>
+                      <span>
+                        $
+                        {(
+                          SERVICE_PRICES.Boarding *
+                          Math.max(
+                            1,
+                            Math.ceil(
+                              (new Date(form.bookingTo).getTime() -
+                                new Date(form.bookingFrom).getTime()) /
+                                (1000 * 60 * 60 * 24)
+                            )
+                          )
+                        ).toFixed(2)}
+                      </span>
+                    </div>
+                  )}
+                {form.services.includes("Day Care") &&
+                  form.bookingFrom &&
+                  form.bookingTo && (
+                    <div style={amountItemStyle}>
+                      <span>Day Care</span>
+                      <span>
+                        $
+                        {(
+                          SERVICE_PRICES["Day Care"] *
+                          Math.max(
+                            1,
+                            Math.ceil(
+                              (new Date(form.bookingTo).getTime() -
+                                new Date(form.bookingFrom).getTime()) /
+                                (1000 * 60 * 60 * 24)
+                            )
+                          )
+                        ).toFixed(2)}
+                      </span>
+                    </div>
+                  )}
+                {form.services.includes("Grooming") && (
+                  <div style={amountItemStyle}>
+                    <span>Grooming</span>
+                    <span>${SERVICE_PRICES.Grooming.toFixed(2)}</span>
+                  </div>
+                )}
+                {form.services.includes("Training") && (
+                  <div style={amountItemStyle}>
+                    <span>Training</span>
+                    <span>${SERVICE_PRICES.Training.toFixed(2)}</span>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Remarks field */}
+          <div
+            className="input-group"
+            style={{ position: "relative", marginTop: "1.5rem" }}
+          >
+            <textarea
+              name="remarks"
+              placeholder=""
+              value={form.remarks || ""}
+              onChange={handleChange}
+              rows={3}
+              style={{ width: "100%" }}
+            />
+            <label style={floatingLabelStyle(!!form.remarks)}>
+              Remarks (Optional)
+            </label>
           </div>
 
           {error && <p className="error-text">{error}</p>}
@@ -611,4 +813,52 @@ const fileInputStyle: CSSProperties = {
   boxShadow: "none",
   width: "180px",
   cursor: "pointer",
+};
+
+// Styles for amount display
+const amountContainerStyle: CSSProperties = {
+  marginTop: "1.5rem",
+  backgroundColor: "#222",
+  borderRadius: "8px",
+  border: "1px solid #333",
+  padding: "1rem",
+  overflow: "hidden",
+};
+
+const amountHeaderStyle: CSSProperties = {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  marginBottom: "0.8rem",
+  borderBottom: "1px solid #444",
+  paddingBottom: "0.5rem",
+};
+
+const amountTitleStyle: CSSProperties = {
+  margin: 0,
+  color: "#eaf6fb",
+  fontSize: "1.1rem",
+  fontWeight: 600,
+};
+
+const totalAmountStyle: CSSProperties = {
+  color: "#3498db",
+  fontWeight: 700,
+  fontSize: "1.5rem",
+  display: "flex",
+  alignItems: "center",
+};
+
+const amountBreakdownStyle: CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  gap: "0.5rem",
+};
+
+const amountItemStyle: CSSProperties = {
+  display: "flex",
+  justifyContent: "space-between",
+  color: "#ccc",
+  fontSize: "0.9rem",
+  padding: "0.2rem 0",
 };
