@@ -3,16 +3,11 @@ import { MdDelete, MdCancel } from "react-icons/md";
 import { IoMdWarning } from "react-icons/io";
 
 type Props = {
-  staffId: number;
-  onSuccess: () => void;
   onCancel: () => void;
+  onConfirm: () => Promise<void>;
 };
 
-export default function DeleteConfirmModal({
-  staffId,
-  onSuccess,
-  onCancel,
-}: Props) {
+export default function DeleteBookingModal({ onCancel, onConfirm }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState("");
@@ -32,23 +27,10 @@ export default function DeleteConfirmModal({
     setError("");
 
     try {
-      const res = await fetch(
-        `http://localhost:5000/api/auth/delete-staff/${staffId}`,
-        {
-          method: "DELETE",
-        }
-      );
-      const result = await res.json();
-
-      if (!res.ok) {
-        setError(result.message || "Failed to delete staff");
-        return;
-      }
-
-      onSuccess(); // Refresh staff list in parent
+      await onConfirm();
     } catch (err) {
-      console.error("Delete staff error:", err);
-      setError("Something went wrong");
+      console.error("Delete booking error:", err);
+      setError(err instanceof Error ? err.message : "Deletion failed");
     } finally {
       setIsDeleting(false);
     }
@@ -99,7 +81,7 @@ export default function DeleteConfirmModal({
             lineHeight: "1.5",
           }}
         >
-          Are you sure you want to delete this staff member?
+          Are you sure you want to delete this booking?
           <br />
           <span style={{ color: "#e74c3c", fontWeight: "bold" }}>
             This action cannot be undone.
