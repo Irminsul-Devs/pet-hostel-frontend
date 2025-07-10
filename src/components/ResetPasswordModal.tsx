@@ -197,8 +197,9 @@ export default function ResetPasswordModal({
             {isSubmitting ? "Resetting..." : "Reset Password"}
           </button>
         </form>
+
         <div className="modal-footer">
-          <p>
+          <p style={{ textAlign: "center", width: "100%" }}>
             <button onClick={onBackToLogin} className="modal-link">
               Back to Profile
             </button>

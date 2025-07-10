@@ -5,6 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import type { EditBookingModalProps, EditBookingForm } from "../types";
 import type { CSSProperties } from "react";
+import CustomerSelect from "./CustomerSelect";
 
 // Define service prices - ensure these match with CreateBookingModal
 const SERVICE_PRICES = {
@@ -18,6 +19,8 @@ export default function EditBookingModal({
   booking,
   onClose,
   onSave,
+  userRole,
+  userId,
 }: EditBookingModalProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -27,6 +30,7 @@ export default function EditBookingModal({
     petAge: booking.petAge || "",
     petFood: booking.petFood || "",
     vaccinationCertificate: booking.vaccinationCertificate || null,
+    customerId: booking.customer?.id || booking.customerId,
   });
   const [petVaccinated, setPetVaccinated] = useState(!!booking.petVaccinated);
   const [error, setError] = useState("");
@@ -39,6 +43,7 @@ export default function EditBookingModal({
       petAge: booking.petAge || "",
       petFood: booking.petFood || "",
       vaccinationCertificate: booking.vaccinationCertificate || null,
+      customerId: booking.customer?.id || booking.customerId,
     });
     setPetVaccinated(!!booking.petVaccinated);
     setTotalAmount(booking.amount || 0);
@@ -228,6 +233,8 @@ export default function EditBookingModal({
         petVaccinated,
         vaccinationCertificate: finalCertificate,
         amount: totalAmount, // Explicitly include the calculated amount
+        userId, // Keep track of who is making the edit
+        customerId: form.customerId, // Keep the selected customer
       };
 
       // Ensure we're sending null when pet is not vaccinated
@@ -269,18 +276,14 @@ export default function EditBookingModal({
     }
 
     return (
-      form.ownerName &&
-      form.ownerMobile &&
-      form.ownerDob &&
-      form.ownerEmail &&
-      form.ownerAddress &&
       form.petName &&
       form.petType &&
       form.bookingFrom &&
       form.bookingTo &&
       form.services?.length > 0 &&
       form.petDob &&
-      form.petFood
+      form.petFood &&
+      form.customerId
     );
   };
 
@@ -306,131 +309,15 @@ export default function EditBookingModal({
           <div className="modal-form-columns">
             <div className="modal-form-col">
               {/* LEFT COLUMN */}
-              <div className="input-group">
-                <input
-                  type="text"
-                  name="ownerName"
-                  placeholder="Owner Name"
-                  required
-                  value={form.ownerName}
-                  onChange={handleChange}
-                />
-                <label>Owner Name</label>
-              </div>
-              <div className="input-group">
-                <input
-                  type="tel"
-                  name="ownerMobile"
-                  pattern="[0-9]{10}"
-                  title="Please enter a 10-digit phone number"
-                  placeholder="Mobile Number"
-                  required
-                  value={form.ownerMobile}
-                  onChange={handleChange}
-                />
-                <label>Mobile Number</label>
-              </div>
-              {/* --- Owner Date of Birth --- */}
-              <div className="input-group" style={{ position: "relative" }}>
-                <ReactDatePicker
-                  selected={parseDate(form.ownerDob)}
-                  onChange={(date) =>
-                    setForm((f: any) => ({
-                      ...f,
-                      ownerDob: date ? date.toISOString().slice(0, 10) : "",
-                    }))
-                  }
-                  dateFormat="yyyy-MM-dd"
-                  customInput={
-                    <input
-                      type="text"
-                      name="ownerDob"
-                      required
-                      autoComplete="off"
-                      value={form.ownerDob}
-                      onKeyDown={(e) => e.preventDefault()}
-                      style={{
-                        background: "#2a2a2a",
-                        color: "#eaf6fb",
-                        border: "1px solid #555",
-                        paddingRight: "2.2em",
-                        cursor: "pointer",
-                      }}
-                    />
-                  }
-                  calendarClassName="modal-datepicker"
-                  popperPlacement="bottom-end"
-                />
-                <FaRegCalendarAlt
-                  style={{
-                    position: "absolute",
-                    right: "0.8em",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    color: "#1ab3f0",
-                    fontSize: "1.25em",
-                    pointerEvents: "none",
-                    opacity: 0.85,
-                    transition: "color 0.2s",
-                  }}
-                />
-                <label
-                  style={{
-                    position: "absolute",
-                    left: "0.75rem",
-                    top: form.ownerDob ? "-0.5rem" : "1rem",
-                    fontSize: form.ownerDob ? "0.75rem" : "0.8rem",
-                    color: form.ownerDob ? "#1ab3f0" : "#aaa",
-                    background: form.ownerDob ? "#181f2a" : "transparent",
-                    padding: "0 0.3rem",
-                    pointerEvents: "none",
-                    transition:
-                      "top 0.25s, font-size 0.25s, color 0.25s, background 0.25s",
-                    zIndex: 2,
-                  }}
-                >
-                  Owner Date of Birth
-                </label>
-              </div>
-              <div className="input-group">
-                <input
-                  type="email"
-                  name="ownerEmail"
-                  placeholder="Email"
-                  required
-                  value={form.ownerEmail}
-                  onChange={handleChange}
-                />
-                <label>Email</label>
-              </div>
-              {/* --- Address --- */}
-              <div className="input-group" style={{ position: "relative" }}>
-                <textarea
-                  name="ownerAddress"
-                  placeholder=""
-                  required
-                  value={form.ownerAddress}
-                  onChange={handleChange}
-                  rows={3}
-                />
-                <label
-                  style={{
-                    position: "absolute",
-                    left: "0.75rem",
-                    top: form.ownerAddress ? "-0.5rem" : "1rem",
-                    fontSize: form.ownerAddress ? "0.75rem" : "0.8rem",
-                    color: form.ownerAddress ? "#1ab3f0" : "#aaa",
-                    background: form.ownerAddress ? "#181f2a" : "transparent",
-                    padding: "0 0.3rem",
-                    pointerEvents: "none",
-                    transition:
-                      "top 0.25s, font-size 0.25s, color 0.25s, background 0.25s",
-                    zIndex: 2,
-                  }}
-                >
-                  Address
-                </label>
-              </div>
+              {/* Customer selection for staff users */}
+              <CustomerSelect
+                value={form.customerId}
+                onChange={(customerId) =>
+                  setForm((prev) => ({ ...prev, customerId }))
+                }
+                isStaff={userRole === "staff" || userRole === "admin"}
+                currentUserId={userId}
+              />
               <div className="input-group">
                 <input
                   type="text"

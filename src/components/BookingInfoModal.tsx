@@ -238,13 +238,13 @@ export default function BookingInfoModal({ booking, onClose }: Props) {
                     className="detail-label"
                     style={{ fontSize: "0.9rem", color: "#888" }}
                   >
-                    Owner
+                    Customer
                   </div>
                   <div
                     className="detail-value"
                     style={{ fontSize: "1.1rem", color: "#eaeaea" }}
                   >
-                    {booking.ownerName || "N/A"}
+                    {booking.customer?.name || "N/A"}
                   </div>
                 </div>
               </div>
@@ -269,7 +269,7 @@ export default function BookingInfoModal({ booking, onClose }: Props) {
                     className="detail-value"
                     style={{ fontSize: "1.1rem", color: "#eaeaea" }}
                   >
-                    {booking.ownerMobile || "N/A"}
+                    {booking.customer?.mobile || "N/A"}
                   </div>
                 </div>
               </div>
@@ -298,7 +298,7 @@ export default function BookingInfoModal({ booking, onClose }: Props) {
                       wordBreak: "break-word",
                     }}
                   >
-                    {booking.ownerEmail || "N/A"}
+                    {booking.customer?.email || "N/A"}
                   </div>
                 </div>
               </div>

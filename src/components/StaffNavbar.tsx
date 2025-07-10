@@ -5,8 +5,8 @@ import { useState } from "react";
 import StaffProfileModal from "./StaffProfileModal";
 
 type Props = {
-  activeTab: "dashboard" | "bookings";
-  setActiveTab: (tab: "dashboard" | "bookings") => void;
+  activeTab: "dashboard" | "bookings" | "customers";
+  setActiveTab: (tab: "dashboard" | "bookings" | "customers") => void;
 };
 
 export default function StaffNavbar({ activeTab, setActiveTab }: Props) {
@@ -38,6 +38,15 @@ export default function StaffNavbar({ activeTab, setActiveTab }: Props) {
             onClick={() => setActiveTab("bookings")}
           >
             Booking List
+          </span>
+          <span
+            className={
+              activeTab === "customers" ? "active-link staff-tab" : "staff-tab"
+            }
+            style={{ marginLeft: "1.2rem" }}
+            onClick={() => setActiveTab("customers")}
+          >
+            Customer List
           </span>
         </div>
         <div
