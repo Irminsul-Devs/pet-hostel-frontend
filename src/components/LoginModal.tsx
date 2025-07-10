@@ -8,7 +8,7 @@ type Props = {
   onSwitchToReset: () => void;
 };
 
-type UserRole = 'staff' | 'admin' | 'customer';
+type UserRole = "staff" | "admin" | "customer";
 
 export default function LoginModal({
   onClose,
@@ -50,16 +50,19 @@ export default function LoginModal({
       }
 
       // Store complete user data
-      localStorage.setItem("user", JSON.stringify({
-        id: data.user.id,
-        name: data.user.name,
-        email: data.user.email,
-        role: data.user.role,
-        mobile: data.user.mobile,
-        dob: data.user.dob,
-        address: data.user.address
-      }));
-      
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          id: data.user.id,
+          name: data.user.name,
+          email: data.user.email,
+          role: data.user.role,
+          mobile: data.user.mobile,
+          dob: data.user.dob,
+          address: data.user.address,
+        })
+      );
+
       localStorage.setItem("token", data.token);
       window.dispatchEvent(new Event("user-login"));
       onClose();
@@ -68,7 +71,7 @@ export default function LoginModal({
       const rolePaths: Record<UserRole, string> = {
         staff: "/staff-dashboard",
         admin: "/admin-dashboard",
-        customer: "/user-dashboard"
+        customer: "/user-dashboard",
       };
 
       const path = rolePaths[data.user.role as UserRole] || "/";
@@ -81,11 +84,13 @@ export default function LoginModal({
   return (
     <div className="modal-backdrop">
       <div className="modal" ref={ref}>
-        <button className="modal-close" onClick={onClose}>✕</button>
+        <button className="modal-close" onClick={onClose}>
+          ✕
+        </button>
         <h2>Login</h2>
 
         <form onSubmit={handleSubmit}>
-          <div className={`input-group ${error ? 'error' : ''}`}>
+          <div className={`input-group ${error ? "error" : ""}`}>
             <input
               type="email"
               placeholder="Email"
@@ -93,13 +98,13 @@ export default function LoginModal({
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
-                setError(''); // Clear error when typing
+                setError(""); // Clear error when typing
               }}
             />
             <label>Email</label>
           </div>
 
-          <div className={`input-group ${error ? 'error' : ''}`}>
+          <div className={`input-group ${error ? "error" : ""}`}>
             <input
               type="password"
               placeholder="Password"
@@ -107,7 +112,7 @@ export default function LoginModal({
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
-                setError(''); // Clear error when typing
+                setError(""); // Clear error when typing
               }}
             />
             <label>Password</label>
@@ -129,7 +134,7 @@ export default function LoginModal({
         </form>
 
         <div className="modal-footer">
-          <p>
+          <p style={{ textAlign: "center", width: "100%" }}>
             New user?{" "}
             <button onClick={onSwitchToSignup} className="modal-link">
               Sign up

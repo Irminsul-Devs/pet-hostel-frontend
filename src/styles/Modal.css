@@ -123,7 +123,6 @@
   color: #1ab3f0;
   background-color: #1e1e1e;
   padding: 0 0.3rem;
-  z-index: 2;
 }
 
 .input-group input::placeholder {
@@ -158,6 +157,10 @@
   font-size: 0.9rem;
   text-align: center;
   color: #ccc;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
 }
 
 .modal-link {
@@ -280,6 +283,74 @@
   background: #333 !important;
 }
 
+/* Dark theme for year dropdown */
+.react-datepicker__year-dropdown {
+  background-color: #222 !important;
+  border: 1px solid #333 !important;
+  color: #eaf6fb !important;
+}
+
+.react-datepicker__year-option {
+  color: #eaf6fb !important;
+  padding: 0.5rem !important;
+}
+
+.react-datepicker__year-option:hover {
+  background-color: #1ab3f0 !important;
+  color: #fff !important;
+}
+
+.react-datepicker__year-read-view {
+  color: #1ab3f0 !important;
+  padding: 0.2rem 0.5rem !important;
+}
+
+.react-datepicker__year-read-view:hover {
+  background-color: #333 !important;
+  border-radius: 4px !important;
+}
+
+.react-datepicker__year-read-view--down-arrow {
+  border-top-color: #1ab3f0 !important;
+}
+
+.react-datepicker__year-read-view--selected-year {
+  color: #1ab3f0 !important;
+}
+
+.react-datepicker__navigation--years {
+  background: none !important;
+  text-align: center !important;
+  color: #1ab3f0 !important;
+}
+
+.react-datepicker__navigation--years:hover {
+  background-color: #333 !important;
+}
+
+.react-datepicker__navigation--years-upcoming::before,
+.react-datepicker__navigation--years-previous::before {
+  border-color: #1ab3f0 !important;
+}
+
+/* Scrollbar styles for year dropdown */
+.react-datepicker__year-dropdown::-webkit-scrollbar {
+  width: 8px;
+}
+
+.react-datepicker__year-dropdown::-webkit-scrollbar-track {
+  background: #222;
+}
+
+.react-datepicker__year-dropdown::-webkit-scrollbar-thumb {
+  background: #1ab3f0;
+  border-radius: 4px;
+}
+
+.react-datepicker__year-dropdown::-webkit-scrollbar-thumb:hover {
+  background: #0e6487;
+}
+
 /* Default label position for date input */
 .input-group input[type="text"][name$="Dob"],
 .input-group input[type="text"][name$="From"],
@@ -337,6 +408,47 @@ input[type="text"][name$="To"] {
   cursor: not-allowed;
 }
 
+.modal-content {
+  margin: 1rem 0;
+  color: #eaf6fb;
+}
+
+.warning-text {
+  color: #ff6b6b;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.secondary-button {
+  background-color: transparent;
+  color: #eaf6fb;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid #555;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.secondary-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.danger-button {
+  background-color: #ff4757;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.danger-button:hover {
+  background-color: #ff6b6b;
+}
+
 @media (max-width: 400px) {
   .modal {
     padding: 1.5rem 1rem;
@@ -371,114 +483,38 @@ input[type="text"][name$="To"] {
   }
 }
 
-.input-group textarea {
-  background: #2a2a2a;
-  color: #eaf6fb;
-  border: 1px solid #555;
-  resize: vertical;
-  padding: 0.7em 0.7em 0.7em 0.7em;
-  font-size: 1em;
-  width: 100%;
-  min-height: 2.5em;
-  max-width: 100%;
-  border-radius: 4px;
-  box-sizing: border-box;
-  display: block;
-}
-
-/* Toggle Switch for Pet Vaccinated */
-.toggle-switch {
-  position: relative;
-  display: inline-block;
-  width: 56px;
-  height: 28px;
-  margin-right: 1em;
-  vertical-align: middle;
-}
-.toggle-switch .slider {
+/* Textarea label positioning */
+.input-group textarea + label {
   position: absolute;
-  cursor: pointer;
-  background: #444;
-  border-radius: 34px;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  transition: background 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 6px;
-  font-size: 0.95em;
-}
-.toggle-switch input:checked + .slider {
-  background: #1ab3f0;
-}
-.toggle-switch .slider:before {
-  content: "";
-  position: absolute;
-  left: 3px;
-  top: 3px;
-  width: 22px;
-  height: 22px;
-  background: #fff;
-  border-radius: 50%;
-  transition: transform 0.2s;
-  box-shadow: 0 1px 4px #0003;
-}
-.toggle-switch input:checked + .slider:before {
-  transform: translateX(26px);
-}
-.toggle-label {
-  z-index: 1;
+  left: 0.75rem;
+  top: 1rem;
   color: #aaa;
-  font-weight: 600;
-  user-select: none;
   pointer-events: none;
-  transition: color 0.2s;
-}
-.toggle-label.yes {
-  color: #fff;
-  opacity: 0.7;
-}
-.toggle-label.no {
-  color: #fff;
-  opacity: 0.7;
-}
-.toggle-switch input:checked + .slider .yes {
-  color: #fff;
-  opacity: 1;
-}
-.toggle-switch input:not(:checked) + .slider .no {
-  color: #fff;
-  opacity: 1;
+  transition: top 0.25s ease, font-size 0.25s ease, color 0.25s ease,
+    padding 0.25s ease, background-color 0.25s ease;
+  background-color: transparent;
+  font-size: 0.8rem;
 }
 
-input[type="file"]::-webkit-file-upload-button {
-  background: #1ab3f0;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 0.35em 1em;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-input[type="file"]::-webkit-file-upload-button:hover {
-  background: #1692c3;
-}
-input[type="file"]::file-selector-button {
-  background: #000000;
+/* Float label for textarea when focused or has value */
+.input-group textarea:focus + label,
+.input-group textarea:not(:placeholder-shown) + label {
+  top: -0.5rem;
+  left: 0.65rem;
+  font-size: 0.75rem;
+  background-color: #1e1e1e;
+  padding: 0 0.3rem;
   color: #1ab3f0;
-  border: none;
-  border-radius: 4px;
-  padding: 0.35em 0.3em;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s;
 }
-input[type="file"]::file-selector-button:hover {
-  background: #2b2b2b;
+
+.input-group textarea {
+  min-height: 100px;
+  line-height: 1.5;
+  resize: none;
+}
+
+.input-group.error input {
+  border-color: #ff4444;
 }
 
 .error-text {
@@ -491,13 +527,18 @@ input[type="file"]::file-selector-button:hover {
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20%, 60% { transform: translateX(-5px); }
-  40%, 80% { transform: translateX(5px); }
-}
-
-.input-group.error input {
-  border-color: #ff4444;
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-5px);
+  }
+  40%,
+  80% {
+    transform: translateX(5px);
+  }
 }
 
 @media (max-width: 600px) {
@@ -537,7 +578,7 @@ input[type="file"]::file-selector-button:hover {
   display: inline-block;
   margin-top: 10px;
   padding: 8px 16px;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   text-decoration: none;
   border-radius: 4px;
@@ -552,4 +593,115 @@ input[type="file"]::file-selector-button:hover {
 .booking-info-modal {
   max-width: 800px;
   width: 90%;
+}
+
+.modal form .form-group {
+  margin-top: 1rem;
+}
+
+.form-group label {
+  display: block;
+  color: #aaa;
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+
+/* React-Select Custom Styles */
+.form-group .select__control {
+  background-color: #2a2a2a !important;
+  border: 1px solid #555 !important;
+  border-radius: 6px !important;
+  min-height: 3rem !important;
+}
+
+.form-group .select__control:hover {
+  border-color: #1ab3f0 !important;
+}
+
+.form-group .select__control--is-focused {
+  border-color: #1ab3f0 !important;
+  box-shadow: none !important;
+}
+
+.form-group .select__menu {
+  background-color: #2a2a2a !important;
+  border: 1px solid #555 !important;
+}
+
+.form-group .select__option {
+  background-color: #2a2a2a !important;
+  color: white !important;
+}
+
+.form-group .select__option--is-focused {
+  background-color: #1e1e1e !important;
+}
+
+.form-group .select__option--is-selected {
+  background-color: #1ab3f0 !important;
+}
+
+.form-group .select__single-value {
+  color: white !important;
+}
+
+.form-group .select__placeholder {
+  color: #aaa !important;
+}
+
+.form-group .select__input-container {
+  color: white !important;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 24px;
+  margin: 0 10px;
+}
+
+.toggle-switch .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #444;
+  transition: 0.4s;
+  border-radius: 24px;
+}
+
+.toggle-switch .slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+.toggle-switch input:checked + .slider {
+  background-color: #1ab3f0;
+}
+
+.toggle-switch input:checked + .slider:before {
+  transform: translateX(24px);
+}
+
+.pet-vaccinated-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+}
+
+.pet-vaccinated-row label {
+  font-size: 0.9rem;
+  color: #eaf6fb;
 }

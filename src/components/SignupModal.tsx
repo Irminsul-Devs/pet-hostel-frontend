@@ -1,21 +1,72 @@
-import { useRef, useEffect, useState } from 'react';
-import '../styles/Modal.css';
+import { useRef, useEffect, useState } from "react";
+import "../styles/Modal.css";
+import ReactDatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { FaRegCalendarAlt } from "react-icons/fa";
+
+const parseDate = (dateString: string) => {
+  if (!dateString) return null;
+  const date = new Date(dateString);
+  return isNaN(date.getTime()) ? null : date;
+};
+
+const isValidDateFormat = (dateStr: string): boolean => {
+  // Check if empty or follows YYYY-MM-DD format
+  if (!dateStr || !/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+    return false;
+  }
+
+  const [year, month, day] = dateStr.split("-").map(Number);
+
+  // Check year range
+  if (year < 1900 || year > 2100) return false;
+
+  // Check month range
+  if (month < 1 || month > 12) return false;
+
+  // Get last day of the month
+  const lastDay = new Date(year, month, 0).getDate();
+
+  // Check day range
+  if (day < 1 || day > lastDay) return false;
+
+  return true;
+};
+
+const formatDateInput = (input: string): string => {
+  // Remove any non-digit characters first
+  const digits = input.replace(/\D/g, "");
+
+  // Format as YYYY-MM-DD while typing
+  if (digits.length <= 4) {
+    return digits;
+  }
+  if (digits.length <= 6) {
+    return `${digits.slice(0, 4)}-${digits.slice(4)}`;
+  }
+  return `${digits.slice(0, 4)}-${digits.slice(4, 6)}-${digits.slice(6, 8)}`;
+};
 
 type Props = {
   onClose: () => void;
   onSwitchToLogin: () => void;
+  hideLoginLink?: boolean;
 };
 
-export default function SignupModal({ onClose, onSwitchToLogin }: Props) {
+export default function SignupModal({
+  onClose,
+  onSwitchToLogin,
+  hideLoginLink = false,
+}: Props) {
   const ref = useRef<HTMLDivElement>(null);
 
   const [form, setForm] = useState({
-    ownerName: '',
-    ownerEmail: '',
-    ownerMobile: '',
-    ownerPassword: '',
-    ownerDob: '',
-    ownerAddress: '',
+    ownerName: "",
+    ownerEmail: "",
+    ownerMobile: "",
+    ownerPassword: "",
+    ownerDob: "",
+    ownerAddress: "",
   });
 
   useEffect(() => {
@@ -24,25 +75,33 @@ export default function SignupModal({ onClose, onSwitchToLogin }: Props) {
         onClose();
       }
     }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onClose]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
-  const isAtLeast18 = (ownerDob: string) => {
+  const isAtLeast18 = (dobStr: string) => {
+    if (!dobStr || !isValidDateFormat(dobStr)) return false;
+    const dob = new Date(dobStr);
     const today = new Date();
-    const birthDate = new Date(ownerDob);
-    const age = today.getFullYear() - birthDate.getFullYear();
-    const m = today.getMonth() - birthDate.getMonth();
-    const d = today.getDate() - birthDate.getDate();
+    const age = today.getFullYear() - dob.getFullYear();
+    const m = today.getMonth() - dob.getMonth();
+    const d = today.getDate() - dob.getDate();
     return age > 18 || (age === 18 && (m > 0 || (m === 0 && d >= 0)));
   };
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!form.ownerDob) {
+      alert("Please enter your date of birth.");
+      return;
+    }
+
     if (!isAtLeast18(form.ownerDob)) {
       alert("Customer must be at least 18 years old.");
       return;
@@ -53,9 +112,9 @@ export default function SignupModal({ onClose, onSwitchToLogin }: Props) {
       email: form.ownerEmail,
       password: form.ownerPassword,
       mobile: form.ownerMobile,
-      dob: form.ownerDob,
+      dob: form.ownerDob || null,
       address: form.ownerAddress,
-      role: 'customer',
+      role: "customer",
     };
 
     try {
@@ -85,7 +144,9 @@ export default function SignupModal({ onClose, onSwitchToLogin }: Props) {
   return (
     <div className="modal-backdrop">
       <div className="modal" ref={ref}>
-        <button className="modal-close" onClick={onClose}>✕</button>
+        <button className="modal-close" onClick={onClose}>
+          ✕
+        </button>
         <h2>Sign Up</h2>
         <form onSubmit={handleSignup}>
           <div className="input-group">
@@ -130,17 +191,100 @@ export default function SignupModal({ onClose, onSwitchToLogin }: Props) {
           </div>
 
           <div className="input-group">
-            <input
-              type="date"
-              name="ownerDob"
-              placeholder=" "
-              value={form.ownerDob}
-              onChange={handleChange}
-              required
-              max={new Date().toISOString().split("T")[0]}
-              min="1900-01-01"
+            <ReactDatePicker
+              selected={parseDate(form.ownerDob)}
+              onChange={(date) =>
+                setForm((prev) => ({
+                  ...prev,
+                  ownerDob: date ? date.toISOString().split("T")[0] : "",
+                }))
+              }
+              dateFormat="yyyy-MM-dd"
+              customInput={
+                <div style={{ position: "relative" }}>
+                  <input
+                    type="text"
+                    name="ownerDob"
+                    id="ownerDob"
+                    required
+                    autoComplete="off"
+                    value={form.ownerDob}
+                    placeholder=" "
+                    onChange={(e) => {
+                      const formattedDate = formatDateInput(e.target.value);
+                      setForm((prev) => ({
+                        ...prev,
+                        ownerDob: formattedDate,
+                      }));
+                    }}
+                    onBlur={(e) => {
+                      const dateStr = e.target.value;
+                      if (!dateStr) {
+                        setForm((prev) => ({ ...prev, ownerDob: "" }));
+                        return;
+                      }
+
+                      if (!isValidDateFormat(dateStr)) {
+                        // If invalid format or date, clear the field
+                        setForm((prev) => ({ ...prev, ownerDob: "" }));
+                      }
+                    }}
+                    style={{
+                      width: "100%",
+                      padding: "1rem 0.75rem 0.5rem",
+                      border: "1px solid #555",
+                      background: "#2a2a2a",
+                      color: "#eaf6fb",
+                      borderRadius: "6px",
+                      fontSize: "1rem",
+                      outline: "none",
+                      paddingRight: "2.2em",
+                      cursor: "text",
+                    }}
+                  />
+                  <label
+                    htmlFor="ownerDob"
+                    style={{
+                      position: "absolute",
+                      left: "0.75rem",
+                      top: form.ownerDob ? "-0.5rem" : "1rem",
+                      color: form.ownerDob ? "#1ab3f0" : "#aaa",
+                      pointerEvents: "none",
+                      transition: "0.25s ease",
+                      backgroundColor: form.ownerDob
+                        ? "#1e1e1e"
+                        : "transparent",
+                      padding: form.ownerDob ? "0 0.3rem" : "0",
+                      fontSize: form.ownerDob ? "0.75rem" : "0.8rem",
+                      zIndex: 1,
+                    }}
+                  >
+                    Date of Birth
+                  </label>
+                  <FaRegCalendarAlt
+                    style={{
+                      position: "absolute",
+                      right: "0.8em",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      color: "#1ab3f0",
+                      fontSize: "1.25em",
+                      pointerEvents: "none",
+                    }}
+                  />
+                </div>
+              }
+              maxDate={new Date()}
+              minDate={new Date("1900-01-01")}
+              calendarClassName="modal-datepicker"
+              popperPlacement="bottom-end"
+              showYearDropdown
+              scrollableYearDropdown
+              yearDropdownItemNumber={100}
+              isClearable
+              allowSameDay={true}
+              strictParsing={false}
             />
-            <label></label>
           </div>
 
           <div className="input-group" style={{ position: "relative" }}>
@@ -161,7 +305,8 @@ export default function SignupModal({ onClose, onSwitchToLogin }: Props) {
                 background: form.ownerAddress ? "#181f2a" : "transparent",
                 padding: "0 0.3rem",
                 pointerEvents: "none",
-                transition: "top 0.25s, font-size 0.25s, color 0.25s, background 0.25s",
+                transition:
+                  "top 0.25s, font-size 0.25s, color 0.25s, background 0.25s",
                 zIndex: 2,
               }}
             >
@@ -187,12 +332,20 @@ export default function SignupModal({ onClose, onSwitchToLogin }: Props) {
         </form>
 
         <div className="modal-footer">
-          <p>
-            Already a user?{" "}
-            <button onClick={onSwitchToLogin} className="modal-link">
-              Sign in
-            </button>
-          </p>
+          {!hideLoginLink && (
+            <p
+              style={{
+                textAlign: "center",
+                width: "100%",
+                marginBottom: "1rem",
+              }}
+            >
+              Already a user?{" "}
+              <button onClick={onSwitchToLogin} className="modal-link">
+                Sign in
+              </button>
+            </p>
+          )}
         </div>
       </div>
     </div>

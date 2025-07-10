@@ -5,6 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import type { Booking, BookingFormData } from "../types";
 import type { CSSProperties } from "react";
+import CustomerSelect from "./CustomerSelect";
 
 // Define service prices
 const SERVICE_PRICES = {
@@ -17,18 +18,15 @@ const SERVICE_PRICES = {
 type Props = {
   onClose: () => void;
   onCreate: (newBooking: Omit<Booking, "id">) => Promise<void>;
+  userRole: "staff" | "admin" | "customer";
+  userId: number;
 };
 
-type DateField = "ownerDob" | "petDob" | "bookingFrom" | "bookingTo";
+type DateField = "petDob" | "bookingFrom" | "bookingTo";
 
 const initialFormState: BookingFormData = {
   bookingDate: new Date().toISOString().split("T")[0],
   remarks: "",
-  ownerName: "",
-  ownerMobile: "",
-  ownerDob: "",
-  ownerEmail: "",
-  ownerAddress: "",
   petName: "",
   petType: "",
   bookingFrom: "",
@@ -40,9 +38,15 @@ const initialFormState: BookingFormData = {
   vaccinationCertificate: null,
   petVaccinated: false,
   amount: 0.0,
+  customerId: undefined,
 };
 
-export default function CreateBookingModal({ onClose, onCreate }: Props) {
+export default function CreateBookingModal({
+  onClose,
+  onCreate,
+  userRole,
+  userId,
+}: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [form, setForm] = useState<BookingFormData>(initialFormState);
   const [error, setError] = useState("");
@@ -229,11 +233,6 @@ export default function CreateBookingModal({ onClose, onCreate }: Props) {
 
   const validateForm = (): boolean => {
     const requiredFields: Array<keyof BookingFormData> = [
-      "ownerName",
-      "ownerMobile",
-      "ownerDob",
-      "ownerEmail",
-      "ownerAddress",
       "petName",
       "petType",
       "bookingFrom",
@@ -322,12 +321,16 @@ export default function CreateBookingModal({ onClose, onCreate }: Props) {
         }
       }
 
-      await onCreate({
+      const bookingData = {
         ...form,
         vaccinationCertificate,
         petVaccinated,
-        userId: null, // Or get from current user if available
-      });
+        userId,
+        customerId: form.customerId || userId, // If no customer selected, user is booking for themselves
+      };
+
+      console.log("Submitting booking:", bookingData); // Debug log
+      await onCreate(bookingData);
 
       setForm(initialFormState);
       setError("");
@@ -447,44 +450,15 @@ export default function CreateBookingModal({ onClose, onCreate }: Props) {
         <form onSubmit={handleSubmit}>
           <div className="modal-form-columns">
             <div className="modal-form-col">
-              {renderInputGroup("ownerName", "Owner Name")}
-              {renderInputGroup("ownerMobile", "Mobile Number", "tel", {
-                pattern: "[0-9]{10}",
-                maxLength: 10,
-                title: "Please enter a 10-digit phone number",
-              })}
-              <div style={{ width: "100%" }}>
-                {renderDatePicker("ownerDob", "Owner Date of Birth")}
-              </div>
-              {renderInputGroup("ownerEmail", "Email", "email")}
-
-              <div className="input-group" style={{ position: "relative" }}>
-                <textarea
-                  name="ownerAddress"
-                  placeholder=""
-                  required
-                  value={form.ownerAddress}
-                  onChange={handleChange}
-                  rows={3}
-                />
-                <label
-                  style={{
-                    position: "absolute",
-                    left: "0.75rem",
-                    top: form.ownerAddress ? "-0.5rem" : "1rem",
-                    fontSize: form.ownerAddress ? "0.75rem" : "0.8rem",
-                    color: form.ownerAddress ? "#1ab3f0" : "#aaa",
-                    background: form.ownerAddress ? "#181f2a" : "transparent",
-                    padding: "0 0.3rem",
-                    pointerEvents: "none",
-                    transition:
-                      "top 0.25s, font-size 0.25s, color 0.25s, background 0.25s",
-                    zIndex: 2,
-                  }}
-                >
-                  Address
-                </label>
-              </div>
+              {/* Customer selection for staff users */}
+              <CustomerSelect
+                value={form.customerId}
+                onChange={(customerId) =>
+                  setForm((prev) => ({ ...prev, customerId }))
+                }
+                isStaff={userRole === "staff" || userRole === "admin"}
+                currentUserId={userId}
+              />
 
               {renderInputGroup("petName", "Pet Name")}
 
@@ -503,6 +477,28 @@ export default function CreateBookingModal({ onClose, onCreate }: Props) {
                   <option value="Other">Other</option>
                 </select>
                 <label>Pet Type</label>
+              </div>
+
+              <div style={{ width: "100%" }}>
+                {renderDatePicker("petDob", "Pet Date of Birth")}
+              </div>
+
+              <div className="input-group">
+                <input
+                  type="text"
+                  name="petAge"
+                  placeholder="Pet Age"
+                  value={form.petAge}
+                  readOnly
+                  tabIndex={-1}
+                  style={{
+                    background: "#222",
+                    color: "#eaf6fb",
+                    border: "1px solid #333",
+                    pointerEvents: "none",
+                  }}
+                />
+                <label>Pet Age (Auto)</label>
               </div>
             </div>
 
@@ -572,28 +568,6 @@ export default function CreateBookingModal({ onClose, onCreate }: Props) {
                     )
                   )}
                 </div>
-              </div>
-
-              <div style={{ width: "100%" }}>
-                {renderDatePicker("petDob", "Pet Date of Birth")}
-              </div>
-
-              <div className="input-group">
-                <input
-                  type="text"
-                  name="petAge"
-                  placeholder="Pet Age"
-                  value={form.petAge}
-                  readOnly
-                  tabIndex={-1}
-                  style={{
-                    background: "#222",
-                    color: "#eaf6fb",
-                    border: "1px solid #333",
-                    pointerEvents: "none",
-                  }}
-                />
-                <label>Pet Age (Auto)</label>
               </div>
 
               <div className="input-group" style={{ position: "relative" }}>

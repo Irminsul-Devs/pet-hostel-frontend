@@ -17,11 +17,6 @@ export type Booking = {
   id: number;
   bookingDate: string;
   remarks: string | null;
-  ownerName: string;
-  ownerMobile: string;
-  ownerDob: string;
-  ownerEmail: string;
-  ownerAddress: string;
   petName: string;
   petType: string;
   bookingFrom: string;
@@ -33,13 +28,19 @@ export type Booking = {
   vaccinationCertificate: string | null;
   petVaccinated: boolean;
   amount: number;
-  userId: number | null;
+  userId: number;
+  customerId: number;
+  customer?: User;
 };
 
-export type BookingFormData = Omit<Booking, "id" | "userId"> & {
+export type BookingFormData = Omit<
+  Booking,
+  "id" | "userId" | "customerId" | "customer"
+> & {
   vaccinationCertificate: File | null;
   petAge: string;
-  userId?: number | null;
+  userId?: number;
+  customerId?: number;
 };
 
 export type ApiResponse<T> = {
@@ -53,6 +54,8 @@ export type EditBookingModalProps = {
   booking: Booking;
   onClose: () => void;
   onSave: (updatedBooking: Booking) => Promise<void>;
+  userRole: "staff" | "admin" | "customer";
+  userId: number;
 };
 
 export type EditBookingForm = Omit<
