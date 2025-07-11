@@ -107,37 +107,6 @@ export default function StaffDashboard() {
     }
   };
 
-  // Format currency
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(amount);
-  };
-
-  // Calculate monthly revenue
-  const getMonthlyRevenue = () => {
-    const now = new Date();
-    return bookings
-      .filter(
-        (b) =>
-          new Date(b.bookingDate).getMonth() === now.getMonth() &&
-          new Date(b.bookingDate).getFullYear() === now.getFullYear()
-      )
-      .reduce((sum, b) => sum + (b.amount || 0), 0);
-  };
-
-  // Get popular pet types
-  const getPopularPetTypes = () => {
-    const petTypes = bookings.reduce((acc, booking) => {
-      acc[booking.petType] = (acc[booking.petType] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
-
-    const sortedTypes = Object.entries(petTypes).sort(([, a], [, b]) => b - a);
-    return sortedTypes.length > 0 ? sortedTypes[0][0] : "N/A";
-  };
-
   // Get upcoming check-ins for today
   const getTodayCheckIns = () => {
     const today = new Date();
@@ -630,21 +599,6 @@ export default function StaffDashboard() {
               <div className="stat-card" style={{ borderLeftColor: "#FF6B81" }}>
                 <h3>Total Customers</h3>
                 <p>{customers.length}</p>
-              </div>
-
-              {/* Pet Statistics */}
-              <div className="stat-card" style={{ borderLeftColor: "#4ECDC4" }}>
-                <h3>Popular Pet Type</h3>
-                <p>{getPopularPetTypes()}</p>
-              </div>
-
-              {/* Revenue Statistics */}
-              <div
-                className="stat-card"
-                style={{ borderLeftColor: "#4cd137", color: "#4cd137" }}
-              >
-                <h3>Monthly Revenue</h3>
-                <p>{formatCurrency(getMonthlyRevenue())}</p>
               </div>
 
               {/* Weekly Trends */}
