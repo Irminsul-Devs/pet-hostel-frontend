@@ -3,91 +3,82 @@ import type { User, Booking } from "../types";
 import "../styles/StaffDashboard.css";
 import UserNavbar from "../components/UserNavbar";
 import BookingInfoModal from "../components/BookingInfoModal";
-import CreateBookingModal from "../components/CreateBookingModal";
+import CustomerBookingModal from "../components/CustomerBookingModal";
 import UserProfileModal from "../components/UserProfileModal";
 import { MdInfoOutline } from "react-icons/md";
 
 export default function UserDashboard() {
   const [user, setUser] = useState<User | null>(null);
-  const [activeTab, setActiveTab] = useState<"dashboard" | "bookings">(
-    "dashboard"
-  );
+  const [activeTab, setActiveTab] = useState<"dashboard" | "bookings">("dashboard");
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [infoBooking, setInfoBooking] = useState<Booking | null>(null);
 
+  // ✅ Load user and bookings on mount
   useEffect(() => {
     const stored = localStorage.getItem("user");
-    if (stored) setUser(JSON.parse(stored));
-
-    const testUserId = 1; // Test user ID
-    setBookings([
-      {
-        id: 1,
-        bookingDate: "2025-06-24",
-        remarks: "First time boarding",
-        petName: "Charlie",
-        petType: "Dog",
-        bookingFrom: "2025-06-24",
-        bookingTo: "2025-06-28",
-        services: ["Boarding"],
-        petDob: "2020-05-01",
-        petAge: "5",
-        petFood: "Dry food",
-        vaccinationCertificate: null,
-        petVaccinated: true,
-        userId: testUserId,
-        customerId: testUserId,
-        customer: {
-          id: testUserId,
-          name: "Charlie Owner",
-          email: "charlie.owner@pet.com",
-          mobile: "9876543210",
-          dob: "1990-01-01",
-          address: "123 Main St",
-          role: "customer",
-          password: "********",
-        },
-        amount: 140.0,
-      },
-      {
-        id: 2,
-        bookingDate: "2025-06-23",
-        remarks: "Grooming only",
-        petName: "Bella",
-        petType: "Cat",
-        bookingFrom: "2025-06-23",
-        bookingTo: "2025-06-24",
-        services: ["Grooming"],
-        petDob: "2019-08-10",
-        petAge: "6",
-        petFood: "Wet food",
-        vaccinationCertificate: null,
-        petVaccinated: false,
-        userId: testUserId,
-        customerId: testUserId,
-        customer: {
-          id: testUserId,
-          name: "Bella Owner",
-          email: "bella.owner@pet.com",
-          mobile: "9876500000",
-          dob: "1988-03-15",
-          address: "456 Park Ave",
-          role: "customer",
-          password: "********",
-        },
-        amount: 45.0,
-      },
-    ]);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      setUser(parsed);
+      fetchBookings();
+    }
   }, []);
 
-  useEffect(() => {
-    const handler = () => setShowBookingModal(true);
-    window.addEventListener("open-create-booking", handler);
-    return () => window.removeEventListener("open-create-booking", handler);
-  }, []);
+  // ✅ Fetch bookings from backend (only logged-in user's bookings)
+  const fetchBookings = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch("http://localhost:5000/api/bookings", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
+      if (!response.ok) throw new Error("Failed to fetch bookings");
+
+      const data = await response.json();
+
+      const transformed = data.map((b: any) => ({
+        id: b.id,
+        bookingDate: b.booking_date,
+        remarks: b.remarks,
+        petName: b.pet_name,
+        petType: b.pet_type,
+        bookingFrom: b.booking_from,
+        bookingTo: b.booking_to,
+        services: Array.isArray(b.services) ? b.services : [],
+        petDob: b.pet_dob,
+        petAge: b.pet_age,
+        petFood: b.pet_food,
+        vaccinationCertificate: b.vaccination_certificate,
+        petVaccinated: Boolean(b.pet_vaccinated),
+        amount: b.amount,
+        userId: b.user_id,
+        customerId: b.customer_id,
+        customer: b.customer,
+      }));
+
+      setBookings(transformed);
+    } catch (err) {
+      console.error("Error fetching bookings:", err);
+    }
+  };
+const formatDate = (dateString: string | null) => {
+    if (!dateString || dateString === "0000-00-00 00:00:00") return "N/A";
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+    } catch {
+      return "N/A";
+    }
+  };
+
+  // ✅ Handle booking submission
   const handleCreateBooking = async (newBooking: any) => {
     try {
       const token = localStorage.getItem("token");
@@ -103,6 +94,7 @@ export default function UserDashboard() {
       if (!response.ok) throw new Error("Failed to create booking");
 
       const data = await response.json();
+
       const transformedBooking = {
         id: data.id,
         bookingDate: data.booking_date,
@@ -155,58 +147,59 @@ export default function UserDashboard() {
             </button>
             <table className="staff-dashboard-table">
               <thead>
-                <tr>
-                  <th>S.No</th>
-                  <th>Booking Period</th>
-                  <th>Service Opted</th>
-                  <th>Remarks</th>
-                  <th>More Info</th>
-                </tr>
-              </thead>
-              <tbody>
-                {bookings.length > 0 ? (
-                  bookings.map((booking, index) => (
-                    <tr key={booking.id}>
-                      <td>{index + 1}</td>
-                      <td>
-                        {booking.bookingFrom} - {booking.bookingTo}
-                      </td>
-                      <td>{booking.services.join(", ")}</td>
-                      <td>{booking.remarks}</td>
-                      <td>
-                        <button
-                          title="More Info"
-                          style={{
-                            background: "none",
-                            border: "none",
-                            cursor: "pointer",
-                            color: "#1ab3f0",
-                          }}
-                          onClick={() => setInfoBooking(booking)}
-                        >
-                          <MdInfoOutline size={22} />
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td
-                      colSpan={5}
-                      style={{ textAlign: "center", padding: "1em" }}
-                    >
-                      No bookings found
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+  <tr>
+    <th>S.No</th>
+    <th>Application Date</th> {/* ✅ New column */}
+    <th>Booking Period</th>
+    <th>Service Opted</th>
+    <th>Remarks</th>
+    <th>More Info</th>
+  </tr>
+</thead>
+<tbody>
+  {bookings.length > 0 ? (
+    bookings.map((booking, index) => (
+      <tr key={booking.id}>
+        <td>{index + 1}</td>
+         <td>{formatDate(booking.bookingDate)}</td> 
+        <td>
+          {formatDate(booking.bookingFrom)}&nbsp; - &nbsp;
+          {formatDate(booking.bookingTo)}
+        </td>
+        <td>{booking.services.join(", ")}</td>
+        <td>{booking.remarks}</td>
+        <td>
+          <button
+            title="More Info"
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              color: "#1ab3f0",
+            }}
+            onClick={() => setInfoBooking(booking)}
+          >
+            <MdInfoOutline size={22} />
+          </button>
+        </td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan={6} style={{ textAlign: "center", padding: "1em" }}>
+        No bookings found.Click the "Create Booking" button to add a new booking!
+      </td>
+    </tr>
+  )}
+</tbody>
+</table>
           </>
         )}
       </div>
 
+      {/* ✅ Create Booking Modal */}
       {showBookingModal && (
-        <CreateBookingModal
+        <CustomerBookingModal
           onClose={() => setShowBookingModal(false)}
           onCreate={handleCreateBooking}
           userRole={user?.role || "customer"}
@@ -214,10 +207,12 @@ export default function UserDashboard() {
         />
       )}
 
+      {/* ✅ Profile Modal */}
       {showProfileModal && (
         <UserProfileModal onClose={() => setShowProfileModal(false)} />
       )}
 
+      {/* ✅ Booking Info Modal */}
       {infoBooking && (
         <BookingInfoModal
           booking={infoBooking}

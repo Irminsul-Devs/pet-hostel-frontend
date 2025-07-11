@@ -1,6 +1,6 @@
 import "../styles/Navbar.css";
 import { useNavigate } from "react-router-dom";
-import { FaUserCircle } from "react-icons/fa"; // For profile icon
+import { FaUserShield } from "react-icons/fa"; 
 
 type Props = {
   activeTab: "dashboard" | "bookings";
@@ -56,13 +56,21 @@ export default function UserNavbar({
     + Create Booking
   </button> */}
 
-        <FaUserCircle
-          size={25}
-          style={{ marginRight: "1rem", cursor: "pointer", color: "#fff" }}
+        <FaUserShield
+                   size={26}
+                   style={{
+                     marginRight: "1.2rem",
+                     color: "#3498db",
+                     background: "#222",
+                     borderRadius: "50%",
+                     padding: "0.3em",
+                     boxShadow: "0 1px 6px rgba(52, 152, 219, 0.5)",
+                     cursor: "pointer",
+                     transition: "all 0.3s ease",
+                   }}
           onClick={onProfileClick}
           title="View Profile"
-        />
-
+        />   
         <button onClick={handleLogout} className="btn logout-btn">
           Logout
         </button>
