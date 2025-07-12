@@ -59,9 +59,9 @@ export default function ChangePasswordModal({ onClose }: Props) {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        "http://localhost:5000/api/auth/change-password",
+        `http://localhost:5000/api/auth/change-password/${storedUser.id}`,
         {
-          method: "POST",
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -69,17 +69,40 @@ export default function ChangePasswordModal({ onClose }: Props) {
           body: JSON.stringify({
             currentPassword,
             newPassword,
-            userId: storedUser.id,
           }),
         }
       );
 
-      const data = await response.json();
+      // Get response text
+      const responseData = await response.text();
+      console.log("Server response:", responseData); // Debug log
 
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to change password");
+      let data;
+      // Handle empty response
+      if (!responseData) {
+        if (!response.ok) {
+          throw new Error("Incorrect current password");
+        }
+        data = { message: "Success" };
+      } else {
+        // Try to parse non-empty response
+        try {
+          data = JSON.parse(responseData);
+        } catch (error) {
+          console.error("Raw response:", responseData);
+          if (!response.ok) {
+            throw new Error("Incorrect current password");
+          }
+          throw new Error("Server error occurred");
+        }
       }
 
+      // Handle error response
+      if (!response.ok) {
+        throw new Error(data?.message || "Incorrect current password");
+      }
+
+      // Success case
       alert("Password changed successfully!");
       onClose();
     } catch (err: any) {

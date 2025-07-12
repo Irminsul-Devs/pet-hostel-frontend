@@ -79,17 +79,30 @@ export default function StaffDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Load user from localStorage
+  // Load user from localStorage and listen for profile updates
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem("user");
-      if (stored) {
-        const parsedUser = JSON.parse(stored);
-        setUser(parsedUser);
+    const loadUser = () => {
+      try {
+        const stored = localStorage.getItem("user");
+        if (stored) {
+          const parsedUser = JSON.parse(stored);
+          setUser(parsedUser);
+        }
+      } catch (error) {
+        console.error("Error parsing user data:", error);
       }
-    } catch (error) {
-      console.error("Error parsing user data:", error);
-    }
+    };
+
+    // Load initial user data
+    loadUser();
+
+    // Listen for profile update events
+    window.addEventListener("user-profile-updated", loadUser);
+
+    // Cleanup listener
+    return () => {
+      window.removeEventListener("user-profile-updated", loadUser);
+    };
   }, []);
 
   // Format date for display

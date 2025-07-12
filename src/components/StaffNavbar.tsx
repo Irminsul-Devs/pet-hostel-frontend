@@ -2,7 +2,7 @@ import "../styles/Navbar.css";
 import { useNavigate } from "react-router-dom";
 import { FaUserShield } from "react-icons/fa";
 import { useState } from "react";
-import StaffProfileModal from "./StaffProfileModal";
+import UserProfileModal from "./UserProfileModal";
 
 type Props = {
   activeTab: "dashboard" | "bookings" | "customers";
@@ -74,7 +74,7 @@ export default function StaffNavbar({ activeTab, setActiveTab }: Props) {
         </div>
       </nav>
       {showProfile && (
-        <StaffProfileModal onClose={() => setShowProfile(false)} />
+        <UserProfileModal onClose={() => setShowProfile(false)} />
       )}
     </>
   );
