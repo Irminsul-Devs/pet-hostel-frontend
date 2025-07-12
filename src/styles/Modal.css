@@ -263,6 +263,12 @@
   background: #222 !important;
   color: #eaf6fb !important;
   border-color: #333 !important;
+  border-radius: 12px !important;
+  z-index: 10;
+}
+
+.react-datepicker-popper {
+  z-index: 10 !important;
 }
 .react-datepicker__current-month,
 .react-datepicker-time__header,

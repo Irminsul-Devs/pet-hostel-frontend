@@ -375,6 +375,9 @@ export default function CreateBookingModal({
         onChange={(date) => handleDateChange(date, field)}
         dateFormat="yyyy-MM-dd"
         placeholderText={label}
+        showYearDropdown
+        scrollableYearDropdown
+        dropdownMode="scroll"
         customInput={
           <input
             type="text"
