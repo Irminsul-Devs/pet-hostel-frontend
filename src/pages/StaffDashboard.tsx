@@ -69,6 +69,14 @@ export default function StaffDashboard() {
   const [customers, setCustomers] = useState<User[]>([]);
   const [refreshCustomers, setRefreshCustomers] = useState(0);
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [bookingSearchTerm, setBookingSearchTerm] = useState("");
+  const [bookingSearchFilter, setBookingSearchFilter] = useState<
+    "name" | "mobile" | "email" | "date"
+  >("name");
+    const [customerSearchTerm, setCustomerSearchTerm] = useState("");
+  const [customerSearchFilter, setCustomerSearchFilter] = useState<
+    "name" | "mobile" | "email"
+  >("name");
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [showAddCustomerModal, setShowAddCustomerModal] = useState(false);
   const [editCustomer, setEditCustomer] = useState<User | null>(null);
@@ -119,6 +127,27 @@ export default function StaffDashboard() {
       return "N/A";
     }
   };
+
+    const filteredBookings = bookings                      .filter((booking) => {
+                        if (!bookingSearchTerm) return true;
+                        const searchLower = bookingSearchTerm.toLowerCase();
+    
+    
+    switch (bookingSearchFilter) {
+      case "name":
+        return booking.customer?.name?.toLowerCase().includes(searchLower) ||
+               booking.petName.toLowerCase().includes(searchLower);
+      case "mobile":
+        return booking.customer?.mobile?.includes(bookingSearchTerm);
+      case "email":
+        return booking.customer?.email?.toLowerCase().includes(searchLower);
+      case "date":
+        const formattedDate = formatDate(booking.bookingDate);
+        return formattedDate.toLowerCase().includes(searchLower);
+      default:
+        return true;
+    }
+  });
 
   // Get upcoming check-ins for today
   const getTodayCheckIns = () => {
@@ -414,20 +443,98 @@ export default function StaffDashboard() {
 
   const handleDeleteBooking = async (id: number) => {
     try {
+      // First check if the booking exists in our current state
+      console.log(
+        "Current bookings in state:",
+        bookings.map((b) => ({ id: b.id, petName: b.petName }))
+      );
+      const bookingExists = bookings.some((b) => b.id === id);
+      console.log(`Checking if booking ${id} exists in state:`, bookingExists);
+
+      if (!bookingExists) {
+        throw new Error(
+          "Booking not found in current list. Please refresh the page and try again."
+        );
+      }
+
+      console.log("Attempting to delete booking:", id);
       const token = localStorage.getItem("token");
+      console.log("Authorization token present:", !!token);
+
       const response = await fetch(`http://localhost:5000/api/bookings/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
       });
 
-      if (!response.ok) throw new Error("Failed to delete booking");
+      console.log("Delete response status:", response.status);
+      console.log(
+        "Delete response headers:",
+        Object.fromEntries(response.headers.entries())
+      );
 
-      setBookings((prev) => prev.filter((b) => b.id !== id));
+      let data;
+      try {
+        const responseText = await response.text();
+        console.log("Raw response text:", responseText);
+        data = responseText ? JSON.parse(responseText) : null;
+        console.log("Parsed response data:", data);
+      } catch (parseError) {
+        console.error("Error parsing response:", parseError);
+        if (!response.ok) {
+          throw new Error(
+            `Server returned ${response.status}: ${response.statusText}`
+          );
+        }
+      }
+
+      if (!response.ok) {
+        // Handle specific status codes with detailed error information
+        if (response.status === 404) {
+          console.error(`Server returned 404 for booking ${id}. Data:`, data);
+          throw new Error(
+            `Booking #${id} not found on server. Server response: ${JSON.stringify(
+              data
+            )}`
+          );
+        }
+        if (response.status === 401 || response.status === 403) {
+          console.error(
+            `Authorization error (${response.status}) for booking ${id}. Data:`,
+            data
+          );
+          throw new Error(
+            "Not authorized to delete this booking. Please check your permissions."
+          );
+        }
+        const errorMessage =
+          data && data.message
+            ? `Server error: ${data.message}`
+            : `Failed to delete booking. Server returned ${response.status}`;
+        console.error(`Delete error for booking ${id}:`, errorMessage);
+        throw new Error(errorMessage);
+      }
+
+      // Successfully deleted
+      console.log(`Successfully deleted booking ${id}. Updating state...`);
+      setBookings((prev) => {
+        const newBookings = prev.filter((b) => b.id !== id);
+        console.log(
+          `Bookings count before: ${prev.length}, after: ${newBookings.length}`
+        );
+        return newBookings;
+      });
       setDeleteBookingId(null);
+      alert("Booking deleted successfully!");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Deletion error");
+      console.error("Delete error:", err);
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to delete booking";
+      alert(errorMessage);
+      setError(errorMessage);
+      setDeleteBookingId(null); // Close the delete modal on error
     }
   };
 
@@ -645,6 +752,7 @@ export default function StaffDashboard() {
         ) : activeTab === "bookings" ? (
           <>
             <div className="bookings-header">
+              <div className="header-top">
               <button
                 className="create-booking-btn"
                 onClick={() => setShowBookingModal(true)}
@@ -664,6 +772,33 @@ export default function StaffDashboard() {
                 <div className="status-item">
                   <span className="status-dot status-future"></span>
                   <span>Future</span>
+                                    </div>
+                </div>
+              </div>
+
+              <div className="search-bar">
+                <div className="search-input-container">
+                  <input
+                    type="text"
+                     placeholder={`Search by ${bookingSearchFilter}...`}
+                    value={bookingSearchTerm}
+                    onChange={(e) => setBookingSearchTerm(e.target.value)}
+                    className="search-input"
+                  />
+                  <select
+                   value={bookingSearchFilter}
+                    onChange={(e) => 
+                      setBookingSearchFilter(
+                        e.target.value as "name" | "mobile" | "email" | "date"
+                      )
+                    }
+                    className="search-filter"
+                  >
+                    <option value="name">Name (Pet/Owner)</option>
+                    <option value="mobile">Mobile Number</option>
+                    <option value="email">Email</option>
+                    <option value="date">Booking Date</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -686,8 +821,8 @@ export default function StaffDashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {bookings.length > 0 ? (
-                    bookings.map((booking, index) => {
+                  {filteredBookings.length > 0 ? (
+                    filteredBookings.map((booking, index) => {
                       // Determine booking status
                       const now = new Date();
                       const bookingFrom = new Date(booking.bookingFrom);
@@ -785,6 +920,31 @@ export default function StaffDashboard() {
               </button>
             </div>
 
+             <div className="search-bar">
+              <div className="search-input-container">
+                <input
+                  type="text"
+                  placeholder={`Search by ${customerSearchFilter}...`}
+                  value={customerSearchTerm}
+                  onChange={(e) => setCustomerSearchTerm(e.target.value)}
+                  className="search-input"
+                />
+                <select
+                  value={customerSearchFilter}
+                  onChange={(e) =>
+                    setCustomerSearchFilter(
+                      e.target.value as "name" | "mobile" | "email"
+                    )
+                  }
+                  className="search-filter"
+                >
+                  <option value="name">Name</option>
+                  <option value="mobile">Mobile Number</option>
+                  <option value="email">Email</option>
+                </select>
+              </div>
+            </div>
+
             {loading ? (
               <div className="loading-spinner">Loading customers...</div>
             ) : (
@@ -802,7 +962,22 @@ export default function StaffDashboard() {
                 </thead>
                 <tbody>
                   {customers.length > 0 ? (
-                    customers.map((customer, index) => (
+                    customers
+                      .filter((customer) => {
+                        if (!customerSearchTerm) return true;
+                        const searchLower = customerSearchTerm.toLowerCase();
+                        switch (customerSearchFilter) {
+                          case "name":
+                            return customer.name?.toLowerCase().includes(searchLower);
+                          case "mobile":
+                            return customer.mobile?.toLowerCase().includes(searchLower);
+                          case "email":
+                            return customer.email.toLowerCase().includes(searchLower);
+                          default:
+                            return true;
+                        }
+                      })
+                      .map((customer, index) => (
                       <tr key={customer.id}>
                         <td>{index + 1}</td>
                         <td>{customer.name || "N/A"}</td>

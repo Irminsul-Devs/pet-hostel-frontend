@@ -345,6 +345,100 @@ export default function EditBookingModal({
                 </select>
                 <label>Pet Type</label>
               </div>
+              {/* --- Pet Date of Birth --- */}
+              <div className="input-group" style={{ position: "relative" }}>
+                <ReactDatePicker
+                  selected={parseDate(form.petDob)}
+                  onChange={(date) => {
+                    setForm((f: any) => {
+                      const dob = date;
+                      const age =
+                        dob && !isNaN(dob.getTime())
+                          ? Math.floor(
+                              (Date.now() - dob.getTime()) /
+                                (365.25 * 24 * 60 * 60 * 1000)
+                            )
+                          : "";
+                      return {
+                        ...f,
+                        petDob: dob ? dob.toISOString().slice(0, 10) : "",
+                        petAge: age.toString(),
+                      };
+                    });
+                  }}
+                  showYearDropdown
+                  scrollableYearDropdown
+                  dropdownMode="scroll"
+                  yearDropdownItemNumber={100}
+                  dateFormat="yyyy-MM-dd"
+                  customInput={
+                    <input
+                      type="text"
+                      name="petDob"
+                      required
+                      autoComplete="off"
+                      value={form.petDob}
+                      onKeyDown={(e) => e.preventDefault()}
+                      style={{
+                        background: "#2a2a2a",
+                        color: "#eaf6fb",
+                        border: "1px solid #555",
+                        paddingRight: "2.2em",
+                        cursor: "pointer",
+                      }}
+                    />
+                  }
+                  calendarClassName="modal-datepicker"
+                  popperPlacement="bottom-end"
+                />
+                <FaRegCalendarAlt
+                  style={{
+                    position: "absolute",
+                    right: "0.8em",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    color: "#1ab3f0",
+                    fontSize: "1.25em",
+                    pointerEvents: "none",
+                    opacity: 0.85,
+                    transition: "color 0.2s",
+                  }}
+                />
+                <label
+                  style={{
+                    position: "absolute",
+                    left: "0.75rem",
+                    top: form.petDob ? "-0.5rem" : "1rem",
+                    fontSize: form.petDob ? "0.75rem" : "0.8rem",
+                    color: form.petDob ? "#1ab3f0" : "#aaa",
+                    background: form.petDob ? "#181f2a" : "transparent",
+                    padding: "0 0.3rem",
+                    pointerEvents: "none",
+                    transition:
+                      "top 0.25s, font-size 0.25s, color 0.25s, background 0.25s",
+                    zIndex: 2,
+                  }}
+                >
+                  Pet Date of Birth
+                </label>
+              </div>
+              <div className="input-group">
+                <input
+                  type="text"
+                  name="petAge"
+                  placeholder="Pet Age"
+                  value={form.petAge}
+                  readOnly
+                  tabIndex={-1}
+                  style={{
+                    background: "#222",
+                    color: "#eaf6fb",
+                    border: "1px solid #333",
+                    pointerEvents: "none",
+                  }}
+                />
+                <label>Pet Age (Auto)</label>
+              </div>
             </div>
             <div className="modal-form-col">
               {/* RIGHT COLUMN */}
@@ -385,6 +479,10 @@ export default function EditBookingModal({
                             : "",
                         }));
                       }}
+                      showYearDropdown
+                      scrollableYearDropdown
+                      dropdownMode="scroll"
+                      yearDropdownItemNumber={100}
                       dateFormat="yyyy-MM-dd"
                       customInput={
                         <input
@@ -467,6 +565,10 @@ export default function EditBookingModal({
                             : "",
                         }));
                       }}
+                      showYearDropdown
+                      scrollableYearDropdown
+                      dropdownMode="scroll"
+                      yearDropdownItemNumber={100}
                       dateFormat="yyyy-MM-dd"
                       customInput={
                         <input
@@ -590,96 +692,6 @@ export default function EditBookingModal({
                     </label>
                   ))}
                 </div>
-              </div>
-              {/* --- Pet Date of Birth --- */}
-              <div className="input-group" style={{ position: "relative" }}>
-                <ReactDatePicker
-                  selected={parseDate(form.petDob)}
-                  onChange={(date) => {
-                    setForm((f: any) => {
-                      const dob = date;
-                      const age =
-                        dob && !isNaN(dob.getTime())
-                          ? Math.floor(
-                              (Date.now() - dob.getTime()) /
-                                (365.25 * 24 * 60 * 60 * 1000)
-                            )
-                          : "";
-                      return {
-                        ...f,
-                        petDob: dob ? dob.toISOString().slice(0, 10) : "",
-                        petAge: age.toString(),
-                      };
-                    });
-                  }}
-                  dateFormat="yyyy-MM-dd"
-                  customInput={
-                    <input
-                      type="text"
-                      name="petDob"
-                      required
-                      autoComplete="off"
-                      value={form.petDob}
-                      onKeyDown={(e) => e.preventDefault()}
-                      style={{
-                        background: "#2a2a2a",
-                        color: "#eaf6fb",
-                        border: "1px solid #555",
-                        paddingRight: "2.2em",
-                        cursor: "pointer",
-                      }}
-                    />
-                  }
-                  calendarClassName="modal-datepicker"
-                  popperPlacement="bottom-end"
-                />
-                <FaRegCalendarAlt
-                  style={{
-                    position: "absolute",
-                    right: "0.8em",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    color: "#1ab3f0",
-                    fontSize: "1.25em",
-                    pointerEvents: "none",
-                    opacity: 0.85,
-                    transition: "color 0.2s",
-                  }}
-                />
-                <label
-                  style={{
-                    position: "absolute",
-                    left: "0.75rem",
-                    top: form.petDob ? "-0.5rem" : "1rem",
-                    fontSize: form.petDob ? "0.75rem" : "0.8rem",
-                    color: form.petDob ? "#1ab3f0" : "#aaa",
-                    background: form.petDob ? "#181f2a" : "transparent",
-                    padding: "0 0.3rem",
-                    pointerEvents: "none",
-                    transition:
-                      "top 0.25s, font-size 0.25s, color 0.25s, background 0.25s",
-                    zIndex: 2,
-                  }}
-                >
-                  Pet Date of Birth
-                </label>
-              </div>
-              <div className="input-group">
-                <input
-                  type="text"
-                  name="petAge"
-                  placeholder="Pet Age"
-                  value={form.petAge}
-                  readOnly
-                  tabIndex={-1}
-                  style={{
-                    background: "#222",
-                    color: "#eaf6fb",
-                    border: "1px solid #333",
-                    pointerEvents: "none", // disables mouse interaction
-                  }}
-                />
-                <label>Pet Age (Auto)</label>
               </div>
               {/* --- Pet Food Habit --- */}
               <div className="input-group" style={{ position: "relative" }}>

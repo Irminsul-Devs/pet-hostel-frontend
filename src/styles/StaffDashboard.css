@@ -19,6 +19,87 @@
   margin-top: 1.5rem;
 }
 
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.search-bar {
+  margin-bottom: 0.3rem;
+  width: 100%;
+  background: rgba(26, 179, 240, 0.05);
+  padding: 0.1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(26, 179, 240, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+.search-input-container {
+  display: flex;
+  gap: 0.2rem;
+  width: 100%;
+  position: relative;
+}
+
+.search-input {
+  flex: 1;
+  padding: 0.7rem 1.25rem;
+  border: 2px solid rgba(26, 179, 240, 0.2);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  color: #fff;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #1ab3f0;
+  box-shadow: 0 0 0 2px rgba(26, 179, 240, 0.2),
+    inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.search-filter {
+  padding: 0.7rem 1.25rem;
+  border: 2px solid rgba(26, 179, 240, 0.2);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  color: #fff;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 20%;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231ab3f0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1em;
+  padding-right: 2.5rem;
+}
+
+.search-filter:focus {
+  outline: none;
+  border-color: #1ab3f0;
+  box-shadow: 0 0 0 2px rgba(26, 179, 240, 0.2);
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.search-filter option {
+  background: #1a1a1a;
+  color: #fff;
+  padding: 10px;
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 300;
+}
+
 .staff-dashboard-table thead {
   background: linear-gradient(to right, #1a5372, #2a5298);
   color: white;

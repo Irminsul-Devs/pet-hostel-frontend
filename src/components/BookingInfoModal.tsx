@@ -28,14 +28,16 @@ export default function BookingInfoModal({ booking, onClose }: Props) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onClose]);
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string, includeTime: boolean = false) => {
     if (!dateString) return "N/A";
     const options: Intl.DateTimeFormatOptions = {
       year: "numeric",
       month: "short",
       day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
+      ...(includeTime && {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
     };
     return new Date(dateString).toLocaleString(undefined, options);
   };
@@ -193,7 +195,7 @@ export default function BookingInfoModal({ booking, onClose }: Props) {
                     className="detail-value"
                     style={{ fontSize: "1.1rem", color: "#eaeaea" }}
                   >
-                    {formatDate(booking.bookingDate) || "Empty"}
+                    {formatDate(booking.bookingDate, false) || "Empty"}
                   </div>
                 </div>
               </div>
