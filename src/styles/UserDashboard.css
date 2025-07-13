@@ -1,0 +1,179 @@
+
+.dashboard-welcome {
+  color: #5a91c9;
+  font-size: 2.2rem;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.section-title {
+  color: #3498db;
+  margin: 2rem 0 1.5rem;
+  font-size: 1.5rem;
+  border-bottom: 2px solid #f1c40f;
+  padding-bottom: 0.5rem;
+  display: inline-block;
+}
+
+/* Summary Cards */
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.summary-cards .card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  text-align: center;
+  border-top: 4px solid #f1c40f;
+}
+
+.summary-cards .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.summary-cards .card h3 {
+  color:#1a2f43;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.summary-cards .card p {
+  color: #1a2f43;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Pet Cards Grid */
+.pet-c {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.pet-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  border-left: 4px solid #3498db;
+}
+
+.pet-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.pet-card h3 {
+  color: #012344;
+  font-size: 1.3rem;
+  margin-bottom: 0.8rem;
+  display: flex;
+  align-items: center;
+}
+
+.pet-card h3::before {
+  margin-right: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.pet-card p {
+  color: #03182c;;
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+}
+
+.pet-card p strong {
+  color: #2c3e50;
+}
+
+/* Status Badges */
+.vaccination-status {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.vaccination-status.true {
+  background: #e8f8f5;
+  color: #27ae60;
+}
+
+.vaccination-status.false {
+  background: #fdedec;
+  color: #e74c3c;
+}
+
+
+/* Table Improvements */
+/* Responsive */
+@media (max-width: 900px) {
+  .summary-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .pet-c {
+    grid-template-columns: 1fr;
+  }
+}
+.Toastify__toast {
+  border-radius: 8px !important;
+  font-family: inherit !important;
+}
+
+.Toastify__toast--info {
+  background: #3498db !important;
+}
+.services-card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  margin: 0.5rem 0 1.5rem 0;
+  justify-content: flex-start;
+}
+
+.service-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  width: 200px;
+  transition: transform 0.2s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-4px);
+}
+
+.service-card h4 {
+  font-size: 1.2rem;
+  margin-bottom: 0.4rem;
+  color: #9b2d2d;
+
+}
+
+.service-card p {
+  font-size: 1.1rem;
+  color: #071318;
+  font-weight: bold;
+}
+
+.unit {
+  color: #888;
+  font-size: 0.9rem;
+  font-weight: normal;
+}

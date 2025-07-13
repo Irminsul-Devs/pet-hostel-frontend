@@ -44,7 +44,6 @@ const initialFormState: BookingFormData = {
 export default function CustomerBookingModal({
   onClose,
   onCreate,
-  userRole,
   userId,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
@@ -73,15 +72,14 @@ export default function CustomerBookingModal({
         ageString = `${age} year${age > 1 ? "s" : ""}`;
         const remainingMonths = today.getMonth() - birthDate.getMonth();
         if (remainingMonths > 0) {
-          ageString += `, ${remainingMonths} month${
-            remainingMonths > 1 ? "s" : ""
-          }`;
+          ageString += `, ${remainingMonths} month${remainingMonths > 1 ? "s" : ""
+            }`;
         }
       } else {
         const months = Math.max(
           0,
           (today.getFullYear() - birthDate.getFullYear()) * 12 +
-            (today.getMonth() - birthDate.getMonth())
+          (today.getMonth() - birthDate.getMonth())
         );
         ageString = `${months} month${months !== 1 ? "s" : ""}`;
       }
@@ -364,82 +362,85 @@ export default function CustomerBookingModal({
     </div>
   );
 
- const renderDatePicker = (
-  field: DateField,
-  label: string,
-  customFontSize?: { input?: string; label?: string }
-) => (
-  <div className="input-group" style={{ position: "relative" }}>
-    <ReactDatePicker
-      selected={parseDate(form[field])}
-      onChange={(date) => handleDateChange(date, field)}
-      dateFormat="yyyy-MM-dd"
-      placeholderText={label}
-      // Disable past dates only for bookingFrom and bookingTo
-      minDate={field === "bookingFrom" || field === "bookingTo" ? new Date() : undefined}
-      customInput={
-        <input
-          type="text"
-          name={field}
-          required
-          placeholder={label}
-          autoComplete="off"
-          value={form[field]}
-          onKeyDown={(e) => e.preventDefault()}
-          style={{
-            background: "#2a2a2a",
-            color: "#eaf6fb",
-            border: "1px solid #555",
-            paddingRight: "2.2em",
-            cursor: "pointer",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            fontSize: customFontSize?.input || "inherit",
-          }}
-        />
-      }
-      calendarClassName="modal-datepicker"
-      popperPlacement="bottom-end"
-    />
-    <FaRegCalendarAlt
-      style={{
-        position: "absolute",
-        right: "0.8em",
-        top: "50%",
-        transform: "translateY(-50%)",
-        color: "#1ab3f0",
-        fontSize: "1.25em",
-        pointerEvents: "none",
-        opacity: 0.85,
-        transition: "color 0.2s",
-      }}
-    />
-    <label
-      style={{
-        position: "absolute",
-        left: "0.75rem",
-        top: form[field] ? "-0.5rem" : "1rem",
-        fontSize: form[field]
-          ? customFontSize?.label || "0.75rem"
-          : customFontSize?.label || "0.7rem",
-        color: form[field] ? "#1ab3f0" : "#aaa",
-        background: form[field] ? "#181f2a" : "transparent",
-        padding: "0 0.3rem",
-        pointerEvents: "none",
-        transition:
-          "top 0.25s, font-size 0.25s, color 0.25s, background 0.25s",
-        zIndex: 2,
-        whiteSpace: "nowrap",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        maxWidth: "calc(100% - 1.5rem)",
-      }}
-    >
-      {label}
-    </label>
-  </div>
-);
+  const renderDatePicker = (
+    field: DateField,
+    label: string,
+    customFontSize?: { input?: string; label?: string }
+  ) => (
+    <div className="input-group" style={{ position: "relative" }}>
+      <ReactDatePicker
+        selected={parseDate(form[field])}
+        onChange={(date) => handleDateChange(date, field)}
+        dateFormat="yyyy-MM-dd"
+        placeholderText={label}
+        showYearDropdown
+        scrollableYearDropdown
+        dropdownMode="scroll"
+        minDate={field === "bookingFrom" ? new Date() : undefined}
+        maxDate={field === "petDob" ? new Date() : undefined}
+        customInput={
+          <input
+            type="text"
+            name={field}
+            required
+            placeholder={label}
+            autoComplete="off"
+            value={form[field]}
+            onKeyDown={(e) => e.preventDefault()}
+            style={{
+              background: "#2a2a2a",
+              color: "#eaf6fb",
+              border: "1px solid #555",
+              paddingRight: "2.2em",
+              cursor: "pointer",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              fontSize: customFontSize?.input || "inherit",
+            }}
+          />
+        }
+        calendarClassName="modal-datepicker"
+        popperPlacement="bottom-end"
+      />
+      <FaRegCalendarAlt
+        style={{
+          position: "absolute",
+          right: "0.8em",
+          top: "50%",
+          transform: "translateY(-50%)",
+          color: "#1ab3f0",
+          fontSize: "1.25em",
+          pointerEvents: "none",
+          opacity: 0.85,
+          transition: "color 0.2s",
+        }}
+      />
+      <label
+        style={{
+          position: "absolute",
+          left: "0.75rem",
+          top: form[field] ? "-0.5rem" : "1rem",
+          fontSize: form[field]
+            ? customFontSize?.label || "0.75rem"
+            : customFontSize?.label || "0.7rem",
+          color: form[field] ? "#1ab3f0" : "#aaa",
+          background: form[field] ? "#181f2a" : "transparent",
+          padding: "0 0.3rem",
+          pointerEvents: "none",
+          transition:
+            "top 0.25s, font-size 0.25s, color 0.25s, background 0.25s",
+          zIndex: 2,
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          maxWidth: "calc(100% - 1.5rem)",
+        }}
+      >
+        {label}
+      </label>
+    </div>
+  );
   return (
     <div className="modal-backdrop">
       <div className="modal" ref={ref}>
@@ -451,7 +452,7 @@ export default function CustomerBookingModal({
         <form onSubmit={handleSubmit}>
           <div className="modal-form-columns">
             <div className="modal-form-col">
-            <br></br>
+              <br></br>
 
               {renderInputGroup("petName", "Pet Name")}
               <div className="input-group">
@@ -630,7 +631,7 @@ export default function CustomerBookingModal({
                             Math.ceil(
                               (new Date(form.bookingTo).getTime() -
                                 new Date(form.bookingFrom).getTime()) /
-                                (1000 * 60 * 60 * 24)
+                              (1000 * 60 * 60 * 24)
                             )
                           )
                         ).toFixed(2)}
@@ -651,7 +652,7 @@ export default function CustomerBookingModal({
                             Math.ceil(
                               (new Date(form.bookingTo).getTime() -
                                 new Date(form.bookingFrom).getTime()) /
-                                (1000 * 60 * 60 * 24)
+                              (1000 * 60 * 60 * 24)
                             )
                           )
                         ).toFixed(2)}
