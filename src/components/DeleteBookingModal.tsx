@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { MdDelete, MdCancel } from "react-icons/md";
 import { IoMdWarning } from "react-icons/io";
 
@@ -12,15 +12,7 @@ export default function DeleteBookingModal({ onCancel, onConfirm }: Props) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        onCancel();
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [onCancel]);
+  // Modal closing on outside click has been intentionally removed to prevent accidental closes of deletion dialog
 
   const handleDelete = async () => {
     setIsDeleting(true);

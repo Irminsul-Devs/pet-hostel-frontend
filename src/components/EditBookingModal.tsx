@@ -92,15 +92,7 @@ export default function EditBookingModal({
     setForm((prev) => ({ ...prev, amount }));
   }, [form.services, form.bookingFrom, form.bookingTo]);
 
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        onClose();
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [onClose]);
+  // Modal closing on outside click has been intentionally removed to prevent accidental closes
 
   const handleChange = (
     e: React.ChangeEvent<
