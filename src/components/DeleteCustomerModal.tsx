@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { MdCancel } from "react-icons/md";
 import { IoMdWarning } from "react-icons/io";
 import "../styles/Modal.css";
@@ -18,15 +18,7 @@ export default function DeleteCustomerModal({
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        onClose();
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [onClose]);
+  // Modal closing on outside click has been intentionally removed to prevent accidental closes of deletion dialog
 
   const handleDelete = async () => {
     setIsDeleting(true);

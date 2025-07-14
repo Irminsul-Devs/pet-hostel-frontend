@@ -92,15 +92,7 @@ export default function EditBookingModal({
     setForm((prev) => ({ ...prev, amount }));
   }, [form.services, form.bookingFrom, form.bookingTo]);
 
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        onClose();
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [onClose]);
+  // Modal closing on outside click has been intentionally removed to prevent accidental closes
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -350,23 +342,74 @@ export default function EditBookingModal({
                 <ReactDatePicker
                   selected={parseDate(form.petDob)}
                   onChange={(date) => {
+                    if (!date) {
+                      setForm((f: any) => ({
+                        ...f,
+                        petDob: "",
+                        petAge: "",
+                      }));
+                      return;
+                    }
+
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+
+                    // Don't allow future dates
+                    if (date > today) {
+                      alert("Pet's date of birth cannot be in the future");
+                      return;
+                    }
+
+                    // Calculate age in years
+                    const ageInYears =
+                      (today.getTime() - date.getTime()) /
+                      (365.25 * 24 * 60 * 60 * 1000);
+
+                    // Age validations based on pet type
+                    if (form.petType) {
+                      const maxAges: { [key: string]: number } = {
+                        Dog: 25, // Maximum reasonable age for dogs
+                        Cat: 30, // Maximum reasonable age for cats
+                        Bird: 50, // Maximum reasonable age for common pet birds
+                        Other: 50, // Generic maximum for other pets
+                      };
+
+                      if (ageInYears > maxAges[form.petType]) {
+                        alert(
+                          `The entered date of birth seems unrealistic for a ${form.petType.toLowerCase()}. Please check the date.`
+                        );
+                        return;
+                      }
+                    }
+
+                    // If validations pass, update the form
                     setForm((f: any) => {
-                      const dob = date;
-                      const age =
-                        dob && !isNaN(dob.getTime())
-                          ? Math.floor(
-                              (Date.now() - dob.getTime()) /
-                                (365.25 * 24 * 60 * 60 * 1000)
-                            )
-                          : "";
+                      const age = Math.floor(ageInYears);
+                      let ageString = "";
+                      if (age > 0) {
+                        ageString = `${age} year${age > 1 ? "s" : ""}`;
+                        const remainingMonths = Math.floor(
+                          (ageInYears - age) * 12
+                        );
+                        if (remainingMonths > 0) {
+                          ageString += `, ${remainingMonths} month${
+                            remainingMonths > 1 ? "s" : ""
+                          }`;
+                        }
+                      } else {
+                        const months = Math.max(0, Math.floor(ageInYears * 12));
+                        ageString = `${months} month${months !== 1 ? "s" : ""}`;
+                      }
+
                       return {
                         ...f,
-                        petDob: dob ? dob.toISOString().slice(0, 10) : "",
-                        petAge: age.toString(),
+                        petDob: date.toISOString().slice(0, 10),
+                        petAge: ageString,
                       };
                     });
                   }}
                   showYearDropdown
+                  showMonthDropdown
                   scrollableYearDropdown
                   dropdownMode="scroll"
                   yearDropdownItemNumber={100}
@@ -480,6 +523,7 @@ export default function EditBookingModal({
                         }));
                       }}
                       showYearDropdown
+                      showMonthDropdown
                       scrollableYearDropdown
                       dropdownMode="scroll"
                       yearDropdownItemNumber={100}
@@ -566,6 +610,7 @@ export default function EditBookingModal({
                         }));
                       }}
                       showYearDropdown
+                      showMonthDropdown
                       scrollableYearDropdown
                       dropdownMode="scroll"
                       yearDropdownItemNumber={100}

@@ -25,15 +25,7 @@ export default function UserProfileModal({ onClose }: Props) {
   const [loading, setLoading] = useState(true);
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
 
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        onClose();
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [onClose]);
+  // Modal closing on outside click has been intentionally removed to prevent accidental closes while editing profile
 
   useEffect(() => {
     if (!storedUser?.id) return;
@@ -221,6 +213,7 @@ export default function UserProfileModal({ onClose }: Props) {
                         }))
                       }
                       showYearDropdown
+                      showMonthDropdown
                       scrollableYearDropdown
                       yearDropdownItemNumber={100}
                       dateFormat="yyyy-MM-dd"

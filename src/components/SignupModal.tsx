@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import "../styles/Modal.css";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -69,15 +69,7 @@ export default function SignupModal({
     ownerAddress: "",
   });
 
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        onClose();
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [onClose]);
+  // Modal closing on outside click has been intentionally removed to prevent accidental closes
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -279,6 +271,7 @@ export default function SignupModal({
               calendarClassName="modal-datepicker"
               popperPlacement="bottom-end"
               showYearDropdown
+              showMonthDropdown
               scrollableYearDropdown
               yearDropdownItemNumber={100}
               isClearable

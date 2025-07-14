@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import {
   MdPets,
   MdPerson,
@@ -18,15 +18,7 @@ type Props = {
 export default function BookingInfoModal({ booking, onClose }: Props) {
   const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        onClose();
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [onClose]);
+  // Modal closing on outside click has been intentionally removed to prevent accidental closes
 
   const formatDate = (dateString: string, includeTime: boolean = false) => {
     if (!dateString) return "N/A";
@@ -506,6 +498,35 @@ export default function BookingInfoModal({ booking, onClose }: Props) {
                     }}
                   >
                     {booking.petVaccinated ? "Yes" : "No"}
+                  </div>
+                </div>
+              </div>
+
+              <div
+                className="detail-item"
+                style={{ display: "flex", alignItems: "center" }}
+              >
+                <MdPets
+                  size={20}
+                  color="#1ab3f0"
+                  style={{ marginRight: "10px" }}
+                />
+                <div>
+                  <div
+                    className="detail-label"
+                    style={{ fontSize: "0.9rem", color: "#888" }}
+                  >
+                    Pet Food Habit
+                  </div>
+                  <div
+                    className="detail-value"
+                    style={{
+                      fontSize: "1.1rem",
+                      color: "#eaeaea",
+                      whiteSpace: "pre-line",
+                    }}
+                  >
+                    {booking.petFood || "N/A"}
                   </div>
                 </div>
               </div>

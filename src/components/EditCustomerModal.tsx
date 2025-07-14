@@ -248,6 +248,7 @@ export default function EditCustomerModal({
                   calendarClassName="modal-datepicker"
                   popperPlacement="bottom-end"
                   showYearDropdown
+                  showMonthDropdown
                   scrollableYearDropdown
                   yearDropdownItemNumber={100}
                   isClearable
