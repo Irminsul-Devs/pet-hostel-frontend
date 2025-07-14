@@ -21,6 +21,60 @@
   left: 0;
   height: 100%;
   width: 100%;
-  background: rgba(0, 0, 0, 0.3); /* semi-transparent black */
+  background: rgba(0, 0, 0, 0.442); /* darker dim */
   z-index: -1;
+}
+
+
+.contact-heading {
+  margin-top: 14rem;
+  color: #fff;
+}
+
+.contact-info-row {
+  display: flex; 
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 2rem;
+  flex-wrap: wrap; /* For responsiveness */
+}
+
+.info-card {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  margin: 0 5px; /* small side margin between cards */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/images/pet-hostel.jpg');
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-top:1%;
+}
+
+
+.info-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: #00bfff; /* blue tone */
+}
+
+.info-title {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.info-detail {
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .contact-info-row {
+    flex-direction: column;
+    align-items: center;
+  }
 }

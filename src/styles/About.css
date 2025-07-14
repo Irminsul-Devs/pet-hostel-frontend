@@ -25,3 +25,252 @@
   background: rgba(0, 0, 0, 0.2); /* semi-transparent black */
   z-index: -1;
 }
+.about-hero {
+  text-align: center;
+  background-size: cover;
+  background-position: center;
+  color: white;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  margin-top:3rem;
+  padding:1rem 0;
+}
+
+.about-section h2 {
+  text-align: center;
+  margin-bottom: 6rem;
+  color: #e1e5e9;
+}
+
+.animal-types, .services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2.5rem;
+  margin-top: 1rem;
+}
+
+ .service-card {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('pet-hostel.jpg');
+  backdrop-filter: blur(2px);
+  padding: 0.5rem;
+  border-radius: 23px;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 6px rgba(143, 77, 77, 0.05);
+  margin-left: 15%;
+}
+.animal-card:hover, .service-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+ .service-icon {
+  color: #3498db;
+  margin-bottom: 0.8rem;
+}
+
+.service-card h3 {
+  margin: 0.8rem 0;
+  font-size: 1.1rem;
+}
+
+.service-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.service-card li {
+  margin-bottom: 0.5rem;
+  position: relative;
+  padding-left: 1.2rem;
+}
+
+.service-card li:before {
+  content: "•";
+  color: #3498db;
+  position: absolute;
+  left: 0;
+}
+
+@media (max-width: 768px) {
+  .animal-types, .services-grid {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .about-hero {
+    padding: 2.5rem 0;
+  }
+}
+
+/* Animal Cards Section */
+.about-section {
+  padding: 0.5rem 0;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.about-section h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+  margin-top: 0.1rem;
+  font-size: 1.8rem;
+  color: #00060b;
+  position: relative;
+}
+
+.about-section h2::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 3px;
+  background: #3498db;
+  margin: 0.5rem auto 0;
+}
+
+.animal-types {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  padding: 0 1rem;
+}
+
+.animal-card {
+  flex: 1;
+  min-width: 200px;
+  max-width: 250px;
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.animal-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.animal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.animal-icon {
+  color: #3498db;
+  margin-bottom: 1rem;
+  background: #e8f4fc;
+  padding: 1rem;
+  border-radius: 50%;
+}
+
+.animal-text {
+  text-align: center;
+}
+
+.animal-text h3 {
+  margin: 0.5rem 0;
+  font-size: 1.25rem;
+  color: #59a3ed;
+}
+
+.animal-text p {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .animal-card {
+    min-width: 160px;
+  }
+}
+
+@media (max-width: 768px) {
+  .animal-types {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .animal-types {
+    grid-template-columns: 1fr;
+  }
+  
+  .animal-card {
+    max-width: 100%;
+  }
+}
+.animal-types-single-card {
+  margin: 2rem 0;
+  margin-top: 1rem;
+}
+
+.animal-card-single {
+   background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('pet-hostel.jpg');
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+.animal-row {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.animal-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex: 1;
+  min-width: 150px;
+  padding: 1rem;
+}
+
+.animal-icon {
+  color: #4a6fa5;
+  margin-bottom: 1rem;
+}
+
+.animal-text h3 {
+  margin: 0.5rem 0;
+  font-size: 1.2rem;
+}
+
+.animal-text p {
+  margin: 0;
+  color: #ebdfdf;
+  font-size: 0.9rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .animal-row {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .animal-item {
+    width: 100%;
+    flex-direction: row;
+    text-align: left;
+    justify-content: flex-start;
+    gap: 1rem;
+  }
+  
+  .animal-icon {
+    margin-bottom: 0;
+  }
+}
