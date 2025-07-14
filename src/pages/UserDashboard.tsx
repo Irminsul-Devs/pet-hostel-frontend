@@ -191,8 +191,8 @@ const getPetIcon = (type: string) => {
 
       <div className="staff-dashboard">
         {activeTab === "dashboard" ? (
-          <div className="dashboard-content">
-            <h1 className="dashboard-welcome">Welcome, {user?.name || "User"}! {user?.name && " 🐾"}</h1>
+          <div className="dashboard-welcome">
+            <h3>Welcome, {user?.name || "User"}! {user?.name && " 🐾"}</h3>
 
             <div className="summary-cards">
               <div className="card">
@@ -236,19 +236,19 @@ const getPetIcon = (type: string) => {
 <br></br>
  <h2 className="section-title">Available Services & Pricing</h2>
 <div className="services-card-container">
-  <div className="service-card">
+  <div className="service-cards">
     <h4>🐾 Boarding</h4>
     <p>₹35.00 <span className="unit">/ day</span></p>
   </div>
-  <div className="service-card">
+  <div className="service-cards">
     <h4>✂️ Grooming</h4>
-    <p>₹45.00 <span className="unit">flat</span></p>
+    <p>₹45.00 <span className="unit">/ day</span></p>
   </div>
-  <div className="service-card">
+  <div className="service-cards">
     <h4>🎓 Training</h4>
-    <p>₹50.00 <span className="unit">/ session</span></p>
+    <p>₹50.00 <span className="unit">/ day</span></p>
   </div>
-  <div className="service-card">
+  <div className="service-cards">
     <h4>🍼 Day Care</h4>
     <p>₹25.00 <span className="unit">/ day</span></p>
   </div>
