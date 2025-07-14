@@ -1,6 +1,6 @@
 
 .dashboard-welcome {
-  color: #5a91c9;
+  color: #3498db;
   font-size: 2.2rem;
   margin-bottom: 1.5rem;
   font-weight: 600;
@@ -24,7 +24,7 @@
 }
 
 .summary-cards .card {
-  background: white;
+  background: rgb(230, 230, 230);
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
@@ -39,13 +39,13 @@
 }
 
 .summary-cards .card h3 {
-  color:#1a2f43;
+  color:black;
   font-size: 1rem;
   margin-bottom: 0.5rem;
 }
 
 .summary-cards .card p {
-  color: #1a2f43;
+  color: black;
   font-size: 1.8rem;
   font-weight: 700;
   margin: 0;
@@ -59,7 +59,7 @@
 }
 
 .pet-card {
-  background: white;
+  background: rgb(230, 230, 230);
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
@@ -88,7 +88,7 @@
 }
 
 .pet-card p {
-  color: #03182c;;
+  color:black;
   margin: 0.5rem 0;
   font-size: 0.95rem;
 }
@@ -96,28 +96,6 @@
 .pet-card p strong {
   color: #2c3e50;
 }
-
-/* Status Badges */
-.vaccination-status {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  padding: 0.3rem 0.6rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
-.vaccination-status.true {
-  background: #e8f8f5;
-  color: #27ae60;
-}
-
-.vaccination-status.false {
-  background: #fdedec;
-  color: #e74c3c;
-}
-
 
 /* Table Improvements */
 /* Responsive */
@@ -146,34 +124,39 @@
   justify-content: flex-start;
 }
 
-.service-card {
-  background: #fff;
-  border-radius: 12px;
+.service-cards {
+  background: rgb(230, 230, 230);
+  border-radius: 8px;
   padding: 1.2rem 1.5rem;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-  width: 200px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  width: 150px;
   transition: transform 0.2s ease;
+  padding: 1.0rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  border-left: 4px solid #3498db;
 }
 
 .service-card:hover {
   transform: translateY(-4px);
 }
 
-.service-card h4 {
+.service-cards h4 {
   font-size: 1.2rem;
   margin-bottom: 0.4rem;
-  color: #9b2d2d;
+  color:black;
 
 }
 
-.service-card p {
+.service-cards p {
   font-size: 1.1rem;
-  color: #071318;
+  color:black;
   font-weight: bold;
 }
 
 .unit {
-  color: #888;
+  color: #474242;
   font-size: 0.9rem;
   font-weight: normal;
 }
