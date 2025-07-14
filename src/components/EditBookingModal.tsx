@@ -409,6 +409,7 @@ export default function EditBookingModal({
                     });
                   }}
                   showYearDropdown
+                  showMonthDropdown
                   scrollableYearDropdown
                   dropdownMode="scroll"
                   yearDropdownItemNumber={100}
@@ -522,6 +523,7 @@ export default function EditBookingModal({
                         }));
                       }}
                       showYearDropdown
+                      showMonthDropdown
                       scrollableYearDropdown
                       dropdownMode="scroll"
                       yearDropdownItemNumber={100}
@@ -608,6 +610,7 @@ export default function EditBookingModal({
                         }));
                       }}
                       showYearDropdown
+                      showMonthDropdown
                       scrollableYearDropdown
                       dropdownMode="scroll"
                       yearDropdownItemNumber={100}

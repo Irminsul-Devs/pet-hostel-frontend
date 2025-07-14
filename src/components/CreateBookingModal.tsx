@@ -404,6 +404,7 @@ export default function CreateBookingModal({
         showYearDropdown
         scrollableYearDropdown
         dropdownMode="scroll"
+        showMonthDropdown
         customInput={
           <input
             type="text"

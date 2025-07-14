@@ -213,6 +213,7 @@ export default function UserProfileModal({ onClose }: Props) {
                         }))
                       }
                       showYearDropdown
+                      showMonthDropdown
                       scrollableYearDropdown
                       yearDropdownItemNumber={100}
                       dateFormat="yyyy-MM-dd"
