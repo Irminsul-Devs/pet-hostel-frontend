@@ -49,12 +49,12 @@ export default function DeleteBookingModal({ onCancel, onConfirm }: Props) {
             width: "100%",
           }}
         >
-          <IoMdWarning size={48} color="#e74c3c" />
+          <IoMdWarning size={48} color="#ff1900ff" />
         </div>
 
         <h2
           style={{
-            color: "#e74c3c",
+            color: "#ff1900ff",
             marginTop: "0.5rem",
             fontSize: "1.8rem",
             textAlign: "center",
@@ -69,13 +69,13 @@ export default function DeleteBookingModal({ onCancel, onConfirm }: Props) {
             textAlign: "center",
             fontSize: "1.1rem",
             margin: "1.5rem 0",
-            color: "#eaeaea",
+            color: "#333",
             lineHeight: "1.5",
           }}
         >
           Are you sure you want to delete this booking?
           <br />
-          <span style={{ color: "#e74c3c", fontWeight: "bold" }}>
+          <span style={{ color: "#ff1900ff", fontWeight: "bold" }}>
             This action cannot be undone.
           </span>
         </p>
@@ -88,7 +88,7 @@ export default function DeleteBookingModal({ onCancel, onConfirm }: Props) {
               padding: "0.8rem",
               margin: "1rem 0",
               backgroundColor: "rgba(231, 76, 60, 0.2)",
-              border: "1px solid #e74c3c",
+              border: "1px solid #ff1900ff",
               borderRadius: "5px",
             }}
           >
@@ -115,7 +115,7 @@ export default function DeleteBookingModal({ onCancel, onConfirm }: Props) {
               gap: "0.5rem",
               padding: "0.7rem 1.2rem",
               borderRadius: "5px",
-              backgroundColor: "#555",
+              backgroundColor: "#000",
               color: "#fff",
               border: "none",
               cursor: "pointer",
@@ -136,7 +136,7 @@ export default function DeleteBookingModal({ onCancel, onConfirm }: Props) {
               gap: "0.5rem",
               padding: "0.7rem 1.2rem",
               borderRadius: "5px",
-              backgroundColor: "#e74c3c",
+              backgroundColor: "#ff1900ff",
               color: "#fff",
               border: "none",
               cursor: "pointer",

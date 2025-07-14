@@ -600,7 +600,12 @@ export default function CreateBookingModal({
                   onChange={handleChange}
                   rows={2}
                 />
-                <label style={floatingLabelStyle(!!form.petFood)}>
+                <label
+                  style={{
+                    ...floatingLabelStyle(!!form.petFood),
+                    color: form.petFood ? "#1ab3f0" : "#888",
+                  }}
+                >
                   Pet Food Habit
                 </label>
               </div>
@@ -716,7 +721,12 @@ export default function CreateBookingModal({
               rows={3}
               style={{ width: "100%" }}
             />
-            <label style={floatingLabelStyle(!!form.remarks)}>
+            <label
+              style={{
+                ...floatingLabelStyle(!!form.remarks),
+                color: form.remarks ? "#1ab3f0" : "#888",
+              }}
+            >
               Remarks (Optional)
             </label>
           </div>
@@ -802,7 +812,7 @@ const fileInputStyle: CSSProperties = {
   background: "#fff",
   border: "2px solid #1ab3f0",
   borderRadius: "4px",
-  padding: "0.3em 0.5em",
+  padding: "0.4em 0.5em",
   fontSize: "0.9em",
   outline: "none",
   boxShadow: "none",

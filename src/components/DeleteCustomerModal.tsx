@@ -55,12 +55,12 @@ export default function DeleteCustomerModal({
             width: "100%",
           }}
         >
-          <IoMdWarning size={48} color="#e74c3c" />
+          <IoMdWarning size={48} color="#ff1900ff" />
         </div>
 
         <h2
           style={{
-            color: "#e74c3c",
+            color: "#ff1900ff",
             marginTop: "0.5rem",
             fontSize: "1.8rem",
             textAlign: "center",
@@ -75,13 +75,13 @@ export default function DeleteCustomerModal({
             textAlign: "center",
             fontSize: "1.1rem",
             margin: "1.5rem 0",
-            color: "#eaeaea",
+            color: "#333",
             lineHeight: "1.5",
           }}
         >
           Are you sure you want to delete this customer "{customerName}"?
           <br />
-          <span style={{ color: "#e74c3c", fontWeight: "bold" }}>
+          <span style={{ color: "#ff1900ff", fontWeight: "bold" }}>
             This action cannot be undone.
           </span>
           <br />
@@ -112,9 +112,8 @@ export default function DeleteCustomerModal({
             style={{
               padding: "0.75rem 1.5rem",
               fontSize: "1rem",
-              background: "transparent",
-              border: "2px solid #666",
-              color: "#eaeaea",
+              background: "#000",
+              color: "#fff",
               borderRadius: "6px",
               cursor: "pointer",
               display: "flex",
@@ -132,7 +131,7 @@ export default function DeleteCustomerModal({
             style={{
               padding: "0.75rem 1.5rem",
               fontSize: "1rem",
-              background: "#e74c3c",
+              background: "#ff1900ff",
               border: "none",
               color: "white",
               borderRadius: "6px",

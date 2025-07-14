@@ -57,8 +57,8 @@ export default function StaffNavbar({ activeTab, setActiveTab }: Props) {
             size={26}
             style={{
               marginRight: "1.2rem",
-              color: "#3498db",
-              background: "#222",
+              color: "#000000ff",
+              background: "#fff",
               borderRadius: "50%",
               padding: "0.3em",
               boxShadow: "0 1px 6px rgba(52, 152, 219, 0.5)",

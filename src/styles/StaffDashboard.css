@@ -4,7 +4,7 @@
   border-spacing: 0;
   min-width: 0; /* Remove or set to 0 to avoid extra space */
   width: 100%;
-  background: #000000;
+  background: #f8f9fa;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);

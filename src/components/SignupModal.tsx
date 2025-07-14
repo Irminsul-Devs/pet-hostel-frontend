@@ -224,9 +224,6 @@ export default function SignupModal({
                     style={{
                       width: "100%",
                       padding: "1rem 0.75rem 0.5rem",
-                      border: "1px solid #555",
-                      background: "#2a2a2a",
-                      color: "#eaf6fb",
                       borderRadius: "6px",
                       fontSize: "1rem",
                       outline: "none",
@@ -240,12 +237,9 @@ export default function SignupModal({
                       position: "absolute",
                       left: "0.75rem",
                       top: form.ownerDob ? "-0.5rem" : "1rem",
-                      color: form.ownerDob ? "#1ab3f0" : "#aaa",
+                      color: form.ownerDob ? "#1ab3f0" : "#888",
                       pointerEvents: "none",
                       transition: "0.25s ease",
-                      backgroundColor: form.ownerDob
-                        ? "#1e1e1e"
-                        : "transparent",
                       padding: form.ownerDob ? "0 0.3rem" : "0",
                       fontSize: form.ownerDob ? "0.75rem" : "0.8rem",
                       zIndex: 1,
@@ -274,7 +268,6 @@ export default function SignupModal({
               showMonthDropdown
               scrollableYearDropdown
               yearDropdownItemNumber={100}
-              isClearable
               allowSameDay={true}
               strictParsing={false}
             />
@@ -294,8 +287,8 @@ export default function SignupModal({
                 left: "0.75rem",
                 top: form.ownerAddress ? "-0.5rem" : "1rem",
                 fontSize: form.ownerAddress ? "0.75rem" : "0.8rem",
-                color: form.ownerAddress ? "#1ab3f0" : "#aaa",
-                background: form.ownerAddress ? "#181f2a" : "transparent",
+                color: form.ownerAddress ? "#1ab3f0" : "#888",
+                background: form.ownerAddress ? "#fff" : "transparent",
                 padding: "0 0.3rem",
                 pointerEvents: "none",
                 transition:
