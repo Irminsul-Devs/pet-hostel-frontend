@@ -67,19 +67,40 @@ export default function CustomerBookingModal({
         age--;
       }
 
+      // Age validation for pet type
+      if (form.petType) {
+        const maxAges: { [key: string]: number } = {
+          Dog: 25,
+          Cat: 30,
+          Bird: 50,
+          Rabbit: 15,
+        };
+        const ageInYears =
+          (today.getTime() - birthDate.getTime()) /
+          (365.25 * 24 * 60 * 60 * 1000);
+        if (maxAges[form.petType] && ageInYears > maxAges[form.petType]) {
+          alert(
+            `The entered date of birth seems unrealistic for a ${form.petType.toLowerCase()}. Please check the date.`
+          );
+          setForm((prev) => ({ ...prev, petDob: "", petAge: "" }));
+          return;
+        }
+      }
+
       let ageString = "";
       if (age > 0) {
         ageString = `${age} year${age > 1 ? "s" : ""}`;
         const remainingMonths = today.getMonth() - birthDate.getMonth();
         if (remainingMonths > 0) {
-          ageString += `, ${remainingMonths} month${remainingMonths > 1 ? "s" : ""
-            }`;
+          ageString += `, ${remainingMonths} month${
+            remainingMonths > 1 ? "s" : ""
+          }`;
         }
       } else {
         const months = Math.max(
           0,
           (today.getFullYear() - birthDate.getFullYear()) * 12 +
-          (today.getMonth() - birthDate.getMonth())
+            (today.getMonth() - birthDate.getMonth())
         );
         ageString = `${months} month${months !== 1 ? "s" : ""}`;
       }
@@ -88,7 +109,7 @@ export default function CustomerBookingModal({
     } else {
       setForm((prev) => ({ ...prev, petAge: "" }));
     }
-  }, [form.petDob]);
+  }, [form.petDob, form.petType]);
 
   // Calculate amount whenever services or dates change
   useEffect(() => {
@@ -128,17 +149,6 @@ export default function CustomerBookingModal({
     setTotalAmount(amount);
     setForm((prev) => ({ ...prev, amount }));
   }, [form.services, form.bookingFrom, form.bookingTo]);
-
-  // Close modal when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        onClose();
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [onClose]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -374,6 +384,7 @@ export default function CustomerBookingModal({
         dateFormat="yyyy-MM-dd"
         placeholderText={label}
         showYearDropdown
+        showMonthDropdown
         scrollableYearDropdown
         dropdownMode="scroll"
         minDate={field === "bookingFrom" ? new Date() : undefined}
@@ -467,7 +478,7 @@ export default function CustomerBookingModal({
                   <option value="Dog">Dog</option>
                   <option value="Cat">Cat</option>
                   <option value="Bird">Bird</option>
-                  <option value="Other">Other</option>
+                  <option value="Rabbit">Rabbit</option>
                 </select>
                 <label>Pet Type</label>
               </div>
@@ -631,7 +642,7 @@ export default function CustomerBookingModal({
                             Math.ceil(
                               (new Date(form.bookingTo).getTime() -
                                 new Date(form.bookingFrom).getTime()) /
-                              (1000 * 60 * 60 * 24)
+                                (1000 * 60 * 60 * 24)
                             )
                           )
                         ).toFixed(2)}
@@ -652,7 +663,7 @@ export default function CustomerBookingModal({
                             Math.ceil(
                               (new Date(form.bookingTo).getTime() -
                                 new Date(form.bookingFrom).getTime()) /
-                              (1000 * 60 * 60 * 24)
+                                (1000 * 60 * 60 * 24)
                             )
                           )
                         ).toFixed(2)}

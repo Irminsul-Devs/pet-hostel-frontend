@@ -1,3 +1,29 @@
+/* Dark theme for month dropdown */
+.react-datepicker__month-dropdown {
+  background-color: #222 !important;
+  border: 1px solid #333 !important;
+  color: #eaf6fb !important;
+}
+
+.react-datepicker__month-option {
+  color: #eaf6fb !important;
+  padding: 0.5rem !important;
+}
+
+.react-datepicker__month-option:hover {
+  background-color: #1ab3f0 !important;
+  color: #fff !important;
+}
+
+.react-datepicker__month-read-view {
+  color: #1ab3f0 !important;
+  padding: 0.2rem 0.5rem !important;
+}
+
+.react-datepicker__month-read-view:hover {
+  background-color: #333 !important;
+  border-radius: 4px !important;
+}
 .modal-backdrop {
   position: fixed;
   top: 0;

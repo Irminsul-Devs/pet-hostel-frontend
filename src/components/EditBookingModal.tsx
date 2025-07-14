@@ -333,7 +333,7 @@ export default function EditBookingModal({
                   <option value="Dog">Dog</option>
                   <option value="Cat">Cat</option>
                   <option value="Bird">Bird</option>
-                  <option value="Other">Other</option>
+                  <option value="Rabbit">Rabbit</option>
                 </select>
                 <label>Pet Type</label>
               </div>
@@ -371,7 +371,7 @@ export default function EditBookingModal({
                         Dog: 25, // Maximum reasonable age for dogs
                         Cat: 30, // Maximum reasonable age for cats
                         Bird: 50, // Maximum reasonable age for common pet birds
-                        Other: 50, // Generic maximum for other pets
+                        Rabbit: 15, // Maximum reasonable age for rabbits
                       };
 
                       if (ageInYears > maxAges[form.petType]) {
