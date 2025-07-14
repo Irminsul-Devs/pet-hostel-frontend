@@ -710,19 +710,19 @@ export default function StaffDashboard() {
               </div>
 
               {/* Today's Statistics */}
-              <div className="stat-card" style={{ borderLeftColor: "#6C5CE7" }}>
+              <div className="stat-card">
                 <h3>Check-ins Today</h3>
                 <p>{getTodayCheckIns()}</p>
               </div>
 
               {/* Customer Statistics */}
-              <div className="stat-card" style={{ borderLeftColor: "#FF6B81" }}>
+              <div className="stat-card">
                 <h3>Total Customers</h3>
                 <p>{customers.length}</p>
               </div>
 
               {/* Weekly Trends */}
-              <div className="stat-card" style={{ borderLeftColor: "#A8E6CF" }}>
+              <div className="stat-card">
                 <h3>Weekly Bookings</h3>
                 <p>
                   {getWeeklyTrends().current}

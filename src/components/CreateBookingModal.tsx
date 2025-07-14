@@ -415,9 +415,6 @@ export default function CreateBookingModal({
             value={form[field]}
             onKeyDown={(e) => e.preventDefault()}
             style={{
-              background: "#2a2a2a",
-              color: "#eaf6fb",
-              border: "1px solid #555",
               paddingRight: "2.2em",
               cursor: "pointer",
               whiteSpace: "nowrap",
@@ -450,9 +447,9 @@ export default function CreateBookingModal({
           top: form[field] ? "-0.5rem" : "1rem",
           fontSize: form[field]
             ? customFontSize?.label || "0.75rem"
-            : customFontSize?.label || "0.7rem",
-          color: form[field] ? "#1ab3f0" : "#aaa",
-          background: form[field] ? "#181f2a" : "transparent",
+            : customFontSize?.label || "0.8rem",
+          color: form[field] ? "#1ab3f0" : "#888",
+          background: form[field] ? "#fff" : "transparent",
           padding: "0 0.3rem",
           pointerEvents: "none",
           transition:
@@ -519,14 +516,8 @@ export default function CreateBookingModal({
                   name="petAge"
                   placeholder="Pet Age"
                   value={form.petAge}
-                  readOnly
+                  disabled
                   tabIndex={-1}
-                  style={{
-                    background: "#222",
-                    color: "#eaf6fb",
-                    border: "1px solid #333",
-                    pointerEvents: "none",
-                  }}
                 />
                 <label>Pet Age (Auto)</label>
               </div>
@@ -536,7 +527,7 @@ export default function CreateBookingModal({
               <div style={{ marginTop: "1rem", marginBottom: "0.5rem" }}>
                 <div
                   style={{
-                    color: "#eaf6fb",
+                    color: "#333",
                     fontWeight: 500,
                     fontSize: "0.9em",
                     marginBottom: "0.5em",
@@ -564,7 +555,7 @@ export default function CreateBookingModal({
                 <div
                   style={{
                     marginBottom: "0.5em",
-                    color: "#eaf6fb",
+                    color: "#333",
                     fontWeight: 500,
                     fontSize: "0.9em",
                   }}
@@ -575,7 +566,7 @@ export default function CreateBookingModal({
                   style={{
                     display: "grid",
                     gridTemplateColumns: "1fr 1fr",
-                    color: "#aaa",
+                    color: "#444",
                     gap: "0.7em",
                   }}
                 >
@@ -609,7 +600,12 @@ export default function CreateBookingModal({
                   onChange={handleChange}
                   rows={2}
                 />
-                <label style={floatingLabelStyle(!!form.petFood)}>
+                <label
+                  style={{
+                    ...floatingLabelStyle(!!form.petFood),
+                    color: form.petFood ? "#1ab3f0" : "#888",
+                  }}
+                >
                   Pet Food Habit
                 </label>
               </div>
@@ -725,7 +721,12 @@ export default function CreateBookingModal({
               rows={3}
               style={{ width: "100%" }}
             />
-            <label style={floatingLabelStyle(!!form.remarks)}>
+            <label
+              style={{
+                ...floatingLabelStyle(!!form.remarks),
+                color: form.remarks ? "#1ab3f0" : "#888",
+              }}
+            >
               Remarks (Optional)
             </label>
           </div>
@@ -758,8 +759,8 @@ const floatingLabelStyle = (hasValue: boolean): CSSProperties => ({
   left: "0.75rem",
   top: hasValue ? "-0.5rem" : "1rem",
   fontSize: hasValue ? "0.75rem" : "0.8rem",
-  color: hasValue ? "#1ab3f0" : "#aaa",
-  background: hasValue ? "#181f2a" : "transparent",
+  color: hasValue ? "#1ab3f0" : "#333",
+  background: hasValue ? "#fff" : "transparent",
   padding: "0 0.3rem",
   pointerEvents: "none",
   transition: "top 0.25s, font-size 0.25s, color 0.25s, background 0.25s",
@@ -777,7 +778,7 @@ const petVaccinatedRowStyle: CSSProperties = {
 
 const petVaccinatedLabelStyle: CSSProperties = {
   marginRight: "1em",
-  color: "#eaf6fb",
+  color: "#333",
   fontWeight: 500,
   minWidth: 0,
   whiteSpace: "nowrap",
@@ -785,7 +786,7 @@ const petVaccinatedLabelStyle: CSSProperties = {
 
 const petVaccinatedStatusStyle = (isVaccinated: boolean): CSSProperties => ({
   marginLeft: "0.3em",
-  color: isVaccinated ? "#1ab3f0" : "#aaa",
+  color: isVaccinated ? "#1ab3f0" : "#333",
   fontWeight: 600,
   minWidth: 0,
   textAlign: "left",
@@ -796,7 +797,7 @@ const petVaccinatedStatusStyle = (isVaccinated: boolean): CSSProperties => ({
 });
 
 const uploadLabelStyle: CSSProperties = {
-  color: "#ccc",
+  color: "#333",
   fontSize: "1em",
   fontWeight: 500,
   display: "flex",
@@ -807,11 +808,11 @@ const uploadLabelStyle: CSSProperties = {
 };
 
 const fileInputStyle: CSSProperties = {
-  color: "#eaf6fb",
-  background: "#2a2a2a",
-  border: "1px solid #1ab3f0",
+  color: "#333",
+  background: "#fff",
+  border: "2px solid #1ab3f0",
   borderRadius: "4px",
-  padding: "0.3em 0.5em",
+  padding: "0.4em 0.5em",
   fontSize: "0.9em",
   outline: "none",
   boxShadow: "none",

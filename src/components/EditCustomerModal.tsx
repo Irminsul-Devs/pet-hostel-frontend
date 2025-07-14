@@ -201,9 +201,6 @@ export default function EditCustomerModal({
                         style={{
                           width: "100%",
                           padding: "1rem 0.75rem 0.5rem",
-                          border: "1px solid #555",
-                          background: "#2a2a2a",
-                          color: "#eaf6fb",
                           borderRadius: "6px",
                           fontSize: "1rem",
                           outline: "none",
@@ -217,12 +214,9 @@ export default function EditCustomerModal({
                           position: "absolute",
                           left: "0.75rem",
                           top: formData.dob ? "-0.5rem" : "1rem",
-                          color: formData.dob ? "#1ab3f0" : "#aaa",
+                          color: formData.dob ? "#1ab3f0" : "#888",
                           pointerEvents: "none",
                           transition: "0.25s ease",
-                          backgroundColor: formData.dob
-                            ? "#1e1e1e"
-                            : "transparent",
                           padding: formData.dob ? "0 0.3rem" : "0",
                           fontSize: formData.dob ? "0.75rem" : "0.8rem",
                           zIndex: 1,
@@ -251,7 +245,6 @@ export default function EditCustomerModal({
                   showMonthDropdown
                   scrollableYearDropdown
                   yearDropdownItemNumber={100}
-                  isClearable
                   allowSameDay={true}
                   strictParsing={false}
                 />

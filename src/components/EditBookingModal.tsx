@@ -423,9 +423,6 @@ export default function EditBookingModal({
                       value={form.petDob}
                       onKeyDown={(e) => e.preventDefault()}
                       style={{
-                        background: "#2a2a2a",
-                        color: "#eaf6fb",
-                        border: "1px solid #555",
                         paddingRight: "2.2em",
                         cursor: "pointer",
                       }}
@@ -453,8 +450,8 @@ export default function EditBookingModal({
                     left: "0.75rem",
                     top: form.petDob ? "-0.5rem" : "1rem",
                     fontSize: form.petDob ? "0.75rem" : "0.8rem",
-                    color: form.petDob ? "#1ab3f0" : "#aaa",
-                    background: form.petDob ? "#181f2a" : "transparent",
+                    color: form.petDob ? "#1ab3f0" : "#888",
+                    background: form.petDob ? "#fff" : "transparent",
                     padding: "0 0.3rem",
                     pointerEvents: "none",
                     transition:
@@ -474,9 +471,6 @@ export default function EditBookingModal({
                   readOnly
                   tabIndex={-1}
                   style={{
-                    background: "#222",
-                    color: "#eaf6fb",
-                    border: "1px solid #333",
                     pointerEvents: "none",
                   }}
                 />
@@ -490,7 +484,7 @@ export default function EditBookingModal({
                 <div
                   style={{
                     marginBottom: "0.7em",
-                    color: "#eaf6fb",
+                    color: "#333",
                     fontWeight: 500,
                     fontSize: "0.9em",
                   }}
@@ -537,11 +531,7 @@ export default function EditBookingModal({
                           value={form.bookingFrom}
                           onKeyDown={(e) => e.preventDefault()}
                           style={{
-                            background: "#2a2a2a",
-                            color: "#eaf6fb",
-                            border: "1px solid #555",
                             paddingRight: "2.2em",
-                            cursor: "pointer",
                           }}
                         />
                       }
@@ -566,10 +556,10 @@ export default function EditBookingModal({
                         position: "absolute",
                         left: "0.5rem",
                         top: form.bookingFrom ? "-0.5rem" : "1rem",
-                        fontSize: form.bookingFrom ? "0.75rem" : "0.7rem",
-                        color: form.bookingFrom ? "#1ab3f0" : "#aaa",
+                        fontSize: form.bookingFrom ? "0.75rem" : "0.75rem",
+                        color: form.bookingFrom ? "#1ab3f0" : "#888",
                         background: form.bookingFrom
-                          ? "#181f2a"
+                          ? "#fff"
                           : "transparent",
                         padding: "0 0.2rem",
                         pointerEvents: "none",
@@ -624,11 +614,7 @@ export default function EditBookingModal({
                           value={form.bookingTo}
                           onKeyDown={(e) => e.preventDefault()}
                           style={{
-                            background: "#2a2a2a",
-                            color: "#eaf6fb",
-                            border: "1px solid #555",
                             paddingRight: "2.2em",
-                            cursor: "pointer",
                           }}
                         />
                       }
@@ -653,9 +639,9 @@ export default function EditBookingModal({
                         position: "absolute",
                         left: "0.5rem",
                         top: form.bookingTo ? "-0.5rem" : "1rem",
-                        fontSize: form.bookingTo ? "0.75rem" : "0.7rem",
-                        color: form.bookingTo ? "#1ab3f0" : "#aaa",
-                        background: form.bookingTo ? "#181f2a" : "transparent",
+                        fontSize: form.bookingTo ? "0.75rem" : "0.75rem",
+                        color: form.bookingTo ? "#1ab3f0" : "#888",
+                        background: form.bookingTo ? "#fff" : "transparent",
                         padding: "0 0.2rem",
                         pointerEvents: "none",
                         transition:
@@ -676,7 +662,7 @@ export default function EditBookingModal({
                 <div
                   style={{
                     marginBottom: "0.5em",
-                    color: "#eaf6fb",
+                    color: "#333",
                     fontWeight: 500,
                     fontSize: "0.9em",
                   }}
@@ -687,7 +673,7 @@ export default function EditBookingModal({
                   style={{
                     display: "grid",
                     gridTemplateColumns: "1fr 1fr",
-                    color: "#aaa",
+                    color: "#444",
                     gap: "0.7em",
                   }}
                 >
@@ -754,8 +740,8 @@ export default function EditBookingModal({
                     left: "0.75rem",
                     top: form.petFood ? "-0.5rem" : "1rem",
                     fontSize: form.petFood ? "0.75rem" : "0.8rem",
-                    color: form.petFood ? "#1ab3f0" : "#aaa",
-                    background: form.petFood ? "#181f2a" : "transparent",
+                    color: form.petFood ? "#1ab3f0" : "#888",
+                    background: form.petFood ? "#fff" : "transparent",
                     padding: "0 0.3rem",
                     pointerEvents: "none",
                     transition:
@@ -782,7 +768,7 @@ export default function EditBookingModal({
             <span
               style={{
                 marginRight: "1em",
-                color: "#eaf6fb",
+                color: "#333",
                 fontWeight: 500,
                 minWidth: 0,
                 whiteSpace: "nowrap",
@@ -809,7 +795,7 @@ export default function EditBookingModal({
             <span
               style={{
                 marginLeft: "0.3em",
-                color: petVaccinated ? "#1ab3f0" : "#aaa",
+                color: petVaccinated ? "#1ab3f0" : "#333",
                 fontWeight: 600,
                 minWidth: 0,
                 textAlign: "left",
@@ -826,7 +812,7 @@ export default function EditBookingModal({
             {petVaccinated && (
               <label
                 style={{
-                  color: "#ccc",
+                  color: "#333",
                   fontSize: "1em",
                   fontWeight: 500,
                   display: "flex",
@@ -843,11 +829,11 @@ export default function EditBookingModal({
                   accept=".pdf"
                   onChange={handleChange} // Use the existing handleChange function
                   style={{
-                    color: "#eaf6fb",
-                    background: "#2a2a2a",
-                    border: "1px solid #1ab3f0",
+                    color: "#222",
+                    background: "#fff",
+                    border: "2px solid #1ab3f0",
                     borderRadius: "4px",
-                    padding: "0.3em 0.5em",
+                    padding: "0.4em 0.5em",
                     fontSize: "0.9em",
                     outline: "none",
                     boxShadow: "none",
@@ -878,8 +864,8 @@ export default function EditBookingModal({
                 left: "0.75rem",
                 top: form.remarks ? "-0.5rem" : "1rem",
                 fontSize: form.remarks ? "0.75rem" : "0.8rem",
-                color: form.remarks ? "#1ab3f0" : "#aaa",
-                background: form.remarks ? "#181f2a" : "transparent",
+                color: form.remarks ? "#1ab3f0" : "#888",
+                background: form.remarks ? "#fff" : "transparent",
                 padding: "0 0.3rem",
                 pointerEvents: "none",
                 transition: "all 0.2s ease-out",

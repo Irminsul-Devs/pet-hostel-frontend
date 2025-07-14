@@ -1,18 +1,18 @@
-/* Dark theme for month dropdown */
+/* Light theme for month dropdown */
 .react-datepicker__month-dropdown {
-  background-color: #222 !important;
-  border: 1px solid #333 !important;
-  color: #eaf6fb !important;
+  background-color: #fff !important;
+  border: 1px solid #ddd !important;
+  color: #333 !important;
 }
 
 .react-datepicker__month-option {
-  color: #eaf6fb !important;
+  color: #333 !important;
   padding: 0.5rem !important;
 }
 
 .react-datepicker__month-option:hover {
-  background-color: #1ab3f0 !important;
-  color: #fff !important;
+  background-color: #f0f8ff !important;
+  color: #1ab3f0 !important;
 }
 
 .react-datepicker__month-read-view {
@@ -21,7 +21,7 @@
 }
 
 .react-datepicker__month-read-view:hover {
-  background-color: #333 !important;
+  background-color: #f5f5f5 !important;
   border-radius: 4px !important;
 }
 .modal-backdrop {
@@ -38,7 +38,7 @@
 }
 
 .modal {
-  background: #222;
+  background: #fff;
   border-radius: 10px;
   padding: 2rem;
   min-width: 320px;
@@ -47,6 +47,7 @@
   overflow-y: auto;
   position: relative;
   z-index: 1001;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 .modal-close {
@@ -61,7 +62,7 @@
 }
 
 .modal-close:hover {
-  color: #0e6487;
+  color: #004080;
 }
 
 .modal h2 {
@@ -69,7 +70,7 @@
   font-size: 1.4rem;
   font-weight: bold;
   text-align: center;
-  color: #ffffff;
+  color: #333;
 }
 
 .modal form {
@@ -88,9 +89,9 @@
   box-sizing: border-box;
   width: 100%;
   padding: 1rem 0.75rem 0.5rem;
-  border: 1px solid #555;
-  background-color: #2a2a2a;
-  color: white;
+  border: 1px solid #000;
+  background-color: #fff;
+  color: #333;
   border-radius: 6px;
   font-size: 1rem;
   outline: none;
@@ -102,14 +103,14 @@
 }
 
 .input-group input:focus {
-  border-color: #1ab3f0;
+  border:2px solid #1ab3f0;
 }
 
 .input-group label {
   position: absolute;
   left: 0.75rem;
   top: 1rem;
-  color: #aaa;
+  color: #888;
   pointer-events: none;
   transition: top 0.25s ease, font-size 0.25s ease, color 0.25s ease,
     padding 0.25s ease, background-color 0.25s ease;
@@ -122,7 +123,7 @@
   top: -0.5rem;
   left: 0.65rem;
   font-size: 0.75rem;
-  background-color: #1e1e1e;
+  background-color: #fff;
   padding: 0 0.3rem;
   color: #1ab3f0;
 }
@@ -132,7 +133,7 @@
   position: absolute;
   left: 0.75rem;
   top: 1rem;
-  color: #aaa;
+  color: #888;
   pointer-events: none;
   transition: top 0.25s ease, font-size 0.25s ease, color 0.25s ease,
     padding 0.25s ease, background-color 0.25s ease;
@@ -147,7 +148,7 @@
   left: 0.65rem;
   font-size: 0.75rem;
   color: #1ab3f0;
-  background-color: #1e1e1e;
+  background-color: #fff;
   padding: 0 0.3rem;
 }
 
@@ -160,12 +161,13 @@
   text-align: left;
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
+  color: #555;
 }
 
 .modal button[type="submit"] {
   margin-top: 10px;
-  background-color: #0eb2f2;
-  color: rgb(0, 0, 0);
+  background-color: #1ab3f0;
+  color: white;
   padding: 0.75rem;
   border: none;
   border-radius: 6px;
@@ -175,14 +177,14 @@
 }
 
 .modal button[type="submit"]:hover {
-  background-color: #137399;
+  background-color: #006dda;
 }
 
 .modal-footer {
   margin-top: 1rem;
   font-size: 0.9rem;
   text-align: center;
-  color: #ccc;
+  color: #666;
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
@@ -200,7 +202,7 @@
 }
 
 .modal-link:hover {
-  color: #1692c3;
+  color: #006dda;
 }
 
 .modal-form-columns {
@@ -221,9 +223,9 @@
 .input-group textarea {
   width: 100%;
   padding: 1rem 0.75rem 0.5rem;
-  border: 1px solid #555;
-  background-color: #2a2a2a;
-  color: white;
+  border: 1px solid #000;
+  background-color: #fff;
+  color: #333;
   border-radius: 6px;
   font-size: 1rem;
   outline: none;
@@ -234,7 +236,7 @@
 
 .input-group select:focus,
 .input-group textarea:focus {
-  border-color: #1ab3f0;
+  border: 2px solid#1ab3f0;
 }
 
 .input-group select {
@@ -254,6 +256,7 @@
   align-items: center;
   margin: 1.5em 0 0.5em 0;
   text-align: center;
+  color: #333;
 }
 
 /* Default label position for date input */
@@ -261,7 +264,7 @@
   position: absolute;
   left: 0.75rem;
   top: 1rem;
-  color: #aaa;
+  color: #888;
   pointer-events: none;
   transition: top 0.25s, font-size 0.25s, color 0.25s, padding 0.25s,
     background-color 0.25s;
@@ -278,17 +281,16 @@
   left: 0.65rem;
   font-size: 0.75rem;
   color: #1ab3f0;
-  background-color: #1e1e1e;
+  background-color: #fff;
   padding: 0 0.3rem;
   z-index: 2;
 }
 
-/* Dark theme for react-datepicker */
 .modal-datepicker,
 .react-datepicker__header {
-  background: #222 !important;
-  color: #eaf6fb !important;
-  border-color: #333 !important;
+  background: #fff !important;
+  color: #333 !important;
+  border-color: #cacaca !important;
   border-radius: 12px !important;
   z-index: 10;
 }
@@ -304,7 +306,7 @@
 .react-datepicker__day,
 .react-datepicker__day-name,
 .react-datepicker__time-name {
-  color: #eaf6fb !important;
+  color: #222 !important;
 }
 .react-datepicker__day--selected,
 .react-datepicker__day--keyboard-selected {
@@ -312,24 +314,24 @@
   color: #fff !important;
 }
 .react-datepicker__day:hover {
-  background: #333 !important;
+  background: #f0f8ff !important;
 }
 
-/* Dark theme for year dropdown */
+/* Light theme for year dropdown */
 .react-datepicker__year-dropdown {
-  background-color: #222 !important;
-  border: 1px solid #333 !important;
-  color: #eaf6fb !important;
+  background-color: #fff !important;
+  border: 1px solid #ddd !important;
+  color: #222 !important;
 }
 
 .react-datepicker__year-option {
-  color: #eaf6fb !important;
+  color: #333 !important;
   padding: 0.5rem !important;
 }
 
 .react-datepicker__year-option:hover {
-  background-color: #1ab3f0 !important;
-  color: #fff !important;
+  background-color: #f0f8ff !important;
+  color: #1ab3f0 !important;
 }
 
 .react-datepicker__year-read-view {
@@ -338,7 +340,7 @@
 }
 
 .react-datepicker__year-read-view:hover {
-  background-color: #333 !important;
+  background-color: #f5f5f5 !important;
   border-radius: 4px !important;
 }
 
@@ -357,7 +359,7 @@
 }
 
 .react-datepicker__navigation--years:hover {
-  background-color: #333 !important;
+  background-color: #f5f5f5 !important;
 }
 
 .react-datepicker__navigation--years-upcoming::before,
@@ -371,7 +373,7 @@
 }
 
 .react-datepicker__year-dropdown::-webkit-scrollbar-track {
-  background: #222;
+  background: #f5f5f5;
 }
 
 .react-datepicker__year-dropdown::-webkit-scrollbar-thumb {
@@ -380,17 +382,15 @@
 }
 
 .react-datepicker__year-dropdown::-webkit-scrollbar-thumb:hover {
-  background: #0e6487;
+  background: #004080;
 }
 
 /* Default label position for date input */
 .input-group input[type="text"][name$="Dob"],
 .input-group input[type="text"][name$="From"],
 .input-group input[type="text"][name$="To"] {
-  /* Ensures all date fields have the same style */
-  background: #222;
-  color: #eaf6fb;
-  border: 1px solid #333;
+  background: #fff;
+  color: #333;
 }
 
 /* Default label position for date input */
@@ -400,7 +400,7 @@
   position: absolute;
   left: 0.75rem;
   top: 1rem;
-  color: #aaa;
+  color: #888;
   pointer-events: none;
   transition: top 0.25s, font-size 0.25s, color 0.25s, background 0.25s,
     padding 0.25s;
@@ -420,7 +420,7 @@
   left: 0.65rem;
   font-size: 0.75rem;
   color: #1ab3f0;
-  background: #222;
+  background: #fff;
   padding: 0 0.3rem;
   z-index: 2;
 }
@@ -438,24 +438,25 @@ input[type="text"][name$="To"] {
 .btn.modal-btn:disabled {
   opacity: 0.7;
   cursor: not-allowed;
+  background-color: #ccc !important;
 }
 
 .modal-content {
   margin: 1rem 0;
-  color: #eaf6fb;
+  color: #333;
 }
 
 .warning-text {
-  color: #ff6b6b;
+  color: #d9534f;
   font-size: 0.9rem;
   margin-top: 0.5rem;
 }
 
 .secondary-button {
   background-color: transparent;
-  color: #eaf6fb;
+  color: #333;
   padding: 0.75rem 1.5rem;
-  border: 1px solid #555;
+  border: 1px solid #ddd;
   border-radius: 6px;
   font-weight: 500;
   cursor: pointer;
@@ -463,11 +464,12 @@ input[type="text"][name$="To"] {
 }
 
 .secondary-button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.05);
+  border-color: #bbb;
 }
 
 .danger-button {
-  background-color: #ff4757;
+  background-color: #d9534f;
   color: white;
   padding: 0.75rem 1.5rem;
   border: none;
@@ -478,7 +480,7 @@ input[type="text"][name$="To"] {
 }
 
 .danger-button:hover {
-  background-color: #ff6b6b;
+  background-color: #c9302c;
 }
 
 @media (max-width: 400px) {
@@ -520,7 +522,7 @@ input[type="text"][name$="To"] {
   position: absolute;
   left: 0.75rem;
   top: 1rem;
-  color: #aaa;
+  color: #888;
   pointer-events: none;
   transition: top 0.25s ease, font-size 0.25s ease, color 0.25s ease,
     padding 0.25s ease, background-color 0.25s ease;
@@ -534,7 +536,7 @@ input[type="text"][name$="To"] {
   top: -0.5rem;
   left: 0.65rem;
   font-size: 0.75rem;
-  background-color: #1e1e1e;
+  background-color: #fff;
   padding: 0 0.3rem;
   color: #1ab3f0;
 }
@@ -546,11 +548,11 @@ input[type="text"][name$="To"] {
 }
 
 .input-group.error input {
-  border-color: #ff4444;
+  border-color: #d9534f;
 }
 
 .error-text {
-  color: #ff4444; /* Bright red color */
+  color: #d9534f;
   font-size: 0.9rem;
   margin-top: -0.5rem;
   margin-bottom: 0.5rem;
@@ -610,7 +612,7 @@ input[type="text"][name$="To"] {
   display: inline-block;
   margin-top: 10px;
   padding: 8px 16px;
-  background-color: #4caf50;
+  background-color: #5cb85c;
   color: white;
   text-decoration: none;
   border-radius: 4px;
@@ -618,7 +620,7 @@ input[type="text"][name$="To"] {
 }
 
 .download-btn:hover {
-  background-color: #45a049;
+  background-color: #4cae4c;
 }
 
 /* Make the modal wider to accommodate the PDF */
@@ -633,17 +635,19 @@ input[type="text"][name$="To"] {
 
 .form-group label {
   display: block;
-  color: #aaa;
-  font-size: 0.8rem;
+  color: #333;
+  font-size: 0.9rem;
   margin-bottom: 0.5rem;
 }
 
 /* React-Select Custom Styles */
 .form-group .select__control {
-  background-color: #2a2a2a !important;
-  border: 1px solid #555 !important;
+  background-color: #fff !important;
+  border: 1px solid #333 !important;
   border-radius: 6px !important;
   min-height: 3rem !important;
+  font-size: 0.9rem;
+
 }
 
 .form-group .select__control:hover {
@@ -656,33 +660,34 @@ input[type="text"][name$="To"] {
 }
 
 .form-group .select__menu {
-  background-color: #2a2a2a !important;
-  border: 1px solid #555 !important;
+  background-color: #fff !important;
+  border: 1px solid #ddd !important;
 }
 
 .form-group .select__option {
-  background-color: #2a2a2a !important;
-  color: white !important;
+  background-color: #fff !important;
+  color: #333 !important;
 }
 
 .form-group .select__option--is-focused {
-  background-color: #1e1e1e !important;
+  background-color: #f5f5f5 !important;
 }
 
 .form-group .select__option--is-selected {
   background-color: #1ab3f0 !important;
+  color: white !important;
 }
 
 .form-group .select__single-value {
-  color: white !important;
+  color: #333 !important;
 }
 
 .form-group .select__placeholder {
-  color: #aaa !important;
+  color: #777 !important;
 }
 
 .form-group .select__input-container {
-  color: white !important;
+  color: #333 !important;
 }
 
 /* Toggle Switch */
@@ -701,7 +706,7 @@ input[type="text"][name$="To"] {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #444;
+  background-color: #ccc;
   transition: 0.4s;
   border-radius: 24px;
 }
@@ -735,5 +740,5 @@ input[type="text"][name$="To"] {
 
 .pet-vaccinated-row label {
   font-size: 0.9rem;
-  color: #eaf6fb;
+  color: #333;
 }

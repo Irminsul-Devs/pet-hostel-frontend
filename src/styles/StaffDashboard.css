@@ -4,7 +4,7 @@
   border-spacing: 0;
   min-width: 0; /* Remove or set to 0 to avoid extra space */
   width: 100%;
-  background: #000000;
+  background: #f8f9fa;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
@@ -101,8 +101,8 @@
 }
 
 .staff-dashboard-table thead {
-  background: linear-gradient(to right, #1a5372, #2a5298);
-  color: white;
+  background: #e1f2f9;
+  color: #23272f;
   position: sticky;
   top: 0;
   z-index: 10;
@@ -113,26 +113,28 @@
   text-align: left;
   font-weight: 500;
   letter-spacing: 0.5px;
+  color: #23272f;
 }
 
 .staff-dashboard-table td {
   padding: 0.9rem 0.75rem;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid #e0e0e0;
   vertical-align: middle;
-  height: 2.5rem; /* Set a consistent height for all cells */
+  height: 2.5rem;
+  color: #23272f;
 }
 
 .staff-dashboard-table tbody tr {
   transition: background-color 0.2s ease;
-  background: #2a2a2a;
+  background: #fff;
 }
 
 .staff-dashboard-table tbody tr:nth-child(even) {
-  background: #252525;
+  background: #f8f9fa;
 }
 
 .staff-dashboard-table tbody tr:hover {
-  background: #333;
+  background: #eaf6fb;
 }
 
 .staff-dashboard-table .actions-cell {
@@ -144,7 +146,8 @@
 }
 
 .staff-dashboard-table .icon-btn {
-  background: rgba(255, 255, 255, 0.05);
+  background: #f8f9fa;
+  color:#1f1f1f;
   border: none;
   width: 36px;
   height: 36px;
@@ -181,17 +184,17 @@
 }
 
 .staff-dashboard-table .text-muted {
-  color: #aaa;
+  color: #888;
   font-size: 0.85em;
 }
 
 .staff-dashboard-table .no-data {
   text-align: center;
   padding: 3rem;
-  color: #aaa;
+  color: #23272f;
   font-style: italic;
   font-size: 1.1rem;
-  background: rgba(0, 0, 0, 0.2);
+  background: #f8f9fa;
 }
 
 /* Status indicators for bookings - with pet-themed paw icon */
@@ -288,7 +291,7 @@
   align-items: center;
   padding: 32px;
   min-height: 100vh;
-  background-color: #1a1a1a;
+  background-color: #f8f9fa;
   background-image: 
     /* Paw prints pattern - blue */ url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 512 512' opacity='0.04' fill='%233498db'%3E%3Cpath d='M226.5 92.9c14.3 42.9-.3 86.2-32.6 96.8s-70.1-15.6-84.4-58.5.3-86.2 32.6-96.8 70.1 15.6 84.4 58.5zm-126.1 105.7c18.9 32.4 14.3 70.1-10.2 84.1s-59.7-.9-78.5-33.3-14.3-70.1 10.2-84.1 59.7.9 78.5 33.3zm321.5 0c-18.9 32.4-14.3 70.1 10.2 84.1s59.7-.9 78.5-33.3 14.3-70.1-10.2-84.1-59.7.9-78.5 33.3z'/%3E%3C/svg%3E"),
     /* Dog silhouette - green */
@@ -433,18 +436,19 @@
 
 /* Enhanced Pet Hostel Themed Dashboard welcome section */
 .dashboard-welcome {
-  width: 100%;
+  width: 80%;
   max-width: 1200px;
+  margin-top: 5%;
   text-align: left;
   padding: 1.8rem 2.5rem 1.8rem 3.5rem;
   margin-bottom: 2rem;
-  background: #2a2a2a;
+  background: #dcdcdc;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 512 512' opacity='0.05' fill='%233498db'%3E%3Cpath d='M226.5 92.9c14.3 42.9-.3 86.2-32.6 96.8s-70.1-15.6-84.4-58.5.3-86.2 32.6-96.8 70.1 15.6 84.4 58.5zm-126.1 105.7c18.9 32.4 14.3 70.1-10.2 84.1s-59.7-.9-78.5-33.3-14.3-70.1 10.2-84.1 59.7.9 78.5 33.3zm321.5 0c-18.9 32.4-14.3 70.1 10.2 84.1s59.7-.9 78.5-33.3 14.3-70.1-10.2-84.1-59.7.9-78.5 33.3zM262.2 188.5c-29.7 20.4-38.9 62.4-20.6 93.7s61.2 40.6 90.9 20.2 38.9-62.4 20.6-93.7-61.2-40.6-90.9-20.2zm-73.8 155.9c-45.7-11.6-91.4 14.7-102.3 58.5s14 87.9 59.7 99.5 91.4-14.7 102.3-58.5-14-87.9-59.7-99.5zm225.5 0c45.7-11.6 91.4 14.7 102.3 58.5s-14 87.9-59.7 99.5-91.4-14.7-102.3-58.5 14-87.9 59.7-99.5z'/%3E%3C/svg%3E"),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 512 512' opacity='0.04' fill='%233498db'%3E%3Cpath d='M269.4 2.9C265.2 1 260.7 0 256 0s-9.2 1-13.4 2.9L54.3 82.8c-22 9.3-38.4 31-38.3 57.2c.5 99.2 41.3 280.7 213.6 363.2c16.7 8 36.1 8 52.8 0C454.7 420.7 495.5 239.2 496 140c.1-26.2-16.3-47.9-38.3-57.2L269.4 2.9zM160.9 286.2c4.8 1.2 9.9 1.8 15.1 1.8c35.3 0 64-28.7 64-64V160h44.2c12.1 0 23.2 6.8 28.6 17.7L320 192h64c8.8 0 16 7.2 16 16v32c0 44.2-35.8 80-80 80H272v50.7c0 7.3-5.9 13.3-13.3 13.3c-1.8 0-3.6-.4-5.2-1.1l-98.7-42.3c-6.6-2.8-10.8-9.3-10.8-16.4c0-2.8 .6-5.5 1.9-8l15-30zM160 160h40 8v32 32c0 17.7-14.3 32-32 32s-32-14.3-32-32V176c0-8.8 7.2-16 16-16zm128 48a16 16 0 1 0 -32 0 16 16 0 1 0 32 0z'/%3E%3C/svg%3E");
   background-position: right bottom, left top;
   background-repeat: no-repeat, repeat;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.08);
   position: relative;
   border-left: 5px solid #3498db;
   border-top-right-radius: 0;
@@ -479,7 +483,7 @@
 
 /* Updated welcome text styling with enhanced pet theme */
 .staff-dashboard-welcome {
-  color: #ffffff !important;
+  color: #23272f !important;
   font-size: 1.8rem;
   margin-bottom: 0.8rem;
   font-weight: 500;
@@ -509,8 +513,8 @@
 }
 
 .stat-card {
-  background: #2a2a2a;
-  border-left: 5px solid transparent;
+  background: #fff;
+  border-left: 8px solid transparent;
   border-radius: 8px;
   padding: 1.2rem 1.5rem 1.2rem 2.2rem;
   text-align: left;
@@ -538,7 +542,7 @@
 }
 
 .stat-card h3 {
-  color: rgba(255, 255, 255, 0.85);
+  color: #23272f;
   font-size: 1rem;
   margin-bottom: 0.8rem;
   font-weight: 500;
@@ -548,7 +552,7 @@
 }
 
 .stat-card p {
-  color: white;
+  color: #23272f;
   font-size: 2.2rem;
   font-weight: 600;
   margin: 0;
@@ -586,14 +590,14 @@
 
 /* Customer Stats Cards (5-6) */
 .stats-container .stat-card:nth-child(5) {
-  border-left-color: #ff6b6b;
+  border-left-color: #6C5CE7;
 }
 .stats-container .stat-card:nth-child(5)::before {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512' fill='%23FF6B6B'%3E%3Cpath d='M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z'/%3E%3C/svg%3E");
 }
 
 .stats-container .stat-card:nth-child(6) {
-  border-left-color: #45b7af;
+  border-left-color: #3ab7af;
 }
 .stats-container .stat-card:nth-child(6)::before {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 512' fill='%2345B7AF'%3E%3Cpath d='M144 160A80 80 0 1 0 144 0a80 80 0 1 0 0 160zm368 0A80 80 0 1 0 512 0a80 80 0 1 0 0 160zM0 298.7C0 310.4 9.6 320 21.3 320H234.7c.2 0 .4 0 .7 0c-26.6-23.5-43.3-57.8-43.3-96c0-7.6 .7-15 1.9-22.3c-13.6-6.3-28.7-9.7-44.6-9.7H106.7C47.8 192 0 239.8 0 298.7zM320 320c24 0 45.9-8.8 62.7-23.3c2.5-3.7 5.2-7.3 8-10.7c2.7-3.3 5.7-6.1 9-8.3C410 262.3 426.2 256 444.3 256H533.3C592.2 256 640 303.8 640 362.7C640 374.4 630.4 384 618.7 384H309.3C297.6 384 288 374.4 288 362.7V362c0-1.3 .1-2.6 .2-3.9c.2-1.8 .5-3.5 .9-5.2c.6-2.8 1.5-5.5 2.5-8.1c1.2-3 2.7-5.9 4.4-8.6c1.1-1.8 2.3-3.5 3.6-5.2c2.6-3.3 5.5-6.3 8.7-9c8.8-7.2 19.6-12.2 31.6-14.3c1.7-.3 3.4-.5 5.1-.7c2.4-.2 4.8-.3 7.3-.3H364c-2.4 11.8-3.9 24-4 36.4c0 .6 0 1.2 0 1.8z'/%3E%3C/svg%3E");
@@ -601,7 +605,7 @@
 
 /* Pet Stats Cards (7-8) */
 .stats-container .stat-card:nth-child(7) {
-  border-left-color: #4ecdc4;
+  border-left-color: #000000;
 }
 .stats-container .stat-card:nth-child(7)::before {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' fill='%234ECDC4'%3E%3Cpath d='M226.5 92.9c14.3 42.9-.3 86.2-32.6 96.8s-70.1-15.6-84.4-58.5.3-86.2 32.6-96.8 70.1 15.6 84.4 58.5zM100.4 198.6c18.9 32.4 14.3 70.1-10.2 84.1s-59.7-.9-78.5-33.3-14.3-70.1 10.2-84.1 59.7.9 78.5 33.3zm321.5 0c-18.9 32.4-14.3 70.1 10.2 84.1s59.7-.9 78.5-33.3 14.3-70.1-10.2-84.1-59.7.9-78.5 33.3zM262.2 188.5c-29.7 20.4-38.9 62.4-20.6 93.7s61.2 40.6 90.9 20.2 38.9-62.4 20.6-93.7-61.2-40.6-90.9-20.2z'/%3E%3C/svg%3E");
@@ -625,47 +629,10 @@
 
 /* Weekly Trends Card (11) */
 .stats-container .stat-card:nth-child(11) {
-  border-left-color: #a8e6cf;
+  border-left-color: #86e3c1;
 }
 .stats-container .stat-card:nth-child(11)::before {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' fill='%23A8E6CF'%3E%3Cpath d='M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm406.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L320 210.7l-57.4-57.4c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L240 221.3l57.4 57.4c12.5 12.5 32.8 12.5 45.3 0l128-128z'/%3E%3C/svg%3E");
-}
-
-/* Common styles for new cards */
-.stats-container .stat-card:nth-child(n + 5) {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.stats-container .stat-card:nth-child(n + 5):hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
-}
-
-.stats-container .stat-card:nth-child(n + 5)::before {
-  content: "";
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 24px;
-  height: 24px;
-  opacity: 0.2;
-  background-size: cover;
-}
-
-.stats-container .stat-card:nth-child(n + 5) h3 {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 0.9rem;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-}
-
-.stats-container .stat-card:nth-child(n + 5) p {
-  color: white;
-  font-size: 1.8rem;
-  font-weight: 600;
-  margin: 0;
 }
 
 /* Bookings Header */
@@ -699,6 +666,7 @@
   align-items: center;
   gap: 6px;
   font-size: 0.85rem;
+  color: #23272f;
 }
 
 .status-dot {
@@ -761,7 +729,7 @@
   width: 100%;
   max-width: 1200px;
   background: rgba(240, 46, 26, 0.2);
-  color: #fff;
+  color: #23272f;
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 1.5rem;
@@ -774,7 +742,7 @@
 .error-message button {
   background: transparent;
   border: none;
-  color: #fff;
+  color: #23272f;
   font-size: 1.2rem;
   cursor: pointer;
   padding: 0.3rem;

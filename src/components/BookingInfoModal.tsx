@@ -109,7 +109,6 @@ export default function BookingInfoModal({ booking, onClose }: Props) {
         ref={ref}
         style={{
           maxWidth: "800px",
-          backgroundColor: "#222",
           borderRadius: "12px",
           boxShadow: "0 5px 15px rgba(0,0,0,0.5)",
         }}
@@ -133,8 +132,7 @@ export default function BookingInfoModal({ booking, onClose }: Props) {
             fontSize: "1.8rem",
             color: "#1ab3f0",
             textAlign: "center",
-            marginBottom: "1.8rem",
-            borderBottom: "2px solid #333",
+            marginBottom: "0.5rem",
             paddingBottom: "1rem",
           }}
         >
@@ -150,7 +148,7 @@ export default function BookingInfoModal({ booking, onClose }: Props) {
             <h3
               style={{
                 fontSize: "1.4rem",
-                color: "#eaeaea",
+                color: "#333",
                 marginBottom: "1rem",
                 borderBottom: "1px solid #333",
                 paddingBottom: "0.5rem",
@@ -179,13 +177,13 @@ export default function BookingInfoModal({ booking, onClose }: Props) {
                 <div>
                   <div
                     className="detail-label"
-                    style={{ fontSize: "0.9rem", color: "#888" }}
+                    style={{ fontSize: "0.9rem", color: "#222" }}
                   >
                     Booking Date
                   </div>
                   <div
                     className="detail-value"
-                    style={{ fontSize: "1.1rem", color: "#eaeaea" }}
+                    style={{ fontSize: "1.1rem", color: "#333" }}
                   >
                     {formatDate(booking.bookingDate, false) || "Empty"}
                   </div>
@@ -204,13 +202,13 @@ export default function BookingInfoModal({ booking, onClose }: Props) {
                 <div>
                   <div
                     className="detail-label"
-                    style={{ fontSize: "0.9rem", color: "#888" }}
+                    style={{ fontSize: "0.9rem", color: "#222" }}
                   >
                     Booking Period
                   </div>
                   <div
                     className="detail-value"
-                    style={{ fontSize: "1.1rem", color: "#eaeaea" }}
+                    style={{ fontSize: "1.1rem", color: "#333" }}
                   >
                     {formatDate(booking.bookingFrom).split(",")[0]} -{" "}
                     {formatDate(booking.bookingTo).split(",")[0]}
@@ -230,13 +228,13 @@ export default function BookingInfoModal({ booking, onClose }: Props) {
                 <div>
                   <div
                     className="detail-label"
-                    style={{ fontSize: "0.9rem", color: "#888" }}
+                    style={{ fontSize: "0.9rem", color: "#222" }}
                   >
                     Customer
                   </div>
                   <div
                     className="detail-value"
-                    style={{ fontSize: "1.1rem", color: "#eaeaea" }}
+                    style={{ fontSize: "1.1rem", color: "#333" }}
                   >
                     {booking.customer?.name || "N/A"}
                   </div>
@@ -255,13 +253,13 @@ export default function BookingInfoModal({ booking, onClose }: Props) {
                 <div>
                   <div
                     className="detail-label"
-                    style={{ fontSize: "0.9rem", color: "#888" }}
+                    style={{ fontSize: "0.9rem", color: "#222" }}
                   >
                     Contact
                   </div>
                   <div
                     className="detail-value"
-                    style={{ fontSize: "1.1rem", color: "#eaeaea" }}
+                    style={{ fontSize: "1.1rem", color: "#333" }}
                   >
                     {booking.customer?.mobile || "N/A"}
                   </div>
@@ -280,7 +278,7 @@ export default function BookingInfoModal({ booking, onClose }: Props) {
                 <div>
                   <div
                     className="detail-label"
-                    style={{ fontSize: "0.9rem", color: "#888" }}
+                    style={{ fontSize: "0.9rem", color: "#222" }}
                   >
                     Email
                   </div>
@@ -288,7 +286,7 @@ export default function BookingInfoModal({ booking, onClose }: Props) {
                     className="detail-value"
                     style={{
                       fontSize: "1.1rem",
-                      color: "#eaeaea",
+                      color: "#333",
                       wordBreak: "break-word",
                     }}
                   >
@@ -309,13 +307,13 @@ export default function BookingInfoModal({ booking, onClose }: Props) {
                 <div>
                   <div
                     className="detail-label"
-                    style={{ fontSize: "0.9rem", color: "#888" }}
+                    style={{ fontSize: "0.9rem", color: "#222" }}
                   >
                     Services
                   </div>
                   <div
                     className="detail-value"
-                    style={{ fontSize: "1.1rem", color: "#eaeaea" }}
+                    style={{ fontSize: "1.1rem", color: "#333" }}
                   >
                     {booking.services && booking.services.length > 0
                       ? booking.services.join(", ")
@@ -336,7 +334,7 @@ export default function BookingInfoModal({ booking, onClose }: Props) {
                 <div>
                   <div
                     className="detail-label"
-                    style={{ fontSize: "0.9rem", color: "#888" }}
+                    style={{ fontSize: "0.9rem", color: "#222" }}
                   >
                     Total Amount
                   </div>
@@ -380,7 +378,7 @@ export default function BookingInfoModal({ booking, onClose }: Props) {
             <h3
               style={{
                 fontSize: "1.4rem",
-                color: "#eaeaea",
+                color: "#222",
                 marginBottom: "1rem",
                 borderBottom: "1px solid #333",
                 paddingBottom: "0.5rem",
@@ -410,13 +408,13 @@ export default function BookingInfoModal({ booking, onClose }: Props) {
                 <div>
                   <div
                     className="detail-label"
-                    style={{ fontSize: "0.9rem", color: "#888" }}
+                    style={{ fontSize: "0.9rem", color: "#222" }}
                   >
                     Pet Name
                   </div>
                   <div
                     className="detail-value"
-                    style={{ fontSize: "1.1rem", color: "#eaeaea" }}
+                    style={{ fontSize: "1.1rem", color: "#333" }}
                   >
                     {booking.petName || "N/A"}
                   </div>
@@ -435,13 +433,13 @@ export default function BookingInfoModal({ booking, onClose }: Props) {
                 <div>
                   <div
                     className="detail-label"
-                    style={{ fontSize: "0.9rem", color: "#888" }}
+                    style={{ fontSize: "0.9rem", color: "#222" }}
                   >
                     Pet Type
                   </div>
                   <div
                     className="detail-value"
-                    style={{ fontSize: "1.1rem", color: "#eaeaea" }}
+                    style={{ fontSize: "1.1rem", color: "#333" }}
                   >
                     {booking.petType || "N/A"}
                   </div>
@@ -460,13 +458,13 @@ export default function BookingInfoModal({ booking, onClose }: Props) {
                 <div>
                   <div
                     className="detail-label"
-                    style={{ fontSize: "0.9rem", color: "#888" }}
+                    style={{ fontSize: "0.9rem", color: "#222" }}
                   >
                     Pet Age
                   </div>
                   <div
                     className="detail-value"
-                    style={{ fontSize: "1.1rem", color: "#eaeaea" }}
+                    style={{ fontSize: "1.1rem", color: "#333" }}
                   >
                     {booking.petAge || "N/A"}
                   </div>
@@ -485,7 +483,7 @@ export default function BookingInfoModal({ booking, onClose }: Props) {
                 <div>
                   <div
                     className="detail-label"
-                    style={{ fontSize: "0.9rem", color: "#888" }}
+                    style={{ fontSize: "0.9rem", color: "#222" }}
                   >
                     Vaccinated
                   </div>
@@ -514,7 +512,7 @@ export default function BookingInfoModal({ booking, onClose }: Props) {
                 <div>
                   <div
                     className="detail-label"
-                    style={{ fontSize: "0.9rem", color: "#888" }}
+                    style={{ fontSize: "0.9rem", color: "#222" }}
                   >
                     Pet Food Habit
                   </div>
@@ -522,7 +520,7 @@ export default function BookingInfoModal({ booking, onClose }: Props) {
                     className="detail-value"
                     style={{
                       fontSize: "1.1rem",
-                      color: "#eaeaea",
+                      color: "#333",
                       whiteSpace: "pre-line",
                     }}
                   >
@@ -584,7 +582,7 @@ export default function BookingInfoModal({ booking, onClose }: Props) {
               <h3
                 style={{
                   fontSize: "1.4rem",
-                  color: "#eaeaea",
+                  color: "#222",
                   marginBottom: "1rem",
                   borderBottom: "1px solid #333",
                   paddingBottom: "0.5rem",
