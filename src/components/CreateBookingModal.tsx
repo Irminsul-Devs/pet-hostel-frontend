@@ -174,6 +174,43 @@ export default function CreateBookingModal({
   };
 
   const handleDateChange = (date: Date | null, field: DateField) => {
+    if (!date) {
+      setForm((prev) => ({ ...prev, [field]: "" }));
+      return;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (field === "petDob") {
+      // Don't allow future dates
+      if (date > today) {
+        alert("Pet's date of birth cannot be in the future");
+        return;
+      }
+
+      // Calculate age in years
+      const ageInYears =
+        (today.getTime() - date.getTime()) / (365.25 * 24 * 60 * 60 * 1000);
+
+      // Age validations based on pet type
+      if (form.petType) {
+        const maxAges: { [key: string]: number } = {
+          Dog: 25, // Maximum reasonable age for dogs
+          Cat: 30, // Maximum reasonable age for cats
+          Bird: 50, // Maximum reasonable age for common pet birds
+          Other: 50, // Generic maximum for other pets
+        };
+
+        if (ageInYears > maxAges[form.petType]) {
+          alert(
+            `The entered date of birth seems unrealistic for a ${form.petType.toLowerCase()}. Please check the date.`
+          );
+          return;
+        }
+      }
+    }
+
     if (field === "bookingTo" && date && form.bookingFrom) {
       // Ensure bookingTo date is not earlier than bookingFrom
       const fromDate = new Date(form.bookingFrom);
@@ -187,8 +224,6 @@ export default function CreateBookingModal({
       // If setting bookingFrom and we already have a bookingTo, validate it's not later
       const toDate = new Date(form.bookingTo);
       if (date > toDate) {
-        // Two options: either clear the bookingTo or alert the user
-        // Here we alert and don't allow the change
         alert("Booking start date cannot be later than end date");
         return;
       }
@@ -196,7 +231,7 @@ export default function CreateBookingModal({
 
     setForm((prev) => ({
       ...prev,
-      [field]: date ? date.toISOString().split("T")[0] : "",
+      [field]: date.toISOString().split("T")[0],
     }));
   };
 
