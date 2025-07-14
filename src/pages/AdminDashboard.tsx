@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import "../styles/AdminDashboard.css";
+import "../styles/StaffDashboard.css";
 import AdminNavbar from "../components/AdminNavbar";
 import AddStaffModal from "../components/AddStaffModal";
 import BookingInfoModal from "../components/BookingInfoModal";
 import DeleteConfirmModal from "../components/DeleteConfirmModal";
 import { MdInfoOutline, MdEdit, MdDelete } from "react-icons/md";
+
 
 export default function AdminDashboard() {
   const [user, setUser] = useState<{ name?: string } | null>(null);
@@ -16,9 +18,12 @@ export default function AdminDashboard() {
   const [analytics, setAnalytics] = useState<any | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editStaff, setEditStaff] = useState<any | null>(null);
+ 
+
   const [infoBooking, setInfoBooking] = useState<any | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  
 
   useEffect(() => {
     const stored = localStorage.getItem("user");
@@ -64,31 +69,56 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleMoreInfoClick = async (bookingId: number) => {
-    const token = localStorage.getItem("token");
+const handleMoreInfoClick = async (bookingId: number) => {
+  const token = localStorage.getItem("token");
 
-    try {
-      const res = await fetch(
-        `http://localhost:5000/api/bookings/${bookingId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+  try {
+    const res = await fetch("http://localhost:5000/api/bookings/all", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-      if (!res.ok) throw new Error("Failed to fetch booking");
+    const allBookings = await res.json();
+    const fullBooking = allBookings.find((b: any) => b.id === bookingId);
 
-      const fullBooking = await res.json();
-      setInfoBooking(fullBooking);
-    } catch (err) {
-      console.error("Error fetching full booking info:", err);
+    if (!fullBooking) {
+      alert("Booking not found");
+      return;
     }
-  };
 
-  useEffect(() => {
-    if (activeTab === "bookings") fetchBookings();
-  }, [activeTab]);
+    // 🛠️ Mapping snake_case → camelCase
+   const mappedBooking = {
+  ...fullBooking,
+  petName: fullBooking.pet_name,
+  petType: fullBooking.pet_type,
+  petAge: fullBooking.pet_age,
+  petFoodHabit: fullBooking.pet_food, // ✅ fixed
+  petVaccinated: fullBooking.pet_vaccinated,
+  vaccinationCertificate: fullBooking.vaccination_certificate,
+  bookingDate: fullBooking.booking_date,
+  bookingFrom: fullBooking.booking_from,
+  bookingTo: fullBooking.booking_to,
+  amount: Number(fullBooking.amount),
+  customer: fullBooking.customer,
+  services: fullBooking.services,
+  remarks: fullBooking.remarks,
+};
+
+    setInfoBooking(mappedBooking);
+  } catch (err) {
+    console.error("Error fetching full booking info:", err);
+    alert("Something went wrong");
+  }
+};
+
+
+
+ useEffect(() => {
+  if (activeTab === "bookings") {
+    fetchBookings();
+  }
+}, [activeTab]);
 
   const fetchBookings = async () => {
     try {
@@ -124,143 +154,138 @@ export default function AdminDashboard() {
         ?.name.toLowerCase()
         .includes(searchTerm.toLowerCase())
   );
+
   return (
-    <div className="paw-background-container::before">
+    <div>
       <AdminNavbar activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      <div className="admin-dashboard-content">
+      <div className="staff-dashboard">
         {activeTab === "dashboard" && (
-          <div className="admin-analytics-container">
-            <h2 className="analytics-title">
-              Welcome, {user?.name || "Admin"}!
-            </h2>
+  <div
+    className="dashboard-welcome"
+    style={{ maxWidth: "1100px", margin: "0 auto" }}
+  >
+    <h1 className="staff-dashboard-welcome">
+      Welcome, {user?.name || "Admin"}!
+    </h1>
 
-            {analytics && (
-              <div className="analytics-grid-layout">
-                {/* Left Column */}
-                <div className="analytics-column">
-                  <div className="analytics-card">
-                    <h3>Most Regular Customer</h3>
-                    {analytics.mostRegularCustomer ? (
-                      <>
-                        <p>
-                          <strong>{analytics.mostRegularCustomer.name}</strong>{" "}
-                          ({analytics.mostRegularCustomer.email})
-                        </p>
-                        <span>
-                          {analytics.mostRegularCustomer.total_bookings}{" "}
-                          bookings
-                        </span>
-                      </>
-                    ) : (
-                      <p>No data</p>
-                    )}
-                  </div>
-
-                  <div className="analytics-card">
-                    <h3>Most Preferred Service</h3>
-                    <p>{analytics.mostPreferredService || "No data"}</p>
-                  </div>
-
-                  <div className="analytics-card">
-                    <h3>Total Bookings</h3>
-                    <p>Bookings: {analytics.totalBookingsThisMonth ?? "0"}</p>
-                  </div>
-                </div>
-
-                {/* Center Column: Upcoming Pet Birthdays */}
-                <div className="analytics-birthday-center">
-                  <div className="analytics-card">
-                    <h3>🎂 Upcoming Pet Birthdays</h3>
-                    {analytics.upcomingPetBirthdays?.length > 0 ? (
-                      <div className="birthday-list">
-                        {analytics.upcomingPetBirthdays.map(
-                          (pet: {
-                            petName: string;
-                            ownerName: string;
-                            petDob: string;
-                          }) => (
-                            <div
-                              key={`${pet.petName}-${pet.ownerName}`}
-                              className="birthday-item"
-                            >
-                              <div className="pet-info">
-                                <div className="pet-line">
-                                  <span className="pet-emoji">🐶</span>
-                                  <span className="pet-label">Pet</span>
-                                  <span className="pet-colon">:</span>
-                                  <span className="pet-name">
-                                    {pet.petName}
-                                  </span>
-                                </div>
-                                <div className="owner-line">
-                                  <span className="owner-label">Owner:</span>
-                                  <span className="owner-name">
-                                    {pet.ownerName}
-                                  </span>
-                                </div>
-                              </div>
-                              <div className="birthday-date">
-                                {new Date(pet.petDob).toLocaleDateString(
-                                  "en-IN",
-                                  {
-                                    day: "2-digit",
-                                    month: "short",
-                                  }
-                                )}
-                              </div>
-                            </div>
-                          )
-                        )}
-                      </div>
-                    ) : (
-                      <p>No upcoming birthdays</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Right Column */}
-                <div className="analytics-column">
-                  <div className="analytics-card">
-                    <h3>Pets in Care</h3>
-                    {analytics.petsInCare?.length > 0 ? (
-                      <div className="pet-counts">
-                        {analytics.petsInCare.map(
-                          (pet: { type: string; count: number }) => (
-                            <div key={pet.type} className="pet-type-count">
-                              <span className="pet-type">{pet.type}:</span>
-                              <span className="count">{pet.count}</span>
-                            </div>
-                          )
-                        )}
-                      </div>
-                    ) : (
-                      <p>No pets currently</p>
-                    )}
-                  </div>
-
-                  <div className="analytics-card">
-                    <h3>Top Pet Type Booked</h3>
-                    <p>{analytics.topPetType || "No data"}</p>
-                  </div>
-
-                  <div className="analytics-card">
-                    <h3>Total Revenue</h3>
-                    <p>
-                      Revenue: ₹
-                      {analytics.totalRevenueThisMonth?.toLocaleString(
-                        undefined,
-                        {
-                          minimumFractionDigits: 2,
-                        }
-                      ) ?? "0.00"}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
+    {analytics && (
+      <div
+        className="stats-container"
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "1rem",
+          justifyContent: "space-between",
+        }}
+      >
+        {/* 🎂 Top Row: Full Width Birthday Card */}
+       <div className="stat-card" style={{ flex: "1 1 100%" }}>
+  <h3 style={{ textAlign: "center" }}>🎂 Upcoming Pet Birthdays</h3>
+  {analytics.upcomingPetBirthdays?.length > 0 ? (
+    <div style={{ textAlign: "center" }}>
+      {analytics.upcomingPetBirthdays.map(
+        (pet: { petName: string; ownerName: string; petDob: string }) => (
+          <div
+            key={`${pet.petName}-${pet.ownerName}`}
+            className="birthday-item"
+            style={{
+              fontSize: "0.85rem",
+              marginBottom: "6px",
+              lineHeight: "1.4",
+              color: "black",
+            }}
+          >
+            •{" "}
+            <span style={{ color: "#ffa502", fontWeight: 500 }}>
+              {new Date(pet.petDob).toLocaleDateString("en-IN", {
+                day: "2-digit",
+                month: "short",
+              })}
+            </span>
+            ---{pet.petName} | Owner: {pet.ownerName}
           </div>
-        )}
+        )
+      )}
+    </div>
+  ) : (
+    <p style={{ fontSize: "0.85rem", textAlign: "center" }}>
+      No upcoming birthdays
+    </p>
+  )}
+</div>
+
+
+        {/* 2nd Row: 3 Cards */}
+<div className="stat-card" style={{ flex: "1 1 32%" }}>
+  <h3 style={{ textAlign: "center" }}>Most Regular Customer</h3>
+  {analytics.mostRegularCustomer ? (
+    <div style={{ textAlign: "center", fontSize: "0.85rem" ,color:"black"}}>
+       {analytics.mostRegularCustomer.name} 
+    </div>
+  ) : (
+    <p style={{ fontSize: "0.85rem", textAlign: "center" }}>No data</p>
+  )}
+</div>
+
+
+
+        <div className="stat-card" style={{ flex: "1 1 32%" }}>
+          <h3 style={{ textAlign: "center" }}>Most Preferred Service</h3>
+          <p style={{ fontSize: "0.85rem", textAlign: "center" }}>
+            {analytics.mostPreferredService || "No data"}
+          </p>
+        </div>
+
+        <div className="stat-card" style={{ flex: "1 1 32%" }}>
+          <h3 style={{ textAlign: "center" }}>Total Bookings</h3>
+          <p style={{ fontSize: "0.85rem", textAlign: "center" }}>
+            {analytics.totalBookingsThisMonth ?? "0"}
+          </p>
+        </div>
+
+        {/* 3rd Row: 3 Cards */}
+        <div className="stat-card" style={{ flex: "1 1 32%" }}>
+          <h3 style={{ textAlign: "center" }}>Pets in Care</h3>
+          {analytics.petsInCare?.length > 0 ? (
+            <div style={{ fontSize: "0.85rem", textAlign: "center" ,color:"black"}}>
+              {analytics.petsInCare.map(
+                (pet: { type: string; count: number }) => (
+                  <span key={pet.type} style={{ marginRight: "8px" }}>
+                        • {pet.type}: {pet.count}
+                  </span>
+                )
+              )}
+            </div>
+          ) : (
+            <p style={{ fontSize: "0.85rem", textAlign: "center" }}>
+              No pets currently
+            </p>
+          )}
+        </div>
+
+        <div className="stat-card" style={{ flex: "1 1 32%" }}>
+          <h3 style={{ textAlign: "center" }}>Top Pet Type Booked</h3>
+          <p style={{ fontSize: "0.85rem", textAlign: "center" }}>
+            {analytics.topPetType || "No data"}
+          </p>
+        </div>
+
+        <div className="stat-card" style={{ flex: "1 1 32%" }}>
+          <h3 style={{ textAlign: "center" }}>Total Revenue</h3>
+          <p style={{ fontSize: "0.85rem", textAlign: "center" }}>
+            ₹
+            {analytics.totalRevenueThisMonth?.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+            }) ?? "0.00"}
+          </p>
+        </div>
+      </div>
+    )}
+  </div>
+)}
+
+
         {activeTab === "bookings" && (
           <>
             {/* Search Bar - Centered and styled like staff list */}
@@ -295,69 +320,66 @@ export default function AdminDashboard() {
             </div>
 
             {/* Bookings Table */}
-            <table className="staff-dashboard-table">
-              <thead>
-                <tr>
-                  <th>S.No</th>
-                  <th>Amount Paid</th>
-                  <th>Booking Period</th>
-                  <th>Service Opted</th>
-                  <th>Booked By</th>
-                  <th>More Info</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredBookings.length > 0 ? ( // Changed from bookings to filteredBookings
-                  filteredBookings.map((b, i) => {
-                    const bookedByStaff = staff.find((s) => s.id === b.user_id);
-                    const bookedBy = bookedByStaff
-                      ? bookedByStaff.name
-                      : `${b.customer?.name || "Unknown"} (customer)`;
+<table className="staff-dashboard-table" style={{ marginTop: "1.5rem" }}>
+  <thead>
+    <tr>
+      <th>S.No</th>
+      <th>Booking Period</th>
+      <th>Service Opted</th>
+      <th>Amount Paid</th>
+      <th>Booked By</th>
+      <th>More Info</th>
+    </tr>
+  </thead>
+  <tbody>
+    {filteredBookings.length > 0 ? (
+      filteredBookings.map((b, i) => {
+  const bookedByStaff = staff.find((s) => s.id === b.user_id);
+const bookedBy = bookedByStaff
+  ? `${bookedByStaff.name} (staff)` 
+  : `${b.customer?.name || "Unknown"} (customer)`; 
 
-                    return (
-                      <tr key={b.id}>
-                        <td>{i + 1}</td>
-                        <td>₹{b.amount.toLocaleString()}</td>
-                        <td>{formatDateRange(b.booking_from, b.booking_to)}</td>
-                        <td>{b.services?.join(", ")}</td>
-                        <td>{bookedBy}</td>
-                        <td>
-                          <button
-                            title="More Info"
-                            style={{
-                              background: "none",
-                              border: "none",
-                              cursor: "pointer",
-                              color: "#1ab3f0",
-                            }}
-                            onClick={() => handleMoreInfoClick(b.id)}
-                          >
-                            <MdInfoOutline size={22} />
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })
-                ) : (
-                  <tr>
-                    <td colSpan={6}>
-                      {searchTerm
-                        ? "No matching bookings found"
-                        : "No bookings available"}
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+        return (
+          <tr key={b.id}>
+            <td>{i + 1}</td>
+            <td>{formatDateRange(b.booking_from, b.booking_to)}</td>
+            <td>{b.services?.join(", ")}</td>
+            <td>₹{b.amount.toLocaleString()}</td>
+            <td>{bookedBy}</td>
+            <td>
+              <button
+                className="icon-btn info-btn"
+                title="More Info"
+              
+                onClick={() => handleMoreInfoClick(b.id)}
+              >
+                <MdInfoOutline size={22} />
+              </button>
+            </td>
+          </tr>
+        );
+      })
+    ) : (
+      <tr>
+        <td colSpan={6}>
+          {searchTerm
+            ? "No matching bookings found"
+            : "No bookings available"}
+        </td>
+      </tr>
+    )}
+  </tbody>
+</table>
+
           </>
         )}
 
         {activeTab === "staff" && (
           <>
             {/* Existing Add Staff Button (unchanged) */}
-            <div className="add-staff-container">
+            <div >
               <button
-                className="add-btn"
+                className="create-booking-btn"
                 onClick={() => {
                   setEditStaff(null);
                   setShowAddModal(true);
@@ -371,6 +393,8 @@ export default function AdminDashboard() {
 
             <div className="adsearch-bar">
               <div className="adsearch-input-container">
+                   
+
                 <input
                   type="text"
                   className="adsearch-input"
@@ -381,7 +405,7 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            <table className="staff-dashboard-table">
+            <table className="staff-dashboard-table" style={{ marginTop: "1.5rem" }}>
               <thead>
                 <tr>
                   <th>S.No</th>
@@ -404,34 +428,28 @@ export default function AdminDashboard() {
                       <td>{s.email}</td>
                       <td>{s.address}</td>
                       <td>
-                        <button
-                          title="Edit"
-                          style={{
-                            background: "none",
-                            border: "none",
-                            cursor: "pointer",
-                            color: "#1ab3f0",
-                            marginRight: 8,
-                          }}
-                          onClick={() => {
-                            setEditStaff(s);
-                            setShowAddModal(true);
-                          }}
-                        >
-                          <MdEdit size={20} />
-                        </button>
-                        <button
-                          title="Delete"
-                          style={{
-                            background: "none",
-                            border: "none",
-                            cursor: "pointer",
-                            color: "#e74c3c",
-                          }}
-                          onClick={() => setConfirmDeleteId(s.id)}
-                        >
-                          <MdDelete size={20} />
-                        </button>
+                       <td>
+  <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+    <button
+      className="icon-btn edit-btn"
+      title="Edit"
+      onClick={() => {
+        setEditStaff(s);
+        setShowAddModal(true);
+      }}
+    >
+      <MdEdit size={18} />
+    </button>
+    <button
+      className="icon-btn delete-btn"
+      title="Delete"
+      onClick={() => setConfirmDeleteId(s.id)}
+    >
+      <MdDelete size={18} />
+    </button>
+  </div>
+</td>
+
                       </td>
                     </tr>
                   ))
