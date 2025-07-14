@@ -448,7 +448,7 @@ export default function CreateBookingModal({
           fontSize: form[field]
             ? customFontSize?.label || "0.75rem"
             : customFontSize?.label || "0.8rem",
-          color: form[field] ? "#1ab3f0" : "#333",
+          color: form[field] ? "#1ab3f0" : "#888",
           background: form[field] ? "#fff" : "transparent",
           padding: "0 0.3rem",
           pointerEvents: "none",
@@ -516,13 +516,8 @@ export default function CreateBookingModal({
                   name="petAge"
                   placeholder="Pet Age"
                   value={form.petAge}
-                  readOnly
+                  disabled
                   tabIndex={-1}
-                  style={{
-                    color: "#333",
-                    border: "1px solid #333",
-                    pointerEvents: "none",
-                  }}
                 />
                 <label>Pet Age (Auto)</label>
               </div>

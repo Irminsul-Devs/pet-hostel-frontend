@@ -89,7 +89,7 @@
   box-sizing: border-box;
   width: 100%;
   padding: 1rem 0.75rem 0.5rem;
-  border: 1px solid #555;
+  border: 1px solid #000;
   background-color: #fff;
   color: #333;
   border-radius: 6px;
@@ -103,14 +103,14 @@
 }
 
 .input-group input:focus {
-  border-color: #1ab3f0;
+  border:2px solid #1ab3f0;
 }
 
 .input-group label {
   position: absolute;
   left: 0.75rem;
   top: 1rem;
-  color: #333;
+  color: #888;
   pointer-events: none;
   transition: top 0.25s ease, font-size 0.25s ease, color 0.25s ease,
     padding 0.25s ease, background-color 0.25s ease;
@@ -133,7 +133,7 @@
   position: absolute;
   left: 0.75rem;
   top: 1rem;
-  color: #333;
+  color: #888;
   pointer-events: none;
   transition: top 0.25s ease, font-size 0.25s ease, color 0.25s ease,
     padding 0.25s ease, background-color 0.25s ease;
@@ -177,7 +177,7 @@
 }
 
 .modal button[type="submit"]:hover {
-  background-color: #004080;
+  background-color: #006dda;
 }
 
 .modal-footer {
@@ -202,7 +202,7 @@
 }
 
 .modal-link:hover {
-  color: #004080;
+  color: #006dda;
 }
 
 .modal-form-columns {
@@ -236,7 +236,7 @@
 
 .input-group select:focus,
 .input-group textarea:focus {
-  border-color: #1ab3f0;
+  border: 2px solid#1ab3f0;
 }
 
 .input-group select {
@@ -264,7 +264,7 @@
   position: absolute;
   left: 0.75rem;
   top: 1rem;
-  color: #777;
+  color: #888;
   pointer-events: none;
   transition: top 0.25s, font-size 0.25s, color 0.25s, padding 0.25s,
     background-color 0.25s;
@@ -286,12 +286,11 @@
   z-index: 2;
 }
 
-/* Light theme for react-datepicker */
 .modal-datepicker,
 .react-datepicker__header {
   background: #fff !important;
   color: #333 !important;
-  border-color: #ddd !important;
+  border-color: #cacaca !important;
   border-radius: 12px !important;
   z-index: 10;
 }
@@ -307,7 +306,7 @@
 .react-datepicker__day,
 .react-datepicker__day-name,
 .react-datepicker__time-name {
-  color: #333 !important;
+  color: #222 !important;
 }
 .react-datepicker__day--selected,
 .react-datepicker__day--keyboard-selected {
@@ -322,7 +321,7 @@
 .react-datepicker__year-dropdown {
   background-color: #fff !important;
   border: 1px solid #ddd !important;
-  color: #333 !important;
+  color: #222 !important;
 }
 
 .react-datepicker__year-option {
@@ -392,7 +391,6 @@
 .input-group input[type="text"][name$="To"] {
   background: #fff;
   color: #333;
-  border: 1px solid #ddd;
 }
 
 /* Default label position for date input */
@@ -402,7 +400,7 @@
   position: absolute;
   left: 0.75rem;
   top: 1rem;
-  color: #333;
+  color: #888;
   pointer-events: none;
   transition: top 0.25s, font-size 0.25s, color 0.25s, background 0.25s,
     padding 0.25s;
