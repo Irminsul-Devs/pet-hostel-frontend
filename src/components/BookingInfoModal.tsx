@@ -509,6 +509,35 @@ export default function BookingInfoModal({ booking, onClose }: Props) {
                   </div>
                 </div>
               </div>
+
+              <div
+                className="detail-item"
+                style={{ display: "flex", alignItems: "center" }}
+              >
+                <MdPets
+                  size={20}
+                  color="#1ab3f0"
+                  style={{ marginRight: "10px" }}
+                />
+                <div>
+                  <div
+                    className="detail-label"
+                    style={{ fontSize: "0.9rem", color: "#888" }}
+                  >
+                    Pet Food Habit
+                  </div>
+                  <div
+                    className="detail-value"
+                    style={{
+                      fontSize: "1.1rem",
+                      color: "#eaeaea",
+                      whiteSpace: "pre-line",
+                    }}
+                  >
+                    {booking.petFood || "N/A"}
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Remarks Section */}
