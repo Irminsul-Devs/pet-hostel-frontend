@@ -1,6 +1,6 @@
 .navbar {
-  background-color: #1a1a1a;
-  color: white;
+  background-color: #ffffff;
+  color: #222;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -9,17 +9,17 @@
   top: 0;
   z-index: 100;
   font-size: 0.9rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4),
-    inset 0 -2px 10px rgba(0, 0, 0, 0.3);
-  /* Enhanced pet-themed background */
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.08),
+    inset 0 -2px 10px rgba(52, 152, 219, 0.05);
+  /* Enhanced pet-themed background (light paw print) */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 512 512' opacity='0.04' fill='%233498db'%3E%3Cpath d='M226.5 92.9c14.3 42.9-.3 86.2-32.6 96.8s-70.1-15.6-84.4-58.5.3-86.2 32.6-96.8s70.1 15.6 84.4 58.5zm-126.1 105.7c18.9 32.4 14.3 70.1-10.2 84.1s-59.7-.9-78.5-33.3-14.3-70.1 10.2-84.1 59.7.9 78.5 33.3zm321.5 0c-18.9 32.4-14.3 70.1 10.2 84.1s59.7-.9 78.5-33.3 14.3-70.1-10.2-84.1-59.7.9-78.5 33.3z'/%3E%3C/svg%3E");
   background-position: center;
   background-repeat: repeat;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .navbar a {
-  color: white;
+  color: #222;
   text-decoration: none;
   margin: 0 1rem;
   font-weight: 500;
@@ -30,7 +30,7 @@
 /* Only affect nav links, not buttons */
 .navbar-left a:hover {
   color: #3498db;
-  text-shadow: 0 0 5px rgba(52, 152, 219, 0.4);
+  text-shadow: 0 0 5px rgba(52, 152, 219, 0.18);
 }
 
 .active-link {
@@ -199,7 +199,7 @@
   padding: 0 1rem;
   font-weight: 600;
   font-size: 1em;
-  color: white;
+  color: #222;
   background: none;
   border: none;
   outline: none;

@@ -226,9 +226,6 @@ export default function UserProfileModal({ onClose }: Props) {
                           value={form.dob}
                           onKeyDown={(e) => e.preventDefault()}
                           style={{
-                            background: "#2a2a2a",
-                            color: "#eaf6fb",
-                            border: "1px solid #555",
                             paddingRight: "2.2em",
                             cursor: "pointer",
                           }}
@@ -258,8 +255,8 @@ export default function UserProfileModal({ onClose }: Props) {
                         left: "0.75rem",
                         top: form.dob ? "-0.5rem" : "1rem",
                         fontSize: form.dob ? "0.75rem" : "0.8rem",
-                        color: form.dob ? "#1ab3f0" : "#aaa",
-                        background: form.dob ? "#181f2a" : "transparent",
+                        color: form.dob ? "#1ab3f0" : "#333",
+                        background: form.dob ? "#fff" : "transparent",
                         padding: form.dob ? "0 0.3rem" : undefined,
                         pointerEvents: "none",
                         transition:
@@ -305,9 +302,6 @@ export default function UserProfileModal({ onClose }: Props) {
                       rows={2}
                       style={{
                         resize: "vertical",
-                        background: "#2a2a2a",
-                        color: "#eaf6fb",
-                        border: "1px solid #555",
                       }}
                       placeholder=" "
                     />
@@ -317,8 +311,8 @@ export default function UserProfileModal({ onClose }: Props) {
                         left: "0.75rem",
                         top: form.address ? "-0.5rem" : "1rem",
                         fontSize: form.address ? "0.75rem" : "0.8rem",
-                        color: form.address ? "#1ab3f0" : "#aaa",
-                        background: form.address ? "#181f2a" : "transparent",
+                        color: form.address ? "#1ab3f0" : "#333",
+                        background: form.address ? "#fff" : "transparent",
                         padding: form.address ? "0 0.3rem" : undefined,
                         pointerEvents: "none",
                         transition:
