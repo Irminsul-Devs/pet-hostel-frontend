@@ -12,7 +12,7 @@ export default function DeleteBookingModal({ onCancel, onConfirm }: Props) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState("");
 
-  // Modal closing on outside click has been intentionally removed to prevent accidental closes of deletion dialog
+  
 
   const handleDelete = async () => {
     setIsDeleting(true);

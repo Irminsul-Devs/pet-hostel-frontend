@@ -26,9 +26,9 @@ export default function Contact() {
 </div>
 
 
-      {/* Message / Form Section */}
+ 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-        {/* Left Message Text */}
+   
         <div>
           <h3 className="text-xl font-semibold mb-2">Message us / Call us</h3>
           <p className="text-gray-700">

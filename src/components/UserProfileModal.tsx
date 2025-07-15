@@ -25,8 +25,6 @@ export default function UserProfileModal({ onClose }: Props) {
   const [loading, setLoading] = useState(true);
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
 
-  // Modal closing on outside click has been intentionally removed to prevent accidental closes while editing profile
-
   useEffect(() => {
     if (!storedUser?.id) return;
     fetch(`http://localhost:5000/api/auth/user/${storedUser.id}`)
@@ -160,7 +158,7 @@ export default function UserProfileModal({ onClose }: Props) {
         };
         console.log("Updating localStorage with:", updatedUser);
         localStorage.setItem("user", JSON.stringify(updatedUser));
-        // Dispatch event to notify other components of the update
+
         window.dispatchEvent(new Event("user-profile-updated"));
         onClose();
       } else {

@@ -85,13 +85,13 @@ export default function AdminDashboard() {
       }
       console.log("fullBooking.pet_food:", fullBooking.pet_food);
 
-      // 🛠️ Mapping snake_case → camelCase
+      // Mapping snake_case to camelCase
       const mappedBooking = {
         ...fullBooking,
         petName: fullBooking.pet_name,
         petType: fullBooking.pet_type,
         petAge: fullBooking.pet_age,
-        petFood: fullBooking.pet_food, // ✅ fixed
+        petFood: fullBooking.pet_food, 
         petVaccinated: fullBooking.pet_vaccinated,
         vaccinationCertificate: fullBooking.vaccination_certificate,
         bookingDate: fullBooking.booking_date,
@@ -318,7 +318,7 @@ export default function AdminDashboard() {
             <div className="adsearch-bar">
               <div
                 className="adsearch-input-container"
-                // style={{ width: "100%", maxWidth: "500px" }}
+              
               >
                 <input
                   type="text"
@@ -410,7 +410,7 @@ export default function AdminDashboard() {
               </button>
             </div>
 
-            {/* New Search Container - Matches your table styling */}
+           
 
             <div className="adsearch-bar">
               <div className="adsearch-input-container">

@@ -44,15 +44,7 @@ export default function AdminNavbar({ activeTab, setActiveTab }: Props) {
         </span>
       </div>
       <div className="navbar-right">
-        {/* <button
-          className="btn create-booking-btn"
-          style={{ marginRight: "0.5rem" }}
-          onClick={() =>
-            window.dispatchEvent(new CustomEvent("open-add-staff"))
-          }
-        >
-          + Add Staff
-        </button> */}
+       
         <button onClick={handleLogout} className="btn logout-btn">
           Logout
         </button>

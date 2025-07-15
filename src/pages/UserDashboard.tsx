@@ -158,7 +158,6 @@ setBookings(transformed);
 
     if (!response.ok) throw new Error("Failed to delete booking");
 
-    // Remove from local state
     setBookings((prev) => prev.filter((b) => b.id !== bookingToDelete.id));
     setShowDeleteModal(false);
     setBookingToDelete(null);
@@ -176,7 +175,7 @@ const getPetIcon = (type: string) => {
     case "bird":
       return "🐦";
     default:
-      return "🐾"; // common symbol for other types
+      return "🐾"; 
   }
 };
 

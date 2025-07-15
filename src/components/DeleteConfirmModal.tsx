@@ -45,7 +45,7 @@ export default function DeleteConfirmModal({
         return;
       }
 
-      onSuccess(); // Refresh staff list in parent
+      onSuccess(); 
     } catch (err) {
       console.error("Delete staff error:", err);
       setError("Something went wrong");

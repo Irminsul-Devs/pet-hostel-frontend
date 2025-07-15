@@ -46,15 +46,7 @@ export default function UserNavbar({
         className="navbar-right"
         style={{ display: "flex", alignItems: "center" }}
       >
-        {/* <button
-    className="btn create-booking-btn"
-    style={{ marginRight: "0.5rem" }}
-    onClick={() =>
-      window.dispatchEvent(new CustomEvent("open-create-booking"))
-    }
-  >
-    + Create Booking
-  </button> */}
+   
 
         <FaUserShield
                    size={26}

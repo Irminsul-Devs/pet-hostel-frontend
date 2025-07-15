@@ -131,7 +131,7 @@ export default function CreateBookingModal({
     setForm((prev) => ({ ...prev, amount }));
   }, [form.services, form.bookingFrom, form.bookingTo]);
 
-  // Modal can only be closed by clicking the X button or submitting the form
+  
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -143,22 +143,22 @@ export default function CreateBookingModal({
     if (type === "file") {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (file) {
-        // Validate that the file is a PDF
+    
         if (
           name === "vaccinationCertificate" &&
           !file.type.match("application/pdf")
         ) {
           setError("Only PDF files are allowed.");
-          // Clear the file input so the invalid file isn't stored
+     
           e.target.value = "";
-          // Show popup alert
+          
           alert("Please select a PDF file only.");
           return;
         }
-        // Validate file size (1MB limit)
+       
         if (file.size > 1 * 1024 * 1024) {
           setError("File too large (max 1MB)");
-          // Clear the file input
+        
           e.target.value = "";
           alert("The file is too large. Maximum size is 1MB.");
           return;
@@ -189,17 +189,16 @@ export default function CreateBookingModal({
         return;
       }
 
-      // Calculate age in years
+    
       const ageInYears =
         (today.getTime() - date.getTime()) / (365.25 * 24 * 60 * 60 * 1000);
 
-      // Age validations based on pet type
       if (form.petType) {
         const maxAges: { [key: string]: number } = {
-          Dog: 25, // Maximum reasonable age for dogs
-          Cat: 30, // Maximum reasonable age for cats
-          Bird: 50, // Maximum reasonable age for common pet birds
-          Rabbit: 15, // Maximum reasonable age for rabbits
+          Dog: 25, 
+          Cat: 30, 
+          Bird: 50, 
+          Rabbit: 15, 
         };
 
         if (ageInYears > maxAges[form.petType]) {
@@ -212,7 +211,7 @@ export default function CreateBookingModal({
     }
 
     if (field === "bookingTo" && date && form.bookingFrom) {
-      // Ensure bookingTo date is not earlier than bookingFrom
+     
       const fromDate = new Date(form.bookingFrom);
       if (date < fromDate) {
         alert("Booking end date cannot be earlier than start date");
@@ -221,7 +220,7 @@ export default function CreateBookingModal({
     }
 
     if (field === "bookingFrom" && date && form.bookingTo) {
-      // If setting bookingFrom and we already have a bookingTo, validate it's not later
+     
       const toDate = new Date(form.bookingTo);
       if (date > toDate) {
         alert("Booking start date cannot be later than end date");
@@ -277,9 +276,8 @@ export default function CreateBookingModal({
       }
     }
 
-    // Check if a file is present and is not a PDF
     if (petVaccinated && form.vaccinationCertificate) {
-      // Check if it's a File object (during upload)
+    
       const file = form.vaccinationCertificate as File;
       if (file && file.type && !file.type.match("application/pdf")) {
         setError("Only PDF files are allowed for vaccination certificate.");
@@ -295,18 +293,17 @@ export default function CreateBookingModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Clear any previous errors
     setError("");
 
     if (!validateForm()) {
-      // Don't set a generic error here since validateForm may set specific errors
+     
       if (!error) {
         setError("Please fill all required fields.");
       }
       return;
     }
 
-    // Explicitly check for vaccination certificate if pet is vaccinated
+    // check for vaccination certificate if pet is vaccinated
     if (petVaccinated) {
       if (!form.vaccinationCertificate) {
         setError("Please upload a vaccination certificate.");
@@ -325,9 +322,9 @@ export default function CreateBookingModal({
 
     try {
       let vaccinationCertificate = null;
-      // Only try to read file if it exists
+  
       if (form.vaccinationCertificate) {
-        // Log file size before conversion for debugging
+      
         const file = form.vaccinationCertificate as File;
         console.log(
           `File size before conversion: ${(file.size / 1024).toFixed(2)}KB`
@@ -337,7 +334,7 @@ export default function CreateBookingModal({
           form.vaccinationCertificate
         );
 
-        // Log base64 size after conversion
+      
         if (vaccinationCertificate) {
           console.log(
             `Base64 size after conversion: ${(
@@ -355,7 +352,7 @@ export default function CreateBookingModal({
         customerId: form.customerId || userId, // If no customer selected, user is booking for themselves
       };
 
-      console.log("Submitting booking:", bookingData); // Debug log
+      console.log("Submitting booking:", bookingData); 
       await onCreate(bookingData);
 
       setForm(initialFormState);
@@ -369,7 +366,7 @@ export default function CreateBookingModal({
 
   const parseDate = (val: string) => (val ? new Date(val) : null);
 
-  // Render functions for better organization
+ 
   const renderInputGroup = (
     name: keyof BookingFormData,
     label: string,
@@ -612,7 +609,7 @@ export default function CreateBookingModal({
             </div>
           </div>
 
-          {/* Pet Vaccinated Toggle */}
+          {/* Toggle (Vaccination)*/}
           <div className="pet-vaccinated-row" style={petVaccinatedRowStyle}>
             <span style={petVaccinatedLabelStyle}>Pet Vaccinated:</span>
             <label className="toggle-switch" style={{ minWidth: 0 }}>
@@ -642,7 +639,7 @@ export default function CreateBookingModal({
             )}
           </div>
 
-          {/* Total Amount Display */}
+          {/* Total Amount */}
           <div style={amountContainerStyle}>
             <div style={amountHeaderStyle}>
               <h3 style={amountTitleStyle}>Booking Summary</h3>
@@ -742,7 +739,7 @@ export default function CreateBookingModal({
   );
 }
 
-// Style objects with proper typing
+// Style 
 const serviceLabelStyle: CSSProperties = {
   fontWeight: 400,
   fontSize: "0.9em",
