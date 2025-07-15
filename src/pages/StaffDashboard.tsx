@@ -11,7 +11,7 @@ import DeleteCustomerModal from "../components/DeleteCustomerModal";
 import { MdInfoOutline, MdEdit, MdDelete } from "react-icons/md";
 import type { User, Booking } from "../types";
 
-// This is needed to make TypeScript recognize HTML elements in JSX
+// to make TypeScript recognize HTML elements in JSX
 declare namespace JSX {
   interface IntrinsicElements {
     div: React.DetailedHTMLProps<
@@ -101,19 +101,18 @@ export default function StaffDashboard() {
       }
     };
 
-    // Load initial user data
+  
     loadUser();
 
-    // Listen for profile update events
     window.addEventListener("user-profile-updated", loadUser);
 
-    // Cleanup listener
+ 
     return () => {
       window.removeEventListener("user-profile-updated", loadUser);
     };
   }, []);
 
-  // Format date for display
+
   const formatDate = (dateString: string | null) => {
     if (!dateString || dateString === "0000-00-00 00:00:00") return "N/A";
     try {
@@ -149,7 +148,7 @@ export default function StaffDashboard() {
     }
   });
 
-  // Get upcoming check-ins for today
+
   const getTodayCheckIns = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -162,7 +161,7 @@ export default function StaffDashboard() {
     }).length;
   };
 
-  // Get weekly booking trends
+
   const getWeeklyTrends = () => {
     const lastWeek = new Date();
     lastWeek.setDate(lastWeek.getDate() - 7);
@@ -183,7 +182,7 @@ export default function StaffDashboard() {
     return { current: weeklyBookings, trend };
   };
 
-  // Fetch bookings data
+
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem("token");
@@ -203,7 +202,7 @@ export default function StaffDashboard() {
 
           const data = await response.json();
           console.log("API Response:", data);
-          // Debug specific fields
+       
           if (data && data.length > 0) {
             console.log(
               "First booking amount:",
@@ -213,12 +212,12 @@ export default function StaffDashboard() {
             console.log("Sample booking data:", data[0]);
           }
 
-          // Transform the data to match your Booking type
+  
           const transformedData = data.map((item: any) => {
-            // Handle amount specially to ensure it's a number
+       
             let amount = 0;
             if (item.amount !== null && item.amount !== undefined) {
-              // Convert to number and handle different formats
+            
               amount =
                 typeof item.amount === "string"
                   ? parseFloat(item.amount)
@@ -386,7 +385,7 @@ export default function StaffDashboard() {
       const data = await response.json();
       console.log("API response after update:", data);
 
-      // Handle amount specially to ensure it's a number
+
       let amount = 0;
       if (data.amount !== null && data.amount !== undefined) {
         amount =
@@ -443,7 +442,7 @@ export default function StaffDashboard() {
 
   const handleDeleteBooking = async (id: number) => {
     try {
-      // First check if the booking exists in our current state
+      // if the booking exists in our current state
       console.log(
         "Current bookings in state:",
         bookings.map((b) => ({ id: b.id, petName: b.petName }))
@@ -517,7 +516,7 @@ export default function StaffDashboard() {
         throw new Error(errorMessage);
       }
 
-      // Successfully deleted
+   
       console.log(`Successfully deleted booking ${id}. Updating state...`);
       setBookings((prev) => {
         const newBookings = prev.filter((b) => b.id !== id);
@@ -534,7 +533,7 @@ export default function StaffDashboard() {
         err instanceof Error ? err.message : "Failed to delete booking";
       alert(errorMessage);
       setError(errorMessage);
-      setDeleteBookingId(null); // Close the delete modal on error
+      setDeleteBookingId(null);
     }
   };
 
@@ -557,17 +556,16 @@ export default function StaffDashboard() {
       const data = await response.json();
 
       if (!response.ok) {
-        // Handle specific error cases with user-friendly messages
+       
         const isActiveBookingsError =
           response.status === 400 && data.message.includes("active bookings");
 
         if (isActiveBookingsError) {
-          // Show alert for active bookings error
           alert(
             "Cannot delete customer with active or future bookings. Please cancel or complete all bookings first."
           );
         } else {
-          // Set error message for other types of errors
+       
           let errorMessage: string;
           if (response.status === 404) {
             errorMessage =
@@ -581,22 +579,22 @@ export default function StaffDashboard() {
         }
 
         setCustomerToDelete(null);
-        return; // Exit early to prevent the catch block from running
+        return; 
       }
 
       setCustomers((prev) =>
         prev.filter((customer) => customer.id !== customerToDelete.id)
       );
       setCustomerToDelete(null);
-      // Show success message
+ 
       setError("Customer deleted successfully");
-      // Clear success message after 3 seconds
+
       setTimeout(() => setError(""), 3000);
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Failed to delete customer";
 
-      // Show alert for active bookings error, otherwise set error state
+     
       if (errorMessage.includes("active or future bookings")) {
         alert(errorMessage);
       } else {
@@ -610,13 +608,13 @@ export default function StaffDashboard() {
   const handleUpdateCustomer = async (updatedCustomer: User) => {
     const token = localStorage.getItem("token");
     try {
-      // Ensure we're sending a complete user object with role
+     
       const customerToUpdate: User = {
         ...updatedCustomer,
         role: "customer" as const, // Use const assertion to match UserRole type
       };
 
-      console.log("Updating customer:", customerToUpdate); // Debug log
+      console.log("Updating customer:", customerToUpdate); 
 
       const response = await fetch(
         `http://localhost:5000/api/auth/user/${updatedCustomer.id}`,
@@ -632,14 +630,13 @@ export default function StaffDashboard() {
 
       if (!response.ok) {
         const errorData = await response.text();
-        console.error("Update failed:", errorData); // Debug log
+        console.error("Update failed:", errorData);
         throw new Error(`Failed to update customer: ${errorData}`);
       }
 
       const data = await response.json();
-      console.log("Update successful:", data); // Debug log
+      console.log("Update successful:", data); 
 
-      // Update customers list after successful update
       setCustomers((prev) =>
         prev.map((customer) =>
           customer.id === updatedCustomer.id ? customerToUpdate : customer
@@ -647,7 +644,7 @@ export default function StaffDashboard() {
       );
       setEditCustomer(null);
     } catch (err) {
-      console.error("Error updating customer:", err); // Debug log
+      console.error("Error updating customer:", err); 
       setError(
         err instanceof Error ? err.message : "Failed to update customer"
       );
@@ -709,19 +706,18 @@ export default function StaffDashboard() {
                 </p>
               </div>
 
-              {/* Today's Statistics */}
+           
               <div className="stat-card">
                 <h3>Check-ins Today</h3>
                 <p>{getTodayCheckIns()}</p>
               </div>
 
-              {/* Customer Statistics */}
               <div className="stat-card">
                 <h3>Total Customers</h3>
                 <p>{customers.length}</p>
               </div>
 
-              {/* Weekly Trends */}
+       
               <div className="stat-card">
                 <h3>Weekly Bookings</h3>
                 <p>
@@ -859,7 +855,7 @@ export default function StaffDashboard() {
                           <td style={{ color: "#4cd137", fontWeight: "500" }}>
                             $
                             {(() => {
-                              // Debug log to see what's coming from the backend
+                             
                               console.log(
                                 `Booking ${booking.id} amount:`,
                                 booking.amount,
@@ -1082,11 +1078,11 @@ export default function StaffDashboard() {
         <SignupModal
           onClose={() => {
             setShowAddCustomerModal(false);
-            // Refresh the customers list after modal is closed
+         
             setRefreshCustomers((prev) => prev + 1);
           }}
           onSwitchToLogin={() => {
-            /* Not needed in staff dashboard */
+     
           }}
           hideLoginLink={true}
         />

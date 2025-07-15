@@ -49,7 +49,7 @@ export default function LoginModal({
         return;
       }
 
-      // Store complete user data
+  
       localStorage.setItem(
         "user",
         JSON.stringify({
@@ -67,7 +67,7 @@ export default function LoginModal({
       window.dispatchEvent(new Event("user-login"));
       onClose();
 
-      // Type-safe role-based redirection
+     
       const rolePaths: Record<UserRole, string> = {
         staff: "/staff-dashboard",
         admin: "/admin-dashboard",
@@ -98,7 +98,7 @@ export default function LoginModal({
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
-                setError(""); // Clear error when typing
+                setError("");
               }}
             />
             <label>Email</label>
@@ -112,7 +112,7 @@ export default function LoginModal({
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
-                setError(""); // Clear error when typing
+                setError(""); 
               }}
             />
             <label>Password</label>

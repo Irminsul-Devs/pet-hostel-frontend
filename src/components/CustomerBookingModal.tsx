@@ -6,14 +6,14 @@ import { FaRegCalendarAlt } from "react-icons/fa";
 import type { Booking, BookingFormData } from "../types";
 import type { CSSProperties } from "react";
 
-// Define service prices
+//  service prices
 const SERVICE_PRICES = {
-  Boarding: 35.0, // per day
-  Grooming: 45.0, // flat fee
-  Training: 50.0, // per session
-  "Day Care": 25.0, // per day
+  Boarding: 35.0, 
+  Grooming: 45.0, 
+  Training: 50.0, 
+  "Day Care": 25.0, 
 };
-//const today = new Date().toISOString().split("T")[0];
+
 
 type Props = {
   onClose: () => void;
@@ -138,7 +138,6 @@ export default function CustomerBookingModal({
       }
     }
 
-    // Add flat-fee services
     if (form.services.includes("Grooming")) {
       amount += SERVICE_PRICES.Grooming;
     }
@@ -166,16 +165,16 @@ export default function CustomerBookingModal({
           !file.type.match("application/pdf")
         ) {
           setError("Only PDF files are allowed.");
-          // Clear the file input so the invalid file isn't stored
+   
           e.target.value = "";
-          // Show popup alert
+        
           alert("Please select a PDF file only.");
           return;
         }
-        // Validate file size (1MB limit)
+    
         if (file.size > 1 * 1024 * 1024) {
           setError("File too large (max 1MB)");
-          // Clear the file input
+        
           e.target.value = "";
           alert("The file is too large. Maximum size is 1MB.");
           return;
@@ -192,7 +191,7 @@ export default function CustomerBookingModal({
 
   const handleDateChange = (date: Date | null, field: DateField) => {
     if (field === "bookingTo" && date && form.bookingFrom) {
-      // Ensure bookingTo date is not earlier than bookingFrom
+     
       const fromDate = new Date(form.bookingFrom);
       if (date < fromDate) {
         alert("Booking end date cannot be earlier than start date");
@@ -204,8 +203,7 @@ export default function CustomerBookingModal({
       // If setting bookingFrom and we already have a bookingTo, validate it's not later
       const toDate = new Date(form.bookingTo);
       if (date > toDate) {
-        // Two options: either clear the bookingTo or alert the user
-        // Here we alert and don't allow the change
+      
         alert("Booking start date cannot be later than end date");
         return;
       }
@@ -259,9 +257,9 @@ export default function CustomerBookingModal({
       }
     }
 
-    // Check if a file is present and is not a PDF
+    // if a file is present and is not a PDF
     if (petVaccinated && form.vaccinationCertificate) {
-      // Check if it's a File object (during upload)
+  
       const file = form.vaccinationCertificate as File;
       if (file && file.type && !file.type.match("application/pdf")) {
         setError("Only PDF files are allowed for vaccination certificate.");
@@ -277,18 +275,17 @@ export default function CustomerBookingModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Clear any previous errors
     setError("");
 
     if (!validateForm()) {
-      // Don't set a generic error here since validateForm may set specific errors
+     
       if (!error) {
         setError("Please fill all required fields.");
       }
       return;
     }
 
-    // Explicitly check for vaccination certificate if pet is vaccinated
+    //  if pet is vaccinated(vaccination certificate)
     if (petVaccinated) {
       if (!form.vaccinationCertificate) {
         setError("Please upload a vaccination certificate.");
@@ -307,9 +304,9 @@ export default function CustomerBookingModal({
 
     try {
       let vaccinationCertificate = null;
-      // Only try to read file if it exists
+  
       if (form.vaccinationCertificate) {
-        // Log file size before conversion for debugging
+      
         const file = form.vaccinationCertificate as File;
         console.log(
           `File size before conversion: ${(file.size / 1024).toFixed(2)}KB`
@@ -319,7 +316,7 @@ export default function CustomerBookingModal({
           form.vaccinationCertificate
         );
 
-        // Log base64 size after conversion
+ 
         if (vaccinationCertificate) {
           console.log(
             `Base64 size after conversion: ${(
@@ -334,10 +331,10 @@ export default function CustomerBookingModal({
         vaccinationCertificate,
         petVaccinated,
         userId,
-        customerId: form.customerId || userId, // If no customer selected, user is booking for themselves
+        customerId: form.customerId || userId, 
       };
 
-      console.log("Submitting booking:", bookingData); // Debug log
+      console.log("Submitting booking:", bookingData); 
       await onCreate(bookingData);
 
       setForm(initialFormState);
@@ -351,7 +348,7 @@ export default function CustomerBookingModal({
 
   const parseDate = (val: string) => (val ? new Date(val) : null);
 
-  // Render functions for better organization
+
   const renderInputGroup = (
     name: keyof BookingFormData,
     label: string,
@@ -584,7 +581,7 @@ export default function CustomerBookingModal({
             </div>
           </div>
 
-          {/* Pet Vaccinated Toggle */}
+          {/*  Toggle */}
           <div className="pet-vaccinated-row" style={petVaccinatedRowStyle}>
             <span style={petVaccinatedLabelStyle}>Pet Vaccinated:</span>
             <label className="toggle-switch" style={{ minWidth: 0 }}>
@@ -614,7 +611,7 @@ export default function CustomerBookingModal({
             )}
           </div>
 
-          {/* Total Amount Display */}
+          {/* Total Amount */}
           <div style={amountContainerStyle}>
             <div style={amountHeaderStyle}>
               <h3 style={amountTitleStyle}>Booking Summary</h3>
@@ -709,7 +706,7 @@ export default function CustomerBookingModal({
   );
 }
 
-// Style objects with proper typing
+// Style 
 const serviceLabelStyle: CSSProperties = {
   fontWeight: 400,
   fontSize: "0.9em",

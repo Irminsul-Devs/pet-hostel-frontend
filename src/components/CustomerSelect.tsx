@@ -55,7 +55,7 @@ export default function CustomerSelect({
         }
 
         const users: User[] = await response.json();
-        console.log("Received customers:", users); // Debug log
+        console.log("Received customers:", users); 
 
         if (!Array.isArray(users)) {
           throw new Error("Invalid response format");
@@ -83,7 +83,7 @@ export default function CustomerSelect({
     if (isStaff) {
       fetchCustomers();
     } else {
-      // If not staff, just set current user as the only option
+      // If not staff,set current user as the only option
       setCustomers([
         {
           value: currentUserId,

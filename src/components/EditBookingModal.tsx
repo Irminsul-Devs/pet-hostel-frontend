@@ -9,10 +9,10 @@ import CustomerSelect from "./CustomerSelect";
 
 // Define service prices - ensure these match with CreateBookingModal
 const SERVICE_PRICES = {
-  Boarding: 35.0, // per day
-  Grooming: 45.0, // flat fee
-  Training: 50.0, // per session
-  "Day Care": 25.0, // per day
+  Boarding: 35.0, 
+  Grooming: 45.0,
+  Training: 50.0,
+  "Day Care": 25.0,
 };
 
 export default function EditBookingModal({
@@ -49,17 +49,17 @@ export default function EditBookingModal({
     setTotalAmount(booking.amount || 0);
   }, [booking]);
 
-  // Calculate amount whenever services or dates change
+
   useEffect(() => {
     let amount = 0;
 
-    // Calculate boarding/day care based on days
+   
     if (
       form.bookingFrom &&
       form.bookingTo &&
       (form.services.includes("Boarding") || form.services.includes("Day Care"))
     ) {
-      // Calculate days difference
+      
       const fromDate = new Date(form.bookingFrom);
       const toDate = new Date(form.bookingTo);
       const days = Math.max(
@@ -69,21 +69,20 @@ export default function EditBookingModal({
         )
       );
 
-      // Add boarding cost if selected
+      
       if (form.services.includes("Boarding")) {
         amount += SERVICE_PRICES.Boarding * days;
       }
-      // Add day care cost if selected
       if (form.services.includes("Day Care")) {
         amount += SERVICE_PRICES["Day Care"] * days;
       }
     }
 
-    // Add grooming cost if selected (flat fee)
+    
     if (form.services.includes("Grooming")) {
       amount += SERVICE_PRICES.Grooming;
     }
-    // Add training cost if selected (flat fee)
+   
     if (form.services.includes("Training")) {
       amount += SERVICE_PRICES.Training;
     }
@@ -92,8 +91,7 @@ export default function EditBookingModal({
     setForm((prev) => ({ ...prev, amount }));
   }, [form.services, form.bookingFrom, form.bookingTo]);
 
-  // Modal closing on outside click has been intentionally removed to prevent accidental closes
-
+ 
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -103,22 +101,22 @@ export default function EditBookingModal({
     if (type === "file") {
       const file = files[0];
       if (file) {
-        // Validate that the file is a PDF
+
         if (
           name === "vaccinationCertificate" &&
           !file.type.match("application/pdf")
         ) {
           setError("Only PDF files are allowed.");
-          // Clear the file input so the invalid file isn't stored
+          
           e.target.value = "";
-          // Show popup alert
+        
           alert("Please select a PDF file only.");
           return;
         }
-        // Validate file size (1MB limit)
+        // file-1mb
         if (file.size > 1 * 1024 * 1024) {
           setError("File too large (max 1MB)");
-          // Clear the file input
+         
           e.target.value = "";
           alert("The file is too large. Maximum size is 1MB.");
           return;
@@ -137,19 +135,18 @@ export default function EditBookingModal({
 
     if (isSubmitting) return;
 
-    // Clear any previous errors
+  
     setError("");
 
-    // Comprehensive validation before proceeding
     if (!validateForm()) {
-      // Don't set a generic error here since validateForm may set specific errors
+
       if (!error) {
         setError("Please fill all required fields.");
       }
       return;
     }
 
-    // Explicitly check for vaccination certificate if pet is vaccinated
+    // check for vaccination certificate if pet is vaccinated
     if (petVaccinated) {
       if (form.vaccinationCertificate === null) {
         setError("Please upload a vaccination certificate.");
@@ -157,7 +154,7 @@ export default function EditBookingModal({
         return;
       }
 
-      // If it's a File object, validate it's a PDF and check size
+
       if (form.vaccinationCertificate instanceof File) {
         if (!form.vaccinationCertificate.type.match("application/pdf")) {
           setError("Only PDF files are allowed for vaccination certificate.");
@@ -165,7 +162,7 @@ export default function EditBookingModal({
           return;
         }
 
-        // Double-check file size again before submission (1MB limit)
+       
         if (form.vaccinationCertificate.size > 1 * 1024 * 1024) {
           setError("Vaccination certificate too large (max 1MB)");
           alert(
@@ -187,10 +184,9 @@ export default function EditBookingModal({
         return;
       }
 
-      // Prepare the updated booking data
       let finalCertificate = null;
 
-      // Log file info if it's a File instance
+ 
       if (petVaccinated && form.vaccinationCertificate instanceof File) {
         const file = form.vaccinationCertificate;
         console.log(
@@ -199,7 +195,6 @@ export default function EditBookingModal({
 
         finalCertificate = await convertFileToBase64(file);
 
-        // Log base64 size after conversion
         if (finalCertificate) {
           console.log(
             `Base64 size after conversion: ${(
@@ -211,7 +206,7 @@ export default function EditBookingModal({
         petVaccinated &&
         typeof form.vaccinationCertificate === "string"
       ) {
-        // Keep existing certificate
+
         finalCertificate = form.vaccinationCertificate;
         console.log(
           `Using existing certificate, length: ${(
@@ -224,12 +219,12 @@ export default function EditBookingModal({
         ...form,
         petVaccinated,
         vaccinationCertificate: finalCertificate,
-        amount: totalAmount, // Explicitly include the calculated amount
-        userId, // Keep track of who is making the edit
-        customerId: form.customerId, // Keep the selected customer
+        amount: totalAmount,
+        userId, 
+        customerId: form.customerId,
       };
 
-      // Ensure we're sending null when pet is not vaccinated
+
       if (!petVaccinated) {
         updatedBooking.vaccinationCertificate = null;
       }
@@ -279,7 +274,6 @@ export default function EditBookingModal({
     );
   };
 
-  // Add this to your imports if not already there
   const convertFileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -300,8 +294,7 @@ export default function EditBookingModal({
         <form onSubmit={handleSubmit}>
           <div className="modal-form-columns">
             <div className="modal-form-col">
-              {/* LEFT COLUMN */}
-              {/* Customer selection for staff users */}
+ 
               <CustomerSelect
                 value={form.customerId}
                 onChange={(customerId) =>
@@ -354,7 +347,7 @@ export default function EditBookingModal({
                     const today = new Date();
                     today.setHours(0, 0, 0, 0);
 
-                    // Don't allow future dates
+               
                     if (date > today) {
                       alert("Pet's date of birth cannot be in the future");
                       return;
@@ -365,13 +358,13 @@ export default function EditBookingModal({
                       (today.getTime() - date.getTime()) /
                       (365.25 * 24 * 60 * 60 * 1000);
 
-                    // Age validations based on pet type
+                
                     if (form.petType) {
                       const maxAges: { [key: string]: number } = {
-                        Dog: 25, // Maximum reasonable age for dogs
-                        Cat: 30, // Maximum reasonable age for cats
-                        Bird: 50, // Maximum reasonable age for common pet birds
-                        Rabbit: 15, // Maximum reasonable age for rabbits
+                        Dog: 25, 
+                        Cat: 30, 
+                        Bird: 50, 
+                        Rabbit: 15, 
                       };
 
                       if (ageInYears > maxAges[form.petType]) {
@@ -382,7 +375,7 @@ export default function EditBookingModal({
                       }
                     }
 
-                    // If validations pass, update the form
+                
                     setForm((f: any) => {
                       const age = Math.floor(ageInYears);
                       let ageString = "";
@@ -478,8 +471,7 @@ export default function EditBookingModal({
               </div>
             </div>
             <div className="modal-form-col">
-              {/* RIGHT COLUMN */}
-              {/* --- Booking Date From & To on the same row --- */}
+           
               <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
                 <div
                   style={{
@@ -783,7 +775,7 @@ export default function EditBookingModal({
                 onChange={() => {
                   const newVaccinatedStatus = !petVaccinated;
                   setPetVaccinated(newVaccinatedStatus);
-                  // Clear certificate immediately when toggling to "No"
+             
                   if (!newVaccinatedStatus) {
                     setForm((f) => ({ ...f, vaccinationCertificate: null }));
                   }
@@ -808,7 +800,7 @@ export default function EditBookingModal({
               {petVaccinated ? "Yes" : "No"}
             </span>
             <div style={{ flex: 1, minWidth: 0 }} />
-            {/* This pushes the next item to the right */}
+     
             {petVaccinated && (
               <label
                 style={{
@@ -827,7 +819,7 @@ export default function EditBookingModal({
                   type="file"
                   name="vaccinationCertificate"
                   accept=".pdf"
-                  onChange={handleChange} // Use the existing handleChange function
+                  onChange={handleChange} 
                   style={{
                     color: "#222",
                     background: "#fff",
@@ -979,7 +971,7 @@ export default function EditBookingModal({
   );
 }
 
-// Styles for amount section
+// Styles
 const amountContainerStyle: CSSProperties = {
   marginTop: "1.5rem",
   marginBottom: "1.5rem",

@@ -25,10 +25,10 @@ export default function About() {
       <section className="about-section">
         <h2>We Care For</h2>
         <div className="animal-types-single-card">
-          {/* Single card containing all animals in a row */}
+        
           <div className="animal-card-single">
             <div className="animal-row">
-              {/* Dog */}
+          
               <div className="animal-item">
                 <FaDog size={40} className="animal-icon" />
                 <div className="animal-text">
@@ -37,7 +37,7 @@ export default function About() {
                 </div>
               </div>
               
-              {/* Cat */}
+             
               <div className="animal-item">
                 <FaCat size={40} className="animal-icon" />
                 <div className="animal-text">
@@ -45,8 +45,7 @@ export default function About() {
                   <p>Private feline suites</p>
                 </div>
               </div>
-              
-              {/* Bird */}
+          
               <div className="animal-item">
                 <GiBirdTwitter size={40} className="animal-icon" />
                 <div className="animal-text">
@@ -55,7 +54,7 @@ export default function About() {
                 </div>
               </div>
               
-              {/* Rabbit */}
+          
               <div className="animal-item">
                 <FaCat size={40} className="animal-icon" />
                 <div className="animal-text">

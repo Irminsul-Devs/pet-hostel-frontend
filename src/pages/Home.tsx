@@ -8,7 +8,7 @@ export default function Home() {
 
   return (
     <>
-      {/* VIDEO MUST BE OUTSIDE .home-container */}
+ 
       <video autoPlay loop muted playsInline className="home-video-bg">
         <source src="/assets/videos/p1.mp4" type="video/mp4" />
         Your browser does not support the video tag.

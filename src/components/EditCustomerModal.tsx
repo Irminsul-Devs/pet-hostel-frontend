@@ -12,33 +12,32 @@ const parseDate = (dateString: string) => {
 };
 
 const isValidDateFormat = (dateStr: string): boolean => {
-  // Check if empty or follows YYYY-MM-DD format
+
   if (!dateStr || !/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
     return false;
   }
 
   const [year, month, day] = dateStr.split("-").map(Number);
 
-  // Check year range
+
   if (year < 1900 || year > 2100) return false;
 
-  // Check month range
+
   if (month < 1 || month > 12) return false;
 
-  // Get last day of the month
+
   const lastDay = new Date(year, month, 0).getDate();
 
-  // Check day range
+
   if (day < 1 || day > lastDay) return false;
 
   return true;
 };
 
 const formatDateInput = (input: string): string => {
-  // Remove any non-digit characters first
+
   const digits = input.replace(/\D/g, "");
 
-  // Format as YYYY-MM-DD while typing
   if (digits.length <= 4) {
     return digits;
   }
