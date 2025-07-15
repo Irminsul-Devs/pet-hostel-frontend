@@ -94,34 +94,35 @@ export default function AddStaffModal({ initialData, onClose, onSave }: Props) {
           </div>
 
           {/* Date of Birth */}
- <div className="input-group" style={{ position: "relative" }}>
-  <ReactDatePicker
-    selected={formData.dob ? new Date(formData.dob) : null}
-    onChange={handleDateChange}
-    dateFormat="yyyy-MM-dd"
-    maxDate={new Date()}
-    showMonthDropdown
-    showYearDropdown
-    dropdownMode="select"
-    placeholderText=" " // <-- just a blank space
-    className={`date-picker-input ${formData.dob ? "filled" : ""}`} // for label float
-    popperPlacement="bottom-start"
-    required
-  />
-  <label className={formData.dob ? "active" : ""}>Date of Birth</label>
-  <FaRegCalendarAlt
-    style={{
-      position: "absolute",
-      right: "10px",
-      top: "50%",
-      transform: "translateY(-50%)",
-      color: "#1ab3f0",
-      fontSize: "1.2em",
-      pointerEvents: "none",
-    }}
-  />
-</div>
-
+          <div className="input-group" style={{ position: "relative" }}>
+            <ReactDatePicker
+              selected={formData.dob ? new Date(formData.dob) : null}
+              onChange={handleDateChange}
+              dateFormat="yyyy-MM-dd"
+              maxDate={new Date()}
+              showMonthDropdown
+              showYearDropdown
+              dropdownMode="select"
+              placeholderText=" " // <-- just a blank space
+              className={`date-picker-input ${formData.dob ? "filled" : ""}`} // for label float
+              popperPlacement="bottom-start"
+              required
+            />
+            <label className={formData.dob ? "active" : ""}>
+              Date of Birth
+            </label>
+            <FaRegCalendarAlt
+              style={{
+                position: "absolute",
+                right: "10px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                color: "#1ab3f0",
+                fontSize: "1.2em",
+                pointerEvents: "none",
+              }}
+            />
+          </div>
 
           <div className="input-group">
             <input
@@ -180,11 +181,20 @@ export default function AddStaffModal({ initialData, onClose, onSave }: Props) {
             className="modal-buttons"
             style={{
               display: "flex",
-              justifyContent: "flex-end",
+              justifyContent: "center",
               marginTop: "1rem",
+              width: "100%", 
             }}
           >
-            <button type="submit">{initialData ? "Save" : "Submit"}</button>
+            <button
+              style={{
+                padding: "10px 40px", 
+                minWidth: "300px", 
+              }}
+              type="submit"
+            >
+              {initialData ? "Save" : "Submit"}
+            </button>
           </div>
         </form>
       </div>
