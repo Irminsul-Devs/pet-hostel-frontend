@@ -323,7 +323,7 @@ export default function AdminDashboard() {
                 <input
                   type="text"
                   className="adsearch-input"
-                  placeholder="Search..."
+                  placeholder="Search by owner name..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   style={{
@@ -417,7 +417,7 @@ export default function AdminDashboard() {
                 <input
                   type="text"
                   className="adsearch-input"
-                  placeholder="Search by ..."
+                  placeholder="Search by name..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
