@@ -1,14 +1,17 @@
 import { useState, useEffect } from "react";
 import "../styles/Modal.css";
+import ReactDatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { FaRegCalendarAlt } from "react-icons/fa";
 
 export type StaffData = {
-  id?: number; // <-- add this
+  id?: number;
   name: string;
   dob: string;
   address: string;
   email: string;
   mobile: string;
-  password?: string; // optional during edit
+  password?: string;
 };
 
 type Props = {
@@ -26,19 +29,15 @@ export default function AddStaffModal({ initialData, onClose, onSave }: Props) {
     mobile: "",
     password: "",
   });
+
   useEffect(() => {
     if (initialData) {
       setFormData({
         ...initialData,
-        dob: initialData.dob.split("T")[0], // ✅ Strip time part for date input
+        dob: initialData.dob.split("T")[0],
       });
     }
   }, [initialData]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
 
   const isAtLeast18 = (dob: string) => {
     const today = new Date();
@@ -55,8 +54,21 @@ export default function AddStaffModal({ initialData, onClose, onSave }: Props) {
       alert("Staff must be at least 18 years old.");
       return;
     }
-    // Delegate API call to parent
     onSave(formData);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleDateChange = (date: Date | null) => {
+    if (date) {
+      setFormData((prev) => ({
+        ...prev,
+        dob: date.toISOString().split("T")[0],
+      }));
+    }
   };
 
   return (
@@ -65,7 +77,9 @@ export default function AddStaffModal({ initialData, onClose, onSave }: Props) {
         <button className="modal-close" onClick={onClose}>
           ✕
         </button>
-        <h2>{initialData ? "Edit Staff" : "Add Staff"}</h2>
+        <h2 style={{ textAlign: "center" }}>
+          {initialData ? "Edit Staff" : "Add Staff"}
+        </h2>
         <form onSubmit={handleSubmit}>
           <div className="input-group">
             <input
@@ -79,18 +93,35 @@ export default function AddStaffModal({ initialData, onClose, onSave }: Props) {
             <label>Name</label>
           </div>
 
-          <div className="input-group">
-            <input
-              type="date"
-              name="dob"
-              value={formData.dob}
-              onChange={handleChange}
-              required
-              placeholder=" "
-              max={new Date().toISOString().split("T")[0]}
-              min="1900-01-01"
-            />
-          </div>
+          {/* Date of Birth */}
+ <div className="input-group" style={{ position: "relative" }}>
+  <ReactDatePicker
+    selected={formData.dob ? new Date(formData.dob) : null}
+    onChange={handleDateChange}
+    dateFormat="yyyy-MM-dd"
+    maxDate={new Date()}
+    showMonthDropdown
+    showYearDropdown
+    dropdownMode="select"
+    placeholderText=" " // <-- just a blank space
+    className={`date-picker-input ${formData.dob ? "filled" : ""}`} // for label float
+    popperPlacement="bottom-start"
+    required
+  />
+  <label className={formData.dob ? "active" : ""}>Date of Birth</label>
+  <FaRegCalendarAlt
+    style={{
+      position: "absolute",
+      right: "10px",
+      top: "50%",
+      transform: "translateY(-50%)",
+      color: "#1ab3f0",
+      fontSize: "1.2em",
+      pointerEvents: "none",
+    }}
+  />
+</div>
+
 
           <div className="input-group">
             <input
@@ -147,12 +178,13 @@ export default function AddStaffModal({ initialData, onClose, onSave }: Props) {
 
           <div
             className="modal-buttons"
-            style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginTop: "1rem",
+            }}
           >
             <button type="submit">{initialData ? "Save" : "Submit"}</button>
-            <button type="button" onClick={onClose}>
-              Cancel
-            </button>
           </div>
         </form>
       </div>
