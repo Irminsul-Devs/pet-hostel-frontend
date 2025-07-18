@@ -5,12 +5,15 @@
   background-color: transparent;
   color: white;
   padding: 2rem;
-  padding-top: 70px; 
+  padding-top: 70px;
   text-align: left;
 
   position: relative;
   z-index: 0;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 /* Overlay */
@@ -29,7 +32,8 @@
 .home-title {
   font-size: 2.5rem;
   color: #ffffff;
-  text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.7), 0 2px 12px rgba(0, 0, 0, 0.5);
+  text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.7),
+               0 2px 12px rgba(0, 0, 0, 0.5);
 }
 
 .book-button {
@@ -41,13 +45,17 @@
   border: none;
   color: #ffffff;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.book-button:hover {
+  background-color: #222;
 }
 
 .home-content {
-  margin-top: 3rem;
+  margin-top: 2rem;
   font-size: 1rem;
   max-width: 520px;
-  text-align: left;
   line-height: 1.7;
 }
 
@@ -63,8 +71,56 @@
   inset: 0;
   width: 100vw;
   height: 100vh;
-  object-fit: fill;
+  object-fit: cover;
   z-index: -2;
   pointer-events: none;
   background: #000;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 768px) {
+  .home-title {
+    font-size: 2rem;
+  }
+
+  .book-button {
+    font-size: 0.9rem;
+    padding: 0.6rem 1.2rem;
+  }
+
+  .home-content {
+    font-size: 0.95rem;
+    max-width: 100%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .home-container {
+    padding: 1.2rem;
+    padding-top: 70px;
+    align-items: center;
+    text-align: center;
+  }
+
+  .home-title {
+    font-size: 1.6rem;
+  }
+
+  .home-content {
+    font-size: 0.9rem;
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+
+  .book-button {
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .home-image {
+    margin-top: 1rem;
+    max-width: 90%;
+  }
 }
