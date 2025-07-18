@@ -283,34 +283,31 @@ export default function UserDashboard() {
                         {formatDate(booking.bookingFrom)} - {formatDate(booking.bookingTo)}
                       </td>
                       <td>{booking.services.join(", ")}</td>
-                      <td>{booking.remarks}</td>
-                      <td>
+                      <td>{booking.remarks || "N/A"}</td>
+                      <td className="action-cell">
+                        <div
+                            style={{
+                              display: "flex",
+                              gap: "8px",
+                              alignItems: "center",
+                            }}
+                          >
                         <button
                           title="More Info"
-                          style={{
-                            background: "none",
-                            border: "none",
-                            cursor: "pointer",
-                            color: "#1ab3f0",
-                          }}
+                          className="icon-btn info-btn"
                           onClick={() => setInfoBooking(booking)}
                         >
-                          <MdInfoOutline size={22} />
+                          <MdInfoOutline size={20} />
                         </button>
-                        <button title="Delete Booking" style={{
-                          background: "none",
-                          border: "none",
-                          cursor: "pointer",
-                          color: "#e74c3c",
-                        }}
+                        <button title="Delete Booking"className="icon-btn delete-btn"
                           onClick={() => {
                             setBookingToDelete(booking);
                             setShowDeleteModal(true);
                           }}
                         >
-                          <MdDelete size={22} />
+                          <MdDelete size={18} />
                         </button>
-
+                        </div>
                       </td>
                     </tr>
                   ))
