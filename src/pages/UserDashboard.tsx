@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import type { User, Booking } from "../types";
-import "../styles/UserDashboard.css"; 
+import "../styles/UserDashboard.css";
 import UserNavbar from "../components/UserNavbar";
 import BookingInfoModal from "../components/BookingInfoModal";
 import CustomerBookingModal from "../components/CustomerBookingModal";
 import UserProfileModal from "../components/UserProfileModal";
-import { MdInfoOutline,MdDelete } from "react-icons/md";
+import { MdInfoOutline, MdDelete } from "react-icons/md";
 import DeleteBookingModal from "../components/DeleteBookingModal";
 
 export default function UserDashboard() {
@@ -18,7 +18,7 @@ export default function UserDashboard() {
   const [monthlyAmount, setMonthlyAmount] = useState<number>(0);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [bookingToDelete, setBookingToDelete] = useState<Booking | null>(null);
- 
+
   const refreshUser = () => {
     const stored = localStorage.getItem("user");
     if (stored) setUser(JSON.parse(stored));
@@ -27,7 +27,7 @@ export default function UserDashboard() {
   useEffect(() => {
     refreshUser();
     fetchBookings();
-    
+
     // Check for user changes every second
     const interval = setInterval(refreshUser, 1000);
     return () => clearInterval(interval);
@@ -45,42 +45,42 @@ export default function UserDashboard() {
       const data = await response.json();
 
       const transformed: Booking[] = data.map((b: any) => ({
-  id: b.id,
-  bookingDate: b.booking_date,
-  remarks: b.remarks,
-  petName: b.pet_name,
-  petType: b.pet_type,
-  bookingFrom: b.booking_from,
-  bookingTo: b.booking_to,
-  services: Array.isArray(b.services) ? b.services : [],
-  petDob: b.pet_dob,
-  petAge: b.pet_age,
-  petFood: b.pet_food,
-  vaccinationCertificate: b.vaccination_certificate,
-  petVaccinated: Boolean(b.pet_vaccinated),
-  amount: b.amount,
-  userId: b.user_id,
-  customerId: b.customer_id,
-  customer: b.customer,
-}));
+        id: b.id,
+        bookingDate: b.booking_date,
+        remarks: b.remarks,
+        petName: b.pet_name,
+        petType: b.pet_type,
+        bookingFrom: b.booking_from,
+        bookingTo: b.booking_to,
+        services: Array.isArray(b.services) ? b.services : [],
+        petDob: b.pet_dob,
+        petAge: b.pet_age,
+        petFood: b.pet_food,
+        vaccinationCertificate: b.vaccination_certificate,
+        petVaccinated: Boolean(b.pet_vaccinated),
+        amount: b.amount,
+        userId: b.user_id,
+        customerId: b.customer_id,
+        customer: b.customer,
+      }));
 
-const now = new Date();
-const currentMonth = now.getMonth();
-const currentYear = now.getFullYear();
+      const now = new Date();
+      const currentMonth = now.getMonth();
+      const currentYear = now.getFullYear();
 
-const totalThisMonth = transformed
-  .filter((b) => {
-    const booking = new Date(b.bookingDate);
-    return (
-      booking.getMonth() === currentMonth &&
-      booking.getFullYear() === currentYear
-    );
-  })
-  .reduce((sum, b) => sum + (typeof b.amount === "number" ? b.amount : Number(b.amount) || 0), 0);
+      const totalThisMonth = transformed
+        .filter((b) => {
+          const booking = new Date(b.bookingDate);
+          return (
+            booking.getMonth() === currentMonth &&
+            booking.getFullYear() === currentYear
+          );
+        })
+        .reduce((sum, b) => sum + (typeof b.amount === "number" ? b.amount : Number(b.amount) || 0), 0);
 
-setMonthlyAmount(totalThisMonth);
+      setMonthlyAmount(totalThisMonth);
 
-setBookings(transformed);
+      setBookings(transformed);
 
 
     } catch (err) {
@@ -146,38 +146,38 @@ setBookings(transformed);
     }
   };
   const handleDeleteBooking = async () => {
-  if (!bookingToDelete) return;
-  try {
-    const token = localStorage.getItem("token");
-    const response = await fetch(`http://localhost:5000/api/bookings/${bookingToDelete.id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    if (!bookingToDelete) return;
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`http://localhost:5000/api/bookings/${bookingToDelete.id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-    if (!response.ok) throw new Error("Failed to delete booking");
+      if (!response.ok) throw new Error("Failed to delete booking");
 
-    setBookings((prev) => prev.filter((b) => b.id !== bookingToDelete.id));
-    setShowDeleteModal(false);
-    setBookingToDelete(null);
-  } catch (err) {
-    console.error("Error deleting booking:", err);
-    alert(err instanceof Error ? err.message : "Failed to delete booking");
-  }
-};
-const getPetIcon = (type: string) => {
-  switch (type.toLowerCase()) {
-    case "cat":
-      return "🐱";
-    case "dog":
-      return "🐶";
-    case "bird":
-      return "🐦";
-    default:
-      return "🐾"; 
-  }
-};
+      setBookings((prev) => prev.filter((b) => b.id !== bookingToDelete.id));
+      setShowDeleteModal(false);
+      setBookingToDelete(null);
+    } catch (err) {
+      console.error("Error deleting booking:", err);
+      alert(err instanceof Error ? err.message : "Failed to delete booking");
+    }
+  };
+  const getPetIcon = (type: string) => {
+    switch (type.toLowerCase()) {
+      case "cat":
+        return "🐱";
+      case "dog":
+        return "🐶";
+      case "bird":
+        return "🐦";
+      default:
+        return "🐾";
+    }
+  };
 
 
   return (
@@ -207,51 +207,51 @@ const getPetIcon = (type: string) => {
                 <p>{bookings.filter(b => new Date(b.bookingFrom) > new Date()).length}</p>
               </div>
               <div className="card">
-                  <h3>Monthly Spending</h3>
-                  <p>₹{monthlyAmount.toFixed(2)}</p>
+                <h3>Monthly Spending</h3>
+                <p>₹{monthlyAmount.toFixed(2)}</p>
               </div>
             </div>
 
-<h2 className="section-title">Your Pets Appointments</h2>
-<div className="pet-c">
-  {bookings.filter(b => new Date(b.bookingTo) >= new Date()).length > 0 ? (
-    bookings
-      .filter(b => new Date(b.bookingTo) >= new Date())
-      .map((booking) => (
-        <div key={booking.id} className="pet-card">
-          <h3>{getPetIcon(booking.petType)} {booking.petName}</h3>
-          <p><strong>Type:</strong> {booking.petType} &nbsp;&nbsp; <strong>Age:</strong> {booking.petAge}</p>
-          <p><strong>Vaccinated:</strong> {booking.petVaccinated ? "Yes" : "No"}</p>
-          <p><strong>Booking Period:</strong><br></br> {formatDate(booking.bookingFrom)} – {formatDate(booking.bookingTo)}</p>
-        </div>
-      ))
-  ) : (
-    <p style={{ fontSize: "1.2rem", color: "#999", textAlign: "center", width: "140%" }}>
-      🐾 No active appointments at the moment.
-    </p>
-  )}
-</div>
+            <h2 className="section-titleh2">Your Pets Appointments</h2>
+            <div className="pet-c">
+              {bookings.filter(b => new Date(b.bookingTo) >= new Date()).length > 0 ? (
+                bookings
+                  .filter(b => new Date(b.bookingTo) >= new Date())
+                  .map((booking) => (
+                    <div key={booking.id} className="pet-card">
+                      <h3>{getPetIcon(booking.petType)} {booking.petName}</h3>
+                      <p><strong>Type:</strong> {booking.petType} &nbsp;&nbsp; <strong>Age:</strong> {booking.petAge}</p>
+                      <p><strong>Vaccinated:</strong> {booking.petVaccinated ? "Yes" : "No"}</p>
+                      <p><strong>Booking Period:</strong><br></br> {formatDate(booking.bookingFrom)} – {formatDate(booking.bookingTo)}</p>
+                    </div>
+                  ))
+              ) : (
+                <p style={{ fontSize: "1.2rem", color: "#999", textAlign: "center", width: "140%" }}>
+                  🐾 No active appointments at the moment.
+                </p>
+              )}
+            </div>
 
-<br></br>
- <h2 className="section-title">Available Services & Pricing</h2>
-<div className="services-card-container">
-  <div className="service-cards">
-    <h4>🐾 Boarding</h4>
-    <p>₹35.00 <span className="unit">/ day</span></p>
-  </div>
-  <div className="service-cards">
-    <h4>✂️ Grooming</h4>
-    <p>₹45.00 <span className="unit">/ day</span></p>
-  </div>
-  <div className="service-cards">
-    <h4>🎓 Training</h4>
-    <p>₹50.00 <span className="unit">/ day</span></p>
-  </div>
-  <div className="service-cards">
-    <h4>🍼 Day Care</h4>
-    <p>₹25.00 <span className="unit">/ day</span></p>
-  </div>
-</div>
+            <br></br>
+            <h2 className="section-title">Available Services & Pricing</h2>
+            <div className="services-card-container">
+              <div className="service-cards">
+                <h4>🐾 Boarding</h4>
+                <p>₹35.00 <span className="unit">/ day</span></p>
+              </div>
+              <div className="service-cards">
+                <h4>✂️ Grooming</h4>
+                <p>₹45.00 <span className="unit">/ day</span></p>
+              </div>
+              <div className="service-cards">
+                <h4>🎓 Training</h4>
+                <p>₹50.00 <span className="unit">/ day</span></p>
+              </div>
+              <div className="service-cards">
+                <h4>🍼 Day Care</h4>
+                <p>₹25.00 <span className="unit">/ day</span></p>
+              </div>
+            </div>
           </div>
         ) : (
           <>
@@ -283,34 +283,31 @@ const getPetIcon = (type: string) => {
                         {formatDate(booking.bookingFrom)} - {formatDate(booking.bookingTo)}
                       </td>
                       <td>{booking.services.join(", ")}</td>
-                      <td>{booking.remarks}</td>
-                      <td>
+                      <td>{booking.remarks || "N/A"}</td>
+                      <td className="action-cell">
+                        <div
+                            style={{
+                              display: "flex",
+                              gap: "8px",
+                              alignItems: "center",
+                            }}
+                          >
                         <button
                           title="More Info"
-                          style={{
-                            background: "none",
-                            border: "none",
-                            cursor: "pointer",
-                            color: "#1ab3f0",
-                          }}
+                          className="icon-btn info-btn"
                           onClick={() => setInfoBooking(booking)}
                         >
-                          <MdInfoOutline size={22} />
+                          <MdInfoOutline size={20} />
                         </button>
-                             <button title="Delete Booking" style={{
-                                                                     background: "none",
-                                                                     border: "none",
-                                                                     cursor: "pointer",
-                                                                     color: "#e74c3c",
-                                                                                        }}
-                             onClick={() => {
-                                             setBookingToDelete(booking);
-                                             setShowDeleteModal(true);
-                                             }}
-                            >
-                            <MdDelete size={22} />
-                            </button>
-                        
+                        <button title="Delete Booking"className="icon-btn delete-btn"
+                          onClick={() => {
+                            setBookingToDelete(booking);
+                            setShowDeleteModal(true);
+                          }}
+                        >
+                          <MdDelete size={18} />
+                        </button>
+                        </div>
                       </td>
                     </tr>
                   ))
@@ -347,11 +344,11 @@ const getPetIcon = (type: string) => {
         />
       )}
       {showDeleteModal && bookingToDelete && (
-  <DeleteBookingModal
-    onCancel={() => setShowDeleteModal(false)}
-    onConfirm={handleDeleteBooking}
-  />
-)}
+        <DeleteBookingModal
+          onCancel={() => setShowDeleteModal(false)}
+          onConfirm={handleDeleteBooking}
+        />
+      )}
 
     </>
   );
