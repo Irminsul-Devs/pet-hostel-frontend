@@ -103,12 +103,30 @@ export default function AddStaffModal({ initialData, onClose, onSave }: Props) {
               showMonthDropdown
               showYearDropdown
               dropdownMode="select"
-              placeholderText=" " // <-- just a blank space
+              placeholderText=" "
               className={`date-picker-input ${formData.dob ? "filled" : ""}`} // for label float
               popperPlacement="bottom-start"
               required
+              
             />
-            <label className={formData.dob ? "active" : ""}>
+            <label
+              style={{
+                position: "absolute",
+                left: "0.75rem",
+                top: formData.dob ? "-0.5rem" : "1rem",
+                fontSize: formData.dob ? "0.75rem" : "0.8rem",
+                color: formData.dob ? "#1ab3f0" : "#888",
+                background: formData.dob ? "#fff" : "transparent",
+                padding: "0 0.3rem",
+                pointerEvents: "none",
+                transition: "top 0.25s, font-size 0.25s, color 0.25s, background 0.25s",
+                zIndex: 2,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                maxWidth: "calc(100% - 1.5rem)",
+              }}
+              >
               Date of Birth
             </label>
             <FaRegCalendarAlt

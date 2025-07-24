@@ -11,7 +11,8 @@ import DeleteCustomerModal from "../components/DeleteCustomerModal";
 import { MdInfoOutline, MdEdit, MdDelete } from "react-icons/md";
 import type { User, Booking } from "../types";
 
-// to make TypeScript recognize HTML elements in JSX
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
+
 declare namespace JSX {
   interface IntrinsicElements {
     div: React.DetailedHTMLProps<
@@ -192,7 +193,7 @@ export default function StaffDashboard() {
           // The backend should handle authorization and return all bookings for staff users
           // Fetch bookings and include customer details
           const response = await fetch(
-            "http://localhost:5000/api/bookings/all?include=customer",
+            `${API_BASE}/api/bookings/all?include=customer`,
             {
               headers: { Authorization: `Bearer ${token}` },
             }
@@ -268,7 +269,7 @@ export default function StaffDashboard() {
       const token = localStorage.getItem("token");
       try {
         const response = await fetch(
-          "http://localhost:5000/api/auth/users/role/customer",
+          `${API_BASE}/api/auth/users/role/customer`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -304,7 +305,7 @@ export default function StaffDashboard() {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch("http://localhost:5000/api/bookings", {
+      const response = await fetch(`${API_BASE}/api/bookings`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -369,7 +370,7 @@ export default function StaffDashboard() {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `http://localhost:5000/api/bookings/${updatedBooking.id}`,
+        `${API_BASE}/api/bookings/${updatedBooking.id}`,
         {
           method: "PUT",
           headers: {
@@ -460,7 +461,7 @@ export default function StaffDashboard() {
       const token = localStorage.getItem("token");
       console.log("Authorization token present:", !!token);
 
-      const response = await fetch(`http://localhost:5000/api/bookings/${id}`, {
+      const response = await fetch(`${API_BASE}/api/bookings/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -543,7 +544,7 @@ export default function StaffDashboard() {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        `http://localhost:5000/api/auth/user/${customerToDelete.id}`,
+        `${API_BASE}/api/auth/user/${customerToDelete.id}`,
         {
           method: "DELETE",
           headers: {
@@ -617,7 +618,7 @@ export default function StaffDashboard() {
       console.log("Updating customer:", customerToUpdate); 
 
       const response = await fetch(
-        `http://localhost:5000/api/auth/user/${updatedCustomer.id}`,
+        `${API_BASE}/api/auth/user/${updatedCustomer.id}`,
         {
           method: "PUT",
           headers: {

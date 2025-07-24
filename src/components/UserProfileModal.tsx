@@ -5,6 +5,8 @@ import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FaRegCalendarAlt } from "react-icons/fa";
 
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
+
 type Props = {
   onClose: () => void;
 };
@@ -27,7 +29,7 @@ export default function UserProfileModal({ onClose }: Props) {
 
   useEffect(() => {
     if (!storedUser?.id) return;
-    fetch(`http://localhost:5000/api/auth/user/${storedUser.id}`)
+    fetch(`${API_BASE}/api/auth/user/${storedUser.id}`)
       .then((res) => res.json())
       .then((data) => {
         setForm({
@@ -122,7 +124,7 @@ export default function UserProfileModal({ onClose }: Props) {
       console.log("Request data:", requestData);
 
       const res = await fetch(
-        `http://localhost:5000/api/auth/user/${storedUser.id}`,
+        `${API_BASE}/api/auth/user/${storedUser.id}`,
         {
           method: "PUT",
           headers: {

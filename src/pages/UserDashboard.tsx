@@ -8,6 +8,8 @@ import UserProfileModal from "../components/UserProfileModal";
 import { MdInfoOutline, MdDelete } from "react-icons/md";
 import DeleteBookingModal from "../components/DeleteBookingModal";
 
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
+
 export default function UserDashboard() {
   const [user, setUser] = useState<User | null>(null);
   const [activeTab, setActiveTab] = useState<"dashboard" | "bookings">("dashboard");
@@ -35,7 +37,7 @@ export default function UserDashboard() {
   const fetchBookings = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:5000/api/bookings", {
+      const response = await fetch(`${API_BASE}/api/bookings`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -105,7 +107,7 @@ export default function UserDashboard() {
   const handleCreateBooking = async (newBooking: any) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:5000/api/bookings", {
+      const response = await fetch(`${API_BASE}/api/bookings`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -149,7 +151,7 @@ export default function UserDashboard() {
     if (!bookingToDelete) return;
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`http://localhost:5000/api/bookings/${bookingToDelete.id}`, {
+      const response = await fetch(`${API_BASE}/api/bookings/${bookingToDelete.id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

@@ -28,34 +28,50 @@ Modern web interface for pet boarding management with role-based dashboards.
 ## 🛠️ Installation
 
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/Irminsul-Devs/pet-hostel-frontend.git
    cd pet-hostel-frontend
    ```
 
 2. **Install dependencies:**
+
    ```bash
    npm install
    ```
 
-3. **Configure environment (optional):**
-   ```bash
-   cp .env.example .env
-   ```
-   Edit `.env` to set your API endpoint:
+3. **Configure environment variables:**
+
+   - Copy the example file:
+     ```bash
+     cp .env.example .env
+     ```
+   - Edit `.env` to set your API endpoint:
+
+     ```ini
+     VITE_BACKEND_URL=http://localhost:5000
+     ```
+
+   - `.env.example` is provided as a template. Always keep it updated with all required variables for deployment and development.
+
+   **Example .env.example:**
+
    ```ini
-   VITE_API_URL=http://localhost:5000
+   VITE_BACKEND_URL=http://localhost:5000
    ```
 
 ## 🚀 Running the App
 
 **Development server:**
+
 ```bash
 npm run dev
 ```
+
 Access at: `http://localhost:5173`
 
 **Production build:**
+
 ```bash
 npm run build
 npm run preview
@@ -81,6 +97,7 @@ pet-hostel-frontend/
 ## 🔌 Backend Integration
 
 Configure your API base URL:
+
 ```ini
 VITE_API_URL=http://your-backend:5000/api
 ```
