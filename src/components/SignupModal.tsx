@@ -4,6 +4,8 @@ import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FaRegCalendarAlt } from "react-icons/fa";
 
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
+
 const parseDate = (dateString: string) => {
   if (!dateString) return null;
   const date = new Date(dateString);
@@ -109,7 +111,7 @@ export default function SignupModal({
     };
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/signup", {
+      const res = await fetch(`${API_BASE}/api/auth/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

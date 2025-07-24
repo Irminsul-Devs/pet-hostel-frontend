@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import "../styles/Modal.css";
 
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
+
 type Props = {
   onClose: () => void;
 };
@@ -59,7 +61,7 @@ export default function ChangePasswordModal({ onClose }: Props) {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        `http://localhost:5000/api/auth/change-password/${storedUser.id}`,
+        `${API_BASE}/api/auth/change-password/${storedUser.id}`,
         {
           method: "PUT",
           headers: {

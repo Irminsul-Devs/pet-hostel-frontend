@@ -7,6 +7,8 @@ import BookingInfoModal from "../components/BookingInfoModal";
 import DeleteConfirmModal from "../components/DeleteConfirmModal";
 import { MdInfoOutline, MdEdit, MdDelete } from "react-icons/md";
 
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
+
 export default function AdminDashboard() {
   const [user, setUser] = useState<{ name?: string } | null>(null);
   const [activeTab, setActiveTab] = useState<
@@ -40,7 +42,7 @@ export default function AdminDashboard() {
 
   const fetchStaff = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/auth/staff");
+      const res = await fetch(`${API_BASE}/api/auth/staff`);
       const data = await res.json();
       setStaff(data);
     } catch (err) {
@@ -52,7 +54,7 @@ export default function AdminDashboard() {
     try {
       const token = localStorage.getItem("token");
       const res = await fetch(
-        "http://localhost:5000/api/analytics/admin-dashboard",
+        `${API_BASE}/api/analytics/admin-dashboard`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -70,7 +72,7 @@ export default function AdminDashboard() {
     const token = localStorage.getItem("token");
 
     try {
-      const res = await fetch("http://localhost:5000/api/bookings/all", {
+      const res = await fetch(`${API_BASE}/api/bookings/all`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -119,7 +121,7 @@ export default function AdminDashboard() {
   const fetchBookings = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/bookings/all", {
+      const res = await fetch(`${API_BASE}/api/bookings/all`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -508,7 +510,7 @@ export default function AdminDashboard() {
               let result;
               if (editStaff) {
                 const res = await fetch(
-                  `http://localhost:5000/api/auth/update-staff/${editStaff.id}`,
+                  `${API_BASE}/api/auth/update-staff/${editStaff.id}`,
                   {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
@@ -523,7 +525,7 @@ export default function AdminDashboard() {
                 alert("Staff updated successfully");
               } else {
                 const res = await fetch(
-                  "http://localhost:5000/api/auth/add-staff",
+                  `${API_BASE}/api/auth/add-staff`,
                   {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },

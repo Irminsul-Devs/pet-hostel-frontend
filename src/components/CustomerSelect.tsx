@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import Select from "react-select";
 import type { User } from "../types";
 
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
+
 type CustomerSelectProps = {
   value?: number;
   onChange: (customerId: number) => void;
@@ -36,7 +38,7 @@ export default function CustomerSelect({
         console.log("Fetching customers with token:", token); // Debug log
 
         const response = await fetch(
-          "http://localhost:5000/api/auth/customers",
+          `${API_BASE}/api/auth/customers`,
           {
             method: "GET",
             headers: {

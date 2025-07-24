@@ -2,6 +2,8 @@ import { useRef, useEffect, useState } from "react";
 import "../styles/Modal.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
+
 type Props = {
   onClose: () => void;
   onBackToLogin: () => void;
@@ -69,7 +71,7 @@ export default function ResetPasswordModal({
       // If we have userId directly (admin resetting staff password)
       if (userId) {
         resetResponse = await fetch(
-          "http://localhost:5000/api/auth/reset-password",
+          `${API_BASE}/api/auth/reset-password`,
           {
             method: "POST",
             headers: {
@@ -85,7 +87,7 @@ export default function ResetPasswordModal({
       } else {
         // Email-based reset (for users who forgot password)
         resetResponse = await fetch(
-          "http://localhost:5000/api/auth/reset-password-by-email",
+          `${API_BASE}/api/auth/reset-password-by-email`,
           {
             method: "POST",
             headers: {
