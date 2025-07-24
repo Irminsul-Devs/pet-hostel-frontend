@@ -8,18 +8,19 @@ export default function About() {
   return (
     <div className="about-container">
       <Navbar />
-      <section className="about-hero">
-        <p>Your pet's home away from home since 2015</p>
-      </section>
 
+<section className="about-hero"></section>
       <section className="about-section">
         <h2>Our Story🐾</h2>
         <p>
-          Founded by animal lovers, Paws & Relax was born from a simple idea: pets deserve 
+          Founded by animal lovers, our hostel was born from a simple idea: pets deserve 
           exceptional care when their families are away. What started as a small boarding 
           facility has grown into the region's most trusted pet hostel with a 98% customer 
           satisfaction rate.
         </p>
+      </section>
+      <section className="about-hero">
+        <p></p>
       </section>
 
       <section className="about-section">

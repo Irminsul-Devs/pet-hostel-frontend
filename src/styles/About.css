@@ -50,14 +50,13 @@
 }
 
  .service-card {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('pet-hostel.jpg');
-  backdrop-filter: blur(2px);
+  background:rgba(0,0,0,0);
+  backdrop-filter: blur(5px);
   padding: 0.5rem;
   border-radius: 23px;
   text-align: center;
   transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 4px 6px rgba(143, 77, 77, 0.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin-left: 15%;
 }
 .animal-card:hover, .service-card:hover {
@@ -120,7 +119,7 @@
   margin-bottom: 1rem;
   margin-top: 0.1rem;
   font-size: 1.8rem;
-  color: #00060b;
+  color: #ffffff;
   position: relative;
 }
 
@@ -216,7 +215,8 @@
 }
 
 .animal-card-single {
-   background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('pet-hostel.jpg');
+  background: rgba(0,0,0,0.1);
+  backdrop-filter: blur(2px);
   border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 2rem;
