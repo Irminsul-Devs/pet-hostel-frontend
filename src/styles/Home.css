@@ -1,7 +1,7 @@
 /* Home.css */
 
 .home-container {
-  min-height: 100vh;
+  /* min-height: 100vh; */
   background-color: transparent;
   color: white;
   padding: 2rem;
@@ -124,3 +124,5 @@
     max-width: 90%;
   }
 }
+
+

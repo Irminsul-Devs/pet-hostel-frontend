@@ -13,32 +13,25 @@ const parseDate = (dateString: string) => {
 };
 
 const isValidDateFormat = (dateStr: string): boolean => {
- 
   if (!dateStr || !/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
     return false;
   }
 
   const [year, month, day] = dateStr.split("-").map(Number);
 
-
   if (year < 1900 || year > 2100) return false;
 
-  
   if (month < 1 || month > 12) return false;
 
-  
   const lastDay = new Date(year, month, 0).getDate();
 
-  
   if (day < 1 || day > lastDay) return false;
 
   return true;
 };
 
 const formatDateInput = (input: string): string => {
-  
   const digits = input.replace(/\D/g, "");
-
 
   if (digits.length <= 4) {
     return digits;
@@ -71,7 +64,6 @@ export default function SignupModal({
     ownerAddress: "",
   });
 
-  
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -141,7 +133,14 @@ export default function SignupModal({
           ✕
         </button>
         <h2>Sign Up</h2>
-        <form onSubmit={handleSignup}>
+        <form
+          onSubmit={handleSignup}
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "1rem",
+          }}
+        >
           <div className="input-group">
             <input
               type="text"
@@ -216,9 +215,7 @@ export default function SignupModal({
                         setForm((prev) => ({ ...prev, ownerDob: "" }));
                         return;
                       }
-
                       if (!isValidDateFormat(dateStr)) {
-                      
                         setForm((prev) => ({ ...prev, ownerDob: "" }));
                       }
                     }}
@@ -274,7 +271,13 @@ export default function SignupModal({
             />
           </div>
 
-          <div className="input-group" style={{ position: "relative" }}>
+          <div
+            className="input-group"
+            style={{
+              position: "relative",
+              gridColumn: "span 2", // full width
+            }}
+          >
             <textarea
               name="ownerAddress"
               placeholder=" "
@@ -301,7 +304,12 @@ export default function SignupModal({
             </label>
           </div>
 
-          <div className="input-group">
+          <div className="input-group"             
+          style={{
+              position: "relative",
+              gridColumn: "span 2", // full width
+              marginTop: "0.8rem",
+            }}>
             <input
               type="password"
               name="ownerPassword"
@@ -315,7 +323,15 @@ export default function SignupModal({
             <label>Password</label>
           </div>
 
-          <button type="submit">Register</button>
+          <div
+            style={{
+              gridColumn: "span 2",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <button type="submit">Register</button>
+          </div>
         </form>
 
         <div className="modal-footer">
@@ -328,7 +344,7 @@ export default function SignupModal({
               }}
             >
               Already a user?{" "}
-              <button onClick={onSwitchToLogin} className="modal-link">
+              <button onClick={() => onSwitchToLogin()} className="modal-link">
                 Sign in
               </button>
             </p>
