@@ -138,7 +138,7 @@ export default function LoginModal({
         <div className="modal-footer">
           <p style={{ textAlign: "center", width: "100%" }}>
             New user?{" "}
-            <button onClick={onSwitchToSignup} className="modal-link">
+            <button onClick={()=>onSwitchToSignup()} className="modal-link">
               Sign up
             </button>
           </p>

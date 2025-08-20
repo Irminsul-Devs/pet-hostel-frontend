@@ -1,15 +1,23 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import LoginModal from "../components/LoginModal"; // Make sure this exists
+import SignupModal from "../components/SignupModal"; // Make sure this exists
 import "../styles/Home.css";
 
 export default function Home() {
   const [showLogin, setShowLogin] = useState(false);
 
+  const [showSignup, setShowSignup] = useState(false);
+
+  const switchToSignUp = () => {
+    setShowLogin(false);
+    setShowSignup(true);
+  };
+
   return (
     <>
  
-      <video autoPlay loop muted playsInline className="home-video-bg">
+      <video autoPlay loop muted playsInline className="home-video-bg" style={{zoom: "110%"}}>
         <source src="/assets/videos/p1.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
@@ -39,8 +47,14 @@ export default function Home() {
       {showLogin && (
         <LoginModal
           onClose={() => setShowLogin(false)}
-          onSwitchToSignup={() => {}}
+          onSwitchToSignup={() => switchToSignUp()}
           onSwitchToReset={() => {}}
+        />
+      )}
+      {showSignup && (
+        <SignupModal
+          onClose={() => setShowSignup(false)}
+          onSwitchToLogin={() => {setShowLogin(true), setShowSignup(false)}}
         />
       )}
     </>
